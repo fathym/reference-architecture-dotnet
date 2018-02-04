@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B8712432-B8DA-47BB-85EE-8DCEB2E810B4}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.config = .nuget\NuGet.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{2CF09551-A580-4EC9-B6D5-F852724C1017}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Develop", "Develop", "{0ECE3374-01E2-40C6-B99D-9A1B6C892455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E48422AB-D0BB-4071-BCAB-698E3AFF7E83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym", "Fathym\Fathym.csproj", "{5D5538E3-C701-4131-BAB2-E2470426D901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.API", "Fathym.API\Fathym.API.csproj", "{35F192A6-F102-450E-A2DB-CBAE06C45C77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D5538E3-C701-4131-BAB2-E2470426D901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5538E3-C701-4131-BAB2-E2470426D901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5538E3-C701-4131-BAB2-E2470426D901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5538E3-C701-4131-BAB2-E2470426D901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35F192A6-F102-450E-A2DB-CBAE06C45C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35F192A6-F102-450E-A2DB-CBAE06C45C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35F192A6-F102-450E-A2DB-CBAE06C45C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35F192A6-F102-450E-A2DB-CBAE06C45C77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5D5538E3-C701-4131-BAB2-E2470426D901} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+		{35F192A6-F102-450E-A2DB-CBAE06C45C77} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}
+	EndGlobalSection
+EndGlobal
