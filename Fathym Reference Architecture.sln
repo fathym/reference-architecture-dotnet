@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.API", "Fathym.API\Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Fabric", "Fathym.Fabric\Fathym.Fabric.csproj", "{968F723B-DFAF-4A3A-B9C7-E99D0F03378B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Fabric.API", "Fathym.Fabric.API\Fathym.Fabric.API.csproj", "{CE1D0B6C-886B-41E1-9402-7E06CD540D74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{968F723B-DFAF-4A3A-B9C7-E99D0F03378B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{968F723B-DFAF-4A3A-B9C7-E99D0F03378B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{968F723B-DFAF-4A3A-B9C7-E99D0F03378B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1D0B6C-886B-41E1-9402-7E06CD540D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1D0B6C-886B-41E1-9402-7E06CD540D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1D0B6C-886B-41E1-9402-7E06CD540D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1D0B6C-886B-41E1-9402-7E06CD540D74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{5D5538E3-C701-4131-BAB2-E2470426D901} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{35F192A6-F102-450E-A2DB-CBAE06C45C77} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{968F723B-DFAF-4A3A-B9C7-E99D0F03378B} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+		{CE1D0B6C-886B-41E1-9402-7E06CD540D74} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}

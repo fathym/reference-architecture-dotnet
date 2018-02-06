@@ -1,49 +1,27 @@
-﻿using Fathym.Design;
-using Fathym.Fabric.Communications;
+﻿using Fathym.Fabric.Communications;
 using Fathym.Fabric.Configuration;
 using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.ServiceFabric.Actors;
-using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fathym.Fabric.Actors
+namespace Fathym.Fabric.API.Controllers
 {
-	public class GenericActor : Actor
+	public abstract class FabricAPIController : Fifty280APIController
 	{
 		#region Fields
-		protected readonly IFabricAdapter fabricAdapter;
+		protected IFabricAdapter fabricAdapter;
 		#endregion
 
 		#region Constructors
-		public GenericActor(ActorService actorService, ActorId actorId)
-			: base(actorService, actorId)
+		public FabricAPIController(IFabricAdapter fabricAdapter)
 		{
-			DesignOutline.Instance.SetupCommonDefaultJSONSerialization();
-
-			fabricAdapter = new StatefulFabricAdapter(actorService.Context);
-		}
-		#endregion
-
-		#region Runtime
-		protected override async Task OnActivateAsync()
-		{
-			setupLogging();
-
-			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
-
-			await base.OnActivateAsync();
-		}
-
-		protected override async Task OnDeactivateAsync()
-		{
-			FabricEventSource.Current.ServiceMessage(this, $"Deactivated {ActorService.Context.ServiceName}");
-
-			await base.OnDeactivateAsync();
+			this.fabricAdapter = fabricAdapter;
 		}
 		#endregion
 
@@ -56,7 +34,9 @@ namespace Fathym.Fabric.Actors
 
 		protected virtual T loadConfigSetting<T>(string section, string name)
 		{
-			return fabricAdapter.GetConfiguration().LoadConfigSetting<T>(section, name);
+			var config = fabricAdapter.GetConfiguration();
+
+			return config.LoadConfigSetting<T>(section, name);
 		}
 
 		protected virtual T loadConfigSetting<T>(string name)
@@ -82,8 +62,15 @@ namespace Fathym.Fabric.Actors
 			return new Uri($@"fabric:/{application}/{service}");
 		}
 
-		protected virtual void setupLogging()
-		{ }
+		protected virtual void logStatelessServiceMessage(string message)
+		{
+			//FabricEventSource.Current.ServiceMessage(serviceAdapter.Context, message);
+		}
+
+		protected virtual void logServiceMessage(string message)
+		{
+			logStatelessServiceMessage(message);
+		}
 		#endregion
 	}
 }
