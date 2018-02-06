@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
+		<ProjectReference Include="..\Fathym\Fathym.csproj" />
+		<PackageReference Include="Autofac" Version="4.6.2" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
+		<PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
+	</ItemGroup>
+
+</Project>
