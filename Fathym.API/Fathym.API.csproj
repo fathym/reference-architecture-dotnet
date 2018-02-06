@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Net.Http.Formatting.Extension" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4-preview1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
   </ItemGroup>
 
   <ItemGroup>
