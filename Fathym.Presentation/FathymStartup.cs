@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation
 {
-	public abstract class LeanStartup
+	public abstract class FathymStartup
 	{
 		#region Fields
 		protected IConfigurationRoot config;
@@ -29,7 +29,7 @@ namespace Fathym.Presentation
 		#endregion
 
 		#region Constructors
-		public LeanStartup(IHostingEnvironment env, ILoggerFactory loggerFactory, IFabricAdapter fabricAdapter)
+		public FathymStartup(IHostingEnvironment env, ILoggerFactory loggerFactory, IFabricAdapter fabricAdapter)
 		{
 			this.env = env;
 

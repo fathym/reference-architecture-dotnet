@@ -16,7 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fathym.Fabric.API.Actors
+namespace Fathym.Fabric.API.Workflows
 {
 	public class DomainWorkflowActor : GenericActor
 	{
@@ -86,6 +86,44 @@ namespace Fathym.Fabric.API.Actors
 			return querySpec;
 		}
 
+		protected virtual async Task<T> createDocument<T>(string databaseName, string collectionName, object asset)
+			where T : class
+		{
+			var docUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
+
+			var resp = await docClient.CreateDocumentAsync(docUri, establishDocDBSafeAsset(asset), new RequestOptions()
+			{
+				PartitionKey = loadQueryPartitionKey(databaseName, collectionName)
+			});
+
+			if (resp.StatusCode == System.Net.HttpStatusCode.Created)
+			{
+				return ((object)resp.Resource).JSONConvert<T>();
+			}
+			else
+				return null;
+		}
+
+		protected virtual async Task<Status> deleteDocument<T>(string databaseName, string collectionName, string assetId)
+			where T : class
+		{
+			var status = Status.Initialized;
+
+			var docUri = UriFactory.CreateDocumentUri(databaseName, collectionName, assetId);
+
+			var resp = await docClient.DeleteDocumentAsync(docUri, new RequestOptions()
+			{
+				PartitionKey = loadQueryPartitionKey(databaseName, collectionName)
+			});
+
+			if (resp.StatusCode == System.Net.HttpStatusCode.NoContent)
+				status = Status.Success;
+			else
+				status = Status.GeneralError.Clone($"Document delete failed with status {resp.StatusCode}");
+
+			return status;
+		}
+
 		protected virtual dynamic establishDocDBSafeAsset(object asset)
 		{
 			if (asset == null)
@@ -106,29 +144,6 @@ namespace Fathym.Fabric.API.Actors
 			//return asset.JSONConvert<dynamic>(new JsonSerializerSettings()
 			//{
 			//	ContractResolver = BusinessModelLowerIDContractResolver.Instance
-			//});
-		}
-
-		protected virtual T readDocDBSafeAsset<T>(object asset)
-		{
-			if (asset == null)
-				return default(T);
-
-			var obj = asset.JSONConvert<IDictionary<string, JToken>>();
-
-			if (obj.ContainsKey("id"))
-			{
-				obj["ID"] = obj["id"];
-
-				obj.Remove("id");
-			}
-
-			return obj.JSONConvert<T>();
-
-			//	TODO:  Why wasn't this working?
-			//return asset.JSONConvert<T>(new JsonSerializerSettings()
-			//{
-			//	ContractResolver = BusinessModelRaiseIDContractResolver.Instance
 			//});
 		}
 
@@ -153,6 +168,28 @@ namespace Fathym.Fabric.API.Actors
 		protected virtual PartitionKey loadQueryPartitionKey(string database, string collection)
 		{
 			return new PartitionKey(primaryApiKey);
+		}
+
+		protected virtual async Task<T> lookupDocument<T>(string databaseName, string collectionName, string query, 
+			IDictionary<string, object> parameters)
+			where T : class
+		{
+			var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
+
+			var querySpec = new SqlQuerySpec(query);
+
+			querySpec.Parameters = new SqlParameterCollection();
+
+			parameters.ForEach(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
+
+			var queryDoc = docClient.CreateDocumentQuery<object>(collectionLink, querySpec,
+				new FeedOptions
+				{
+					EnableCrossPartitionQuery = true,
+					//PartitionKey = loadQueryPartitionKey(databaseName, collectionName)
+				}).ToArray();
+
+			return readDocDBSafeAsset<T>(queryDoc.FirstOrDefault());
 		}
 
 		protected virtual async Task<BaseResponse<T>> lookupDomain<T, TID>(string database, string collection)
@@ -187,6 +224,50 @@ namespace Fathym.Fabric.API.Actors
 					Status = Status.GeneralError.Clone(ex.ToString())
 				};
 			}
+		}
+
+		protected virtual T readDocDBSafeAsset<T>(object asset)
+		{
+			if (asset == null)
+				return default(T);
+
+			var obj = asset.JSONConvert<IDictionary<string, JToken>>();
+
+			if (obj.ContainsKey("id"))
+			{
+				obj["ID"] = obj["id"];
+
+				obj.Remove("id");
+			}
+
+			return obj.JSONConvert<T>();
+
+			//	TODO:  Why wasn't this working?
+			//return asset.JSONConvert<T>(new JsonSerializerSettings()
+			//{
+			//	ContractResolver = BusinessModelRaiseIDContractResolver.Instance
+			//});
+		}
+
+		protected virtual async Task<string> searchDocuments(string databaseName, string collectionName, string query,
+			IDictionary<string, object> parameters)
+		{
+			var collectionLink = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
+
+			var querySpec = new SqlQuerySpec(query);
+
+			querySpec.Parameters = new SqlParameterCollection();
+
+			parameters.ForEach(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
+
+			var queryDoc = docClient.CreateDocumentQuery<object>(collectionLink, querySpec,
+				new FeedOptions
+				{
+					EnableCrossPartitionQuery = true,
+					//PartitionKey = loadQueryPartitionKey(databaseName, collectionName)
+				}).ToArray();
+
+			return queryDoc.ToJSON();
 		}
 
 		protected virtual async Task storeInBlob(string containerName, string connectionString, string blobName,

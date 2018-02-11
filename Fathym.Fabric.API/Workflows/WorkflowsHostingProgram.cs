@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fathym.Fabric.API.Actors
+namespace Fathym.Fabric.API.Workflows
 {
 	public class WorkflowsHostingProgram
 	{
