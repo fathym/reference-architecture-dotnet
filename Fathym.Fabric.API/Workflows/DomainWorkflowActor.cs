@@ -270,8 +270,8 @@ namespace Fathym.Fabric.API.Workflows
 			return queryDoc.ToJSON();
 		}
 
-		protected virtual async Task<Pageable<T>> searchDocuments<T>(string databaseName, string collectionName, string query,
-			IDictionary<string, object> parameters, int page, int pageSize)
+		protected virtual async Task<Pageable<T>> searchDocuments<T>(string databaseName, string collectionName, string query, 
+			int page, int pageSize, IDictionary<string, object> parameters)
 		{
 			var search = await searchDocuments(databaseName, collectionName, query, parameters);
 
