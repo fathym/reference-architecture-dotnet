@@ -270,6 +270,16 @@ namespace Fathym.Fabric.API.Workflows
 			return queryDoc.ToJSON();
 		}
 
+		protected virtual async Task<Pageable<T>> searchDocuments<T>(string databaseName, string collectionName, string query,
+			IDictionary<string, object> parameters, int page, int pageSize)
+		{
+			var search = await searchDocuments(databaseName, collectionName, query, parameters);
+
+			var queryDoc = search.FromJSON<object[]>();
+
+			return queryDoc.Select(qd => readDocDBSafeAsset<T>(qd)).ToArray().Page(page, pageSize);
+		}
+
 		protected virtual async Task storeInBlob(string containerName, string connectionString, string blobName,
 			string value)
 		{
