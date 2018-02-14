@@ -30,8 +30,6 @@ namespace Fathym.Fabric.Hosting
 				ServiceRuntime.RegisterServiceAsync(serviceTypeName, serviceFactory).GetAwaiter().GetResult();
 
 				FabricEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, serviceTypeName);
-
-				Thread.Sleep(Timeout.Infinite);
 			}
 			catch (Exception e)
 			{
