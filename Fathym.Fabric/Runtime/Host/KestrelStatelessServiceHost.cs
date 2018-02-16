@@ -64,6 +64,7 @@ namespace Fathym.Fabric.Runtime.Host
 				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseStartup<TStartup>()
 				.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
+				.UseApplicationInsights()
 				.UseUrls(url)
 				.Build();
 		}
