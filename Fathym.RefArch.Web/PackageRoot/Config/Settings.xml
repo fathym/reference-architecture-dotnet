@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+	<Section Name="Request.Pipeline">
+		<!--<Parameter Name="Localhost" Value="www.railsendbeerco.com" />-->
+		<!--<Parameter Name="Localhost" Value="www.maxlinebrewing.com" />-->
+		<!--<Parameter Name="Localhost" Value="www.5280software.com" />-->
+		<!--<Parameter Name="Localhost" Value="www.railsendbeerco.com" />-->
+		<Parameter Name="Localhost" Value="www.jackrabbitslimdenver.com" />
+		<!--<Parameter Name="Localhost" Value="dashboards.5280software.com" />-->
+	</Section>
+</Settings>
