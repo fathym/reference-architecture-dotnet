@@ -32,6 +32,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fathym.RefArch.Web.API\Fathym.RefArch.Web.API.csproj" />
     <ProjectReference Include="..\Fathym.RefArch.Web\Fathym.RefArch.Web.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

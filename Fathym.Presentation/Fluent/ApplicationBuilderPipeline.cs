@@ -86,7 +86,7 @@ namespace Fathym.Presentation.Fluent
 
 			return this;
 		}
-
+		
 		public virtual IBuilderPipelineCloseout WithAppCloseout(Action<IApplicationBuilder> action)
 		{
 			action(app);
