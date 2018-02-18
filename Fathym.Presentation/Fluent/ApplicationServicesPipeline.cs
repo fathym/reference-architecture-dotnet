@@ -20,7 +20,7 @@ namespace Fathym.Presentation.Fluent
 		#region Fields
 		protected readonly IServiceCollection services;
 
-		protected IConfigurationRoot config;
+		protected IConfiguration config;
 
 		protected IContainer container;
 
@@ -34,7 +34,7 @@ namespace Fathym.Presentation.Fluent
 		#endregion
 
 		#region Constructors
-		public ApplicationServicesPipeline(IServiceCollection services, IConfigurationRoot config, IHostingEnvironment env, IFabricAdapter fabricAdapter, ILoggerFactory loggerFactory)
+		public ApplicationServicesPipeline(IServiceCollection services, IConfiguration config, IHostingEnvironment env, IFabricAdapter fabricAdapter, ILoggerFactory loggerFactory)
 		{
 			this.config = config;
 
@@ -142,7 +142,7 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
-		public virtual IServicesPipelineStartup With(Action<IServiceCollection, IConfigurationRoot> action)
+		public virtual IServicesPipelineStartup With(Action<IServiceCollection, IConfiguration> action)
 		{
 			action(services, config);
 
@@ -193,6 +193,6 @@ namespace Fathym.Presentation.Fluent
 
 		IServicesPipelineStartup SetupSessions(string sessionCookieName, int sessionIdleTimeout);
 
-		IServicesPipelineStartup With(Action<IServiceCollection, IConfigurationRoot> action);
+		IServicesPipelineStartup With(Action<IServiceCollection, IConfiguration> action);
 	}
 }

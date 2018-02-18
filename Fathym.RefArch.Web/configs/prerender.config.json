@@ -1,0 +1,11 @@
+﻿{
+	"Prerender": {
+		"PrerenderServiceUrl": "http://service.prerender.io/",
+		"StripApplicationNameFromRequestUrl": true,
+		"WhiteListPattern": "",
+		"BlackListPattern": "",
+		"ExtensionsToIgnore": [],
+		"CrawlerUserAgentPattern": null,
+		"Token": "n7sq49ybe6TjqwVITPqc"
+	}
+}

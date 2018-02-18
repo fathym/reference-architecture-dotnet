@@ -12,9 +12,9 @@ namespace Fathym.Presentation.Prerender
 {
 	public static class PrerenderMiddlewareExtensions
 	{
-		public static IApplicationBuilder UsePrerender(this IApplicationBuilder app, PrerenderConfiguration configuration = null)
+		public static IApplicationBuilder UsePrerender(this IApplicationBuilder app)
 		{
-			return app.UseMiddleware<PrerenderMiddleware>(configuration ?? app.ApplicationServices.GetService<IOptions<PrerenderConfiguration>>().Value);
+			return app.UseMiddleware<PrerenderMiddleware>(app.ApplicationServices.GetService<IOptions<PrerenderConfiguration>>().Value);
 		}
 	}
 }

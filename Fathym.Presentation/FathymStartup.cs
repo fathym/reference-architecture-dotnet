@@ -19,7 +19,7 @@ namespace Fathym.Presentation
 	public abstract class FathymStartup
 	{
 		#region Fields
-		protected IConfigurationRoot config;
+		protected IConfiguration config;
 
 		protected readonly IHostingEnvironment env;
 
@@ -74,7 +74,7 @@ namespace Fathym.Presentation
 				results.Files.ForEach(file => builder.AddJsonFile(file.Path));
 		}
 
-		protected virtual IConfigurationRoot buildConfigurationRoot()
+		protected virtual IConfiguration buildConfigurationRoot()
 		{
 			var builder = loadConfigurationBuilder();
 
@@ -88,7 +88,6 @@ namespace Fathym.Presentation
 				.ConfigureAll()
 				.CloseoutAll();
 		}
-
 
 		protected virtual IServiceProvider configureAppServicesPipeline(IServicesPipelineStartup pipeline)
 		{

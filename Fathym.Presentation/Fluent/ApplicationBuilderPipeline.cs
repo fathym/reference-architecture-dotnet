@@ -23,7 +23,7 @@ namespace Fathym.Presentation.Fluent
 		#region Fields
 		protected IApplicationBuilder app;
 
-		protected IConfigurationRoot config;
+		protected IConfiguration config;
 
 		protected readonly IHostingEnvironment env;
 
@@ -35,7 +35,7 @@ namespace Fathym.Presentation.Fluent
 		#endregion
 
 		#region Constructors
-		public ApplicationBuilderPipeline(IApplicationBuilder app, IConfigurationRoot config, IHostingEnvironment env, IFabricAdapter fabricAdapter, ILoggerFactory loggerFactory)
+		public ApplicationBuilderPipeline(IApplicationBuilder app, IConfiguration config, IHostingEnvironment env, IFabricAdapter fabricAdapter, ILoggerFactory loggerFactory)
 		{
 			this.app = app;
 
