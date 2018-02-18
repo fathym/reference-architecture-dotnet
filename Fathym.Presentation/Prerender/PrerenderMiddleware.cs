@@ -32,7 +32,7 @@ namespace Fathym.Presentation.Prerender
 			var handledPrerender = await helper.HandlePrerender(context);
 
 			if (!handledPrerender)
-				await next.Invoke(context);
+				await next(context);
 		} 
 		#endregion
 	}
