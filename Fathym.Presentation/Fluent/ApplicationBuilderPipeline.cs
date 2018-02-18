@@ -182,7 +182,7 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
-		public virtual IBuilderPipelineStartup SetupProxy(List<string> usernameQueryParams, List<string> clientIpQueryParams)
+		public virtual IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams)
 		{
 			app.UseClientIPQueryParam(clientIpQueryParams);
 
@@ -229,7 +229,7 @@ namespace Fathym.Presentation.Fluent
 				})
 				.SetupSessions()
 				.SetupPrerender()
-				.SetupProxy(new List<string> { "username" }, new List<string> { "clientIp" })
+				.SetupQueryParams(new List<string> { "username" }, new List<string> { "clientIp" })
 				.Startup();
 		}
 
@@ -282,7 +282,7 @@ namespace Fathym.Presentation.Fluent
 
 		IBuilderPipelineStartup SetupPrerender();
 
-		IBuilderPipelineStartup SetupProxy(List<string> usernameQueryParams, List<string> clientIpQueryParams);
+		IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams);
 
 		IBuilderPipelineStartup SetupSessions();
 
