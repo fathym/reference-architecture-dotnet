@@ -17,8 +17,6 @@ namespace Fathym.Presentation.Web
 		#region Fields
 		protected readonly IHostingEnvironment env;
 
-		protected readonly IFileProvider fileProvider;
-
 		protected const string startupAttributeName = "startup";
 
 		protected const string systemJsAttributeName = "systemJs";
@@ -33,11 +31,9 @@ namespace Fathym.Presentation.Web
 		#endregion
 
 		#region Constructors
-		public AngularTagHelper(IHostingEnvironment env, IFileProvider fileProvider)
+		public AngularTagHelper(IHostingEnvironment env)
 		{
 			this.env = env;
-
-			this.fileProvider = fileProvider;
 		}
 		#endregion
 
