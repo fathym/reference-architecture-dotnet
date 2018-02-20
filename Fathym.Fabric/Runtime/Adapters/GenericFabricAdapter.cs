@@ -41,6 +41,16 @@ namespace Fathym.Fabric.Runtime.Adapters
 			return client;
 		}
 
+		//public virtual TActor BuildPartitionClient<TActor>(string actorId, string applicationName = null, string serviceName = null)
+		//	where TActor : IActor
+		//{
+		//	var client = ActorProxy.Create<TActor>(new ActorId(actorId),
+		//		applicationName: applicationName,
+		//		serviceName: serviceName);
+
+		//	return client;
+		//}
+
 		public virtual dynamic BuildServiceListener(string listenerName, Func<string, ServiceContext, ICommunicationListener> listener)
 		{
 			return resolveServiceListener(initParams => listener(listenerName, initParams));

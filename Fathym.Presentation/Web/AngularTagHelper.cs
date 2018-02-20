@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +17,8 @@ namespace Fathym.Presentation.Web
 		#region Fields
 		protected readonly IHostingEnvironment env;
 
+		protected readonly IFileProvider fileProvider;
+
 		protected const string startupAttributeName = "startup";
 
 		protected const string systemJsAttributeName = "systemJs";
@@ -30,9 +33,11 @@ namespace Fathym.Presentation.Web
 		#endregion
 
 		#region Constructors
-		public AngularTagHelper(IHostingEnvironment env)
+		public AngularTagHelper(IHostingEnvironment env, IFileProvider fileProvider)
 		{
 			this.env = env;
+
+			this.fileProvider = fileProvider;
 		}
 		#endregion
 
@@ -109,18 +114,23 @@ namespace Fathym.Presentation.Web
 
 						var main = appDir.GetFiles("main.*.bundle.js").FirstOrDefault();
 
-						output.Attributes.SetAttribute("src", $"{resolveRelativePath(rootDir, inline)}?v={version}");
+						if (inline != null && inline.Exists)
+							output.Attributes.SetAttribute("src", $"{resolveRelativePath(rootDir, inline)}?v={version}");
 
-						output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, polyfills)}?v={version}'></script>");
+						if (polyfills != null && polyfills.Exists)
+							output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, polyfills)}?v={version}'></script>");
 
-						output.PostElement.AppendHtml($"<link href='{resolveRelativePath(rootDir, styles)}?v={version}' rel='stylesheet' />");
+						if (styles != null && styles.Exists)
+							output.PostElement.AppendHtml($"<link href='{resolveRelativePath(rootDir, styles)}?v={version}' rel='stylesheet' />");
 
 						if (scripts != null && scripts.Exists)
 							output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, scripts)}?v={version}'></script>");
 
-						output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, vendor)}?v={version}'></script>");
+						if (vendor != null && vendor.Exists)
+							output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, vendor)}?v={version}'></script>");
 
-						output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, main)}?v={version}'></script>");
+						if (main != null && main.Exists)
+							output.PostElement.AppendHtml($"<script src='{resolveRelativePath(rootDir, main)}?v={version}'></script>");
 					}
 				}
 				else
