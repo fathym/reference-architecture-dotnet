@@ -15,7 +15,7 @@ namespace Fathym.Presentation.Web
 	public class AngularTagHelper : TagHelper
 	{
 		#region Fields
-		protected readonly IHostingEnvironment env;
+		protected readonly IHostingEnvironment env; 
 
 		protected const string startupAttributeName = "startup";
 
