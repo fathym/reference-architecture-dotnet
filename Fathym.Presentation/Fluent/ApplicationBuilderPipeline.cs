@@ -158,6 +158,7 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupExceptionHandling(string errorPagePath)
 		{
+			//	TODO:  Undo comment out once stable
 			//if (isDevelopment())
 				app.UseDeveloperExceptionPage();
 			//else
