@@ -44,14 +44,23 @@ namespace Fathym.Fabric.Communications
 
 		public virtual async Task<TResult> Delete<TResult>(Uri requestUri)
 		{
-			var result = await HttpClient.DeleteAsync(requestUri);
+			try
+			{
+				var result = await HttpClient.DeleteAsync(requestUri);
 
-			var resultBody = await result.Content.ReadAsStringAsync();
+				var resultBody = await result.Content.ReadAsStringAsync();
 
-			if (resultBody.StartsWith("<"))
-				throw new Exception($"Error in request to {requestUri}: {resultBody}");
+				if (resultBody.StartsWith("<"))
+					throw new Exception($"Error in request to {requestUri}: {resultBody}");
 
-			return resultBody.FromJSON<TResult>();
+				return resultBody.FromJSON<TResult>();
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 
 		public virtual async Task<TResult> Get<TResult>(string requestUri)
@@ -61,12 +70,21 @@ namespace Fathym.Fabric.Communications
 
 		public virtual async Task<TResult> Get<TResult>(Uri requestUri)
 		{
-			var result = await HttpClient.GetStringAsync(requestUri);
+			try
+			{
+				var result = await HttpClient.GetStringAsync(requestUri);
 
-			if (result.StartsWith("<"))
-				throw new Exception($"Error in request to {requestUri}: {result}");
+				if (result.StartsWith("<"))
+					throw new Exception($"Error in request to {requestUri}: {result}");
 
-			return result.FromJSON<TResult>();
+				return result.FromJSON<TResult>();
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 
 		public virtual async Task<TResult> Patch<TModel, TResult>(string requestUri, TModel model)
@@ -76,14 +94,23 @@ namespace Fathym.Fabric.Communications
 
 		public virtual async Task<TResult> Patch<TModel, TResult>(Uri requestUri, TModel model)
 		{
-			var result = await HttpClient.PatchAsJsonAsync(requestUri, model);
+			try
+			{
+				var result = await HttpClient.PatchAsJsonAsync(requestUri, model);
 
-			var resultBody = await result.Content.ReadAsStringAsync();
+				var resultBody = await result.Content.ReadAsStringAsync();
 
-			if (resultBody.StartsWith("<"))
-				throw new Exception($"Error in request to {requestUri}: {resultBody}");
+				if (resultBody.StartsWith("<"))
+					throw new Exception($"Error in request to {requestUri}: {resultBody}");
 
-			return resultBody.FromJSON<TResult>();
+				return resultBody.FromJSON<TResult>();
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 
 		public virtual async Task<TResult> Post<TModel, TResult>(string requestUri, TModel model)
@@ -93,14 +120,23 @@ namespace Fathym.Fabric.Communications
 
 		public virtual async Task<TResult> Post<TModel, TResult>(Uri requestUri, TModel model)
 		{
-			var result = await HttpClient.PostAsJsonAsync(requestUri, model);
+			try
+			{
+				var result = await HttpClient.PostAsJsonAsync(requestUri, model);
 
-			var resultBody = await result.Content.ReadAsStringAsync();
+				var resultBody = await result.Content.ReadAsStringAsync();
 
-			if (resultBody.StartsWith("<"))
-				throw new Exception($"Error in request to {requestUri}: {resultBody}");
+				if (resultBody.StartsWith("<"))
+					throw new Exception($"Error in request to {requestUri}: {resultBody}");
 
-			return resultBody.FromJSON<TResult>();
+				return resultBody.FromJSON<TResult>();
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 
 		public virtual async Task<TResult> Put<TModel, TResult>(string requestUri, TModel model)
@@ -110,14 +146,23 @@ namespace Fathym.Fabric.Communications
 
 		public virtual async Task<TResult> Put<TModel, TResult>(Uri requestUri, TModel model)
 		{
-			var result = await HttpClient.PutAsJsonAsync(requestUri, model);
+			try
+			{
+				var result = await HttpClient.PutAsJsonAsync(requestUri, model);
 
-			var resultBody = await result.Content.ReadAsStringAsync();
+				var resultBody = await result.Content.ReadAsStringAsync();
 
-			if (resultBody.StartsWith("<"))
-				throw new Exception($"Error in request to {requestUri}: {resultBody}");
+				if (resultBody.StartsWith("<"))
+					throw new Exception($"Error in request to {requestUri}: {resultBody}");
 
-			return resultBody.FromJSON<TResult>();
+				return resultBody.FromJSON<TResult>();
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 		#endregion
 	}

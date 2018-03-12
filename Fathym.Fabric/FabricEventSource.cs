@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric
 {
-	[EventSource(Name = "Fifty280-Fabric")]
+	[EventSource(Name = "Fathym-Fabric")]
 	public sealed class FabricEventSource : EventSource
 	{
 		#region Constants

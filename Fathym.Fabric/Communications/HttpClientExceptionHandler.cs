@@ -14,6 +14,9 @@ namespace Fathym.Fabric.Communications
 		public virtual bool TryHandleException(ExceptionInformation exceptionInformation, OperationRetrySettings retrySettings,
 			out ExceptionHandlingResult result)
 		{
+			if (exceptionInformation.Exception != null)
+				FabricEventSource.Current.Exception(exceptionInformation.Exception.ToString());
+
 			if (exceptionInformation.Exception is TimeoutException)
 			{
 				result = new ExceptionHandlingRetryResult(exceptionInformation.Exception, false, retrySettings, retrySettings.DefaultMaxRetryCount);

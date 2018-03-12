@@ -55,6 +55,7 @@ namespace Fathym.Presentation.Compression
 			}
 			else
 				await next(httpContext);
+
 		}
 		#endregion
 	}

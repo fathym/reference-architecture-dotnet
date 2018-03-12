@@ -27,26 +27,35 @@ namespace Fathym.Fabric.Actors
 		#region Runtime
 		protected override async Task RunAsync(CancellationToken cancellationToken)
 		{
-			await base.RunAsync(cancellationToken);
+			try
+			{
+				await base.RunAsync(cancellationToken);
 
-			var appName = Context.CodePackageActivationContext.ApplicationName;
+				var appName = Context.CodePackageActivationContext.ApplicationName;
 
-			var serviceName = ActorTypeInformation.ServiceName;
+				var serviceName = ActorTypeInformation.ServiceName;
 
-			var autoStartKey = $"{appName}.{serviceName}.AutoStart";
+				var autoStartKey = $"{appName}.{serviceName}.AutoStart";
 
-			FabricEventSource.Current.Message($"Auto Starting {autoStartKey}");
+				FabricEventSource.Current.Message($"Auto Starting {autoStartKey}");
 
-			var proxy = ActorProxy.Create<IAutoStartActor>(new ActorId(autoStartKey),
-				applicationName: appName,
-				serviceName: serviceName);
+				var proxy = ActorProxy.Create<IAutoStartActor>(new ActorId(autoStartKey),
+					applicationName: appName,
+					serviceName: serviceName);
 
-			var status = await proxy.AutoStart();
+				var status = await proxy.AutoStart();
 
-			if (!status)
-				throw new Exception(status.Message);
+				if (!status)
+					throw new Exception(status.Message);
 
-			FabricEventSource.Current.Message($"Auto Start Complete for {autoStartKey}");
+				FabricEventSource.Current.Message($"Auto Start Complete for {autoStartKey}");
+			}
+			catch (Exception ex)
+			{
+				FabricEventSource.Current.Exception(ex.ToString());
+
+				throw;
+			}
 		}
 		#endregion
 	}
