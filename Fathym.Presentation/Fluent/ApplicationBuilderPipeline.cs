@@ -158,10 +158,10 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupExceptionHandling(string errorPagePath)
 		{
-			if (isDevelopment())
+			//if (isDevelopment())
 				app.UseDeveloperExceptionPage();
-			else
-				app.UseExceptionHandler(errorPagePath);
+			//else
+			//	app.UseExceptionHandler(errorPagePath);
 
 			return this;
 		}
