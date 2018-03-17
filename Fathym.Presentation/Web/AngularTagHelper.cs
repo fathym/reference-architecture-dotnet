@@ -69,9 +69,9 @@ namespace Fathym.Presentation.Web
 				else
 					output.PostElement.AppendHtml($"<script src='/js/{Application}.bundle.js.gz?v={version}'></script>");
 			}
-			else
+			else if (!env.WebRootPath.IsNullOrEmpty())
 			{
-				var rootDir = new DirectoryInfo($"{env.ContentRootPath}/wwwroot");
+				var rootDir = new DirectoryInfo(env.WebRootPath);
 
 				var appDir = rootDir.GetDirectories(Application).FirstOrDefault();
 
@@ -132,6 +132,8 @@ namespace Fathym.Presentation.Web
 				else
 					output.PostElement.AppendHtml($"<span>Unable to locate application bundles for {Application}");
 			}
+			else
+				output.PostElement.AppendHtml($"<span>The wwwroot folder was not added on deploy for {Application}.  Update the Web project file to Copy wwwroot files on publish.");
 		}
 		#endregion
 
