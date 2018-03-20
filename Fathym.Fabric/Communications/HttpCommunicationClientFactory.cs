@@ -13,18 +13,14 @@ namespace Fathym.Fabric.Communications
 	public class HttpCommunicationClientFactory : CommunicationClientFactoryBase<HttpCommunicationClient>
 	{
 		#region Fields
-		protected readonly string baseApiAddress;
 		#endregion
 
 		#region Constructors
-		public HttpCommunicationClientFactory(string baseApiAddress,
-			ServicePartitionResolver servicePartitionResolver = null,
+		public HttpCommunicationClientFactory(ServicePartitionResolver servicePartitionResolver = null,
 			IEnumerable<IExceptionHandler> exceptionHandlers = null,
 			string traceId = null)
 			: base(servicePartitionResolver, exceptionHandlers, traceId)
-		{
-			this.baseApiAddress = baseApiAddress;
-		}
+		{ }
 		#endregion
 
 		#region Helpers
@@ -36,11 +32,6 @@ namespace Fathym.Fabric.Communications
 		protected override async Task<HttpCommunicationClient> CreateClientAsync(string endpoint, CancellationToken cancellationToken)
 		{
 			var httpClient = new HttpClient();
-
-			if (!baseApiAddress.IsNullOrEmpty())
-				httpClient.BaseAddress = new Uri(new Uri(endpoint.TrimEnd('/') + "/"), baseApiAddress.TrimEnd('/') + "/");
-			else
-				httpClient.BaseAddress = new Uri(endpoint.TrimEnd('/') + "/");
 
 			return new HttpCommunicationClient(httpClient);
 		}

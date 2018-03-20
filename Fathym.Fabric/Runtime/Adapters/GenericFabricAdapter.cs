@@ -1,12 +1,17 @@
-﻿using Fathym.Fabric.Configuration;
+﻿using Fathym.Design;
+using Fathym.Fabric.Communications;
+using Fathym.Fabric.Configuration;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
+using Microsoft.ServiceFabric.Services.Client;
+using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +74,14 @@ namespace Fathym.Fabric.Runtime.Adapters
 				ServiceName = context.ServiceTypeName.Replace("Type", String.Empty)
 			};
 		}
+
+		public virtual async Task WithFabricClient(string application, string service, Func<HttpClient, Task> action)
+		{
+			var handler = loadHttpClientHandler(application, service);
+
+			if (handler != null)
+				await handler(action);
+		}
 		#endregion
 
 		#region Helpers
@@ -78,6 +91,62 @@ namespace Fathym.Fabric.Runtime.Adapters
 		}
 
 		protected abstract dynamic resolveServiceListener(Func<dynamic, ICommunicationListener> createCommunicationListener);
+
+		#region Client Helpers
+		protected virtual ICommunicationClientFactory<HttpCommunicationClient> loadCommunicationClient()
+		{
+			return new HttpCommunicationClientFactory(servicePartitionResolver: ServicePartitionResolver.GetDefault(),
+				exceptionHandlers: new[] { new HttpClientExceptionHandler() });
+		}
+
+		protected virtual Func<Func<HttpClient, Task>, Task> loadFabricClientHandler(string application, string service)
+		{
+			var partitionClient = loadPartitionClient(application, service);
+
+			Func<Func<HttpClient, Task>, Task> handler = async (h) =>
+			{
+				await partitionClient.InvokeWithRetryAsync(
+					async (client) =>
+					{
+						using (client.HttpClient)
+						{
+							client.HttpClient.Timeout = TimeSpan.FromSeconds(60);
+
+							await h(client.HttpClient);
+						}
+					});
+			};
+
+			return handler;
+		}
+
+		protected virtual Func<Func<HttpClient, Task>, Task> loadHttpClientHandler(string application, string service)
+		{
+			return DesignOutline.Instance.Chain<Func<Func<HttpClient, Task>, Task>>()
+				.AddResponsibilities(
+					() => loadFabricClientHandler(application, service))
+				//() => loadDirectClientHandler(proxyContext))
+				.Run().Result;
+		}
+
+		protected virtual ServicePartitionClient<HttpCommunicationClient> loadPartitionClient(string application,
+			string service, long? partitionKey = null)
+		{
+			var clientFactory = loadCommunicationClient();
+
+			if (partitionKey.HasValue)
+				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
+					loadServiceUri(application, service), new ServicePartitionKey(partitionKey.Value));
+			else
+				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
+					loadServiceUri(application, service));
+		}
+
+		protected virtual Uri loadServiceUri(string application, string service)
+		{
+			return new Uri($@"fabric:/{application}/{service}");
+		}
+		#endregion
 		#endregion
 	}
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,5 +20,7 @@ namespace Fathym.Fabric.Runtime.Adapters
 		RuntimeContext GetContext();
 
 		IConfigurationManager GetConfiguration();
+
+		Task WithFabricClient(string application, string service, Func<HttpClient, Task> action);
 	}
 }

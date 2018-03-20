@@ -48,12 +48,6 @@ namespace Fathym.Fabric.Actors
 		#endregion
 
 		#region Helpers
-		protected virtual ICommunicationClientFactory<HttpCommunicationClient> loadCommunicationClient(string baseApiAddress)
-		{
-			return new HttpCommunicationClientFactory(baseApiAddress, servicePartitionResolver: ServicePartitionResolver.GetDefault(),
-				exceptionHandlers: new[] { new HttpClientExceptionHandler() });
-		}
-
 		protected virtual T loadConfigSetting<T>(string section, string name)
 		{
 			return fabricAdapter.GetConfiguration().LoadConfigSetting<T>(section, name);
@@ -64,24 +58,6 @@ namespace Fathym.Fabric.Actors
 			return loadConfigSetting<T>(GetType().FullName, name);
 		}
 		
-		protected virtual ServicePartitionClient<HttpCommunicationClient> loadPartitionClient(string application,
-			string service, string baseApiAddress, long? partitionKey = null)
-		{
-			var clientFactory = loadCommunicationClient(baseApiAddress);
-
-			if (partitionKey.HasValue)
-				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
-					loadServiceUri(application, service), new ServicePartitionKey(partitionKey.Value));
-			else
-				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
-					loadServiceUri(application, service));
-		}
-
-		protected virtual Uri loadServiceUri(string application, string service)
-		{
-			return new Uri($@"fabric:/{application}/{service}");
-		}
-
 		protected virtual void setupLogging()
 		{ }
 		#endregion
