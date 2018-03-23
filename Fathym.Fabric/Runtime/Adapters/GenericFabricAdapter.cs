@@ -75,6 +75,11 @@ namespace Fathym.Fabric.Runtime.Adapters
 			};
 		}
 
+		public virtual Uri LoadServiceUri(string application, string service)
+		{
+			return new Uri($@"fabric:/{application}/{service}");
+		}
+
 		public virtual async Task WithFabricClient(string application, string service, Func<HttpClient, Task> action)
 		{
 			var handler = loadHttpClientHandler(application, service);
@@ -136,15 +141,10 @@ namespace Fathym.Fabric.Runtime.Adapters
 
 			if (partitionKey.HasValue)
 				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
-					loadServiceUri(application, service), new ServicePartitionKey(partitionKey.Value));
+					LoadServiceUri(application, service), new ServicePartitionKey(partitionKey.Value));
 			else
 				return new ServicePartitionClient<HttpCommunicationClient>(clientFactory,
-					loadServiceUri(application, service));
-		}
-
-		protected virtual Uri loadServiceUri(string application, string service)
-		{
-			return new Uri($@"fabric:/{application}/{service}");
+					LoadServiceUri(application, service));
 		}
 		#endregion
 		#endregion

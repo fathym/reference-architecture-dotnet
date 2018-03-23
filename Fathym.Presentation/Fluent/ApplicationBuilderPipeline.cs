@@ -178,7 +178,14 @@ namespace Fathym.Presentation.Fluent
 		public virtual IBuilderPipelineStartup SetupPrerender()
 		{
 			//if (!isDevelopment())
-				app.UsePrerender();
+			app.UsePrerender();
+
+			return this;
+		}
+
+		public virtual IBuilderPipelineStartup SetupProxy()
+		{
+			app.UseProxy();
 
 			return this;
 		}
@@ -231,6 +238,7 @@ namespace Fathym.Presentation.Fluent
 				.SetupSessions()
 				.SetupPrerender()
 				.SetupQueryParams(new List<string> { "username" }, new List<string> { "clientIp" })
+				.SetupProxy()
 				.Startup();
 		}
 
@@ -282,6 +290,8 @@ namespace Fathym.Presentation.Fluent
 		IBuilderPipelineStartup SetupLogging(string configSectionName);
 
 		IBuilderPipelineStartup SetupPrerender();
+
+		IBuilderPipelineStartup SetupProxy();
 
 		IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams);
 

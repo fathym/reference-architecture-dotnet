@@ -21,6 +21,8 @@ namespace Fathym.Fabric.Runtime.Adapters
 
 		IConfigurationManager GetConfiguration();
 
+		Uri LoadServiceUri(string application, string service);
+
 		Task WithFabricClient(string application, string service, Func<HttpClient, Task> action);
 	}
 }

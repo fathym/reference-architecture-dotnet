@@ -33,6 +33,8 @@ namespace Fathym.Fabric.Communications
 		{
 			var httpClient = new HttpClient();
 
+			httpClient.BaseAddress = new Uri(endpoint.TrimEnd('/') + "/");
+
 			return new HttpCommunicationClient(httpClient);
 		}
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.Extensions.Logging;
 using Fathym.Presentation.Prerender;
+using Fathym.Presentation.Proxy;
 
 namespace Fathym.Presentation.Fluent
 {
@@ -66,6 +67,7 @@ namespace Fathym.Presentation.Fluent
 				.SetupMVC()
 				.SetupPrerender("Prerender")
 				.SetupDataProtection("Data:Protection:Connection", "Data:Protection:Container")
+				.SetupProxy("Proxy")
 				.Configure();
 		}
 
@@ -125,7 +127,15 @@ namespace Fathym.Presentation.Fluent
 		public virtual IServicesPipelineStartup SetupPrerender(string prerenderConfig)
 		{
 			//if (!isDevelopment())
-				services.Configure<PrerenderConfiguration>(config.GetSection(prerenderConfig));
+			services.Configure<PrerenderConfiguration>(config.GetSection(prerenderConfig));
+
+			return this;
+		}
+
+		public virtual IServicesPipelineStartup SetupProxy(string proxyConfig)
+		{
+			//if (!isDevelopment())
+			services.Configure<ProxyConfiguration>(config.GetSection(proxyConfig));
 
 			return this;
 		}
@@ -190,6 +200,8 @@ namespace Fathym.Presentation.Fluent
 		IServicesPipelineStartup SetupMVC();
 
 		IServicesPipelineStartup SetupPrerender(string prerenderConfig);
+
+		IServicesPipelineStartup SetupProxy(string proxyConfig);
 
 		IServicesPipelineStartup SetupSessions(string sessionCookieName, int sessionIdleTimeout);
 

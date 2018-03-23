@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Prerender
 {
+	/// <summary>
+	///	TODO:  Rewrite to leverage the ProxyContext
+	/// </summary>
 	public class PrerenderMiddleware : BaseMiddleware
 	{
 		#region Fields
