@@ -58,7 +58,7 @@ namespace Fathym
 		{
 			context.UpdateContext(contextLookup, ctxt);
 
-			context.Session.Set(contextLookup, context.Items[contextLookup].ToBytes());
+			context.Session.Set(contextLookup, ctxt.ToBytes());
 		}
 
 		public static async Task<Status> WithSessionLockedContext<TContext>(this HttpContext context, string contextLookup, SemaphoreSlim readLock, Func<Task<TContext>> action)
@@ -68,7 +68,7 @@ namespace Fathym
 				var status = await WithLockedContext(context, contextLookup, readLock, action);
 
 				if (status)
-					context.UpdateSessionContext(contextLookup, context.Items[contextLookup].ToBytes());
+					context.UpdateSessionContext(contextLookup, context.Items[contextLookup]);
 
 				return status;
 			}
@@ -86,7 +86,7 @@ namespace Fathym
 			{
 				await readLock.WaitAsync();
 
-				var ctxt = action();
+				var ctxt = await action();
 
 				if (ctxt != null)
 				{
@@ -95,7 +95,7 @@ namespace Fathym
 					return Status.Success;
 				}
 				else
-					throw new Exception("The enterprise could not be loaded for the host.");
+					throw new Exception("The context could not be loaded.");
 			}
 			catch (Exception ex)
 			{
