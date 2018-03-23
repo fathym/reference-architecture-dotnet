@@ -24,6 +24,15 @@ namespace Fathym
 			return request.Headers.ContainsKey("User-Agent") ? (string)request.Headers["User-Agent"] : string.Empty;
 		}
 
+		public static async Task HandleContext<TContext>(this HttpContext context, string contextLookup, Func<TContext, Task> action)
+		{
+			var ctxt = context.ResolveContext<TContext>(contextLookup);
+
+			await action(ctxt);
+
+			context.UpdateContext(contextLookup, ctxt);
+		}
+
 		public static TContext ResolveContext<TContext>(this HttpContext context, string contextLookup)
 		{
 			return (TContext)context.Items[contextLookup];
