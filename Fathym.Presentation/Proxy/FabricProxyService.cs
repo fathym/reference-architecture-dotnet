@@ -27,7 +27,7 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region Helpers
-		protected override async Task<Uri> resolveDestinationUri(HttpContext context, ProxyOptions proxyOptions)
+		protected override async Task resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)
 		{
 			var partResolve = ServicePartitionResolver.GetDefault();
 
@@ -39,7 +39,7 @@ namespace Fathym.Presentation.Proxy
 
 			var resolvedUri = new Uri(endpoint.Address);
 
-			return new Uri(UriHelper.BuildAbsolute(resolvedUri.Scheme, new HostString(resolvedUri.Host, resolvedUri.Port), path: context.Request.Path,
+			proxyOptions.ProxyPath = new Uri(UriHelper.BuildAbsolute(resolvedUri.Scheme, new HostString(resolvedUri.Host, resolvedUri.Port), path: context.Request.Path,
 				query: context.Request.QueryString));
 		}
 

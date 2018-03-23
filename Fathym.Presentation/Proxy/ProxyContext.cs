@@ -20,6 +20,8 @@ namespace Fathym.Presentation.Proxy
 
 		public virtual ProxyConnection Proxy { get; set; }
 
+		public virtual Uri ProxyPath { get; set; }
+
 		public virtual int? StreamCopyBufferSize { get; set; }
 
 		public virtual TimeSpan? WebSocketKeepAliveInterval { get; set; }
@@ -45,6 +47,8 @@ namespace Fathym.Presentation.Proxy
 		public virtual string[] NotForwardedWebSocketHeaders { get; set; }
 
 		public virtual ProxyConnection Proxy { get; set; }
+
+		public virtual Uri ProxyPath { get; set; }
 
 		public virtual int StreamCopyBufferSize { get; set; }
 

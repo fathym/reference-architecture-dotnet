@@ -8,6 +8,6 @@ namespace Fathym.Presentation.Proxy
 {
     public interface IProxyRequestHandler
 	{
-		Task<Status> Proxy(HttpContext context, Uri destinationUri);
+		Task<Status> Proxy(HttpContext context);
     }
 }

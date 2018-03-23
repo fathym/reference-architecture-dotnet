@@ -36,13 +36,14 @@ namespace Fathym.Presentation.Proxy
 
 			if (proxyOptions != null)
 			{
+				if (proxyOptions.ProxyPath == null)
+					await resolveProxyPath(context, proxyOptions);
+
 				var reqHndlr = resolveProxyRequestHandler(context, proxyOptions);
 
 				if (reqHndlr != null)
 				{
-					var destinationUri = await resolveDestinationUri(context, proxyOptions);
-
-					return await reqHndlr.Proxy(context, destinationUri);
+					return await reqHndlr.Proxy(context);
 				}
 				else
 					return Status.GeneralError.Clone("Proxy Request Handler not located.");
@@ -51,7 +52,7 @@ namespace Fathym.Presentation.Proxy
 				return Status.GeneralError.Clone("Proxy options not located.");
 		}
 
-		protected abstract Task<Uri> resolveDestinationUri(HttpContext context, ProxyOptions proxyOptions);
+		protected abstract Task resolveProxyPath(HttpContext context, ProxyOptions proxyOptions);
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{
@@ -71,6 +72,9 @@ namespace Fathym.Presentation.Proxy
 
 			proxyOptions.NotForwardedWebSocketHeaders = !proxyContext.NotForwardedWebSocketHeaders.IsNullOrEmpty() ?
 				proxyContext.NotForwardedWebSocketHeaders : config.NotForwardedWebSocketHeaders;
+
+			if (!proxyContext.ProxyPath.IsNullOrEmpty())
+				proxyOptions.ProxyPath = proxyContext.ProxyPath;
 
 			proxyOptions.StreamCopyBufferSize = !proxyContext.StreamCopyBufferSize.HasValue ?
 				proxyContext.StreamCopyBufferSize.Value : config.StreamCopyBufferSize;

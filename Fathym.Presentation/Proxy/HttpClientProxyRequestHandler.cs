@@ -27,9 +27,9 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region API Methods
-		public virtual async Task<Status> Proxy(HttpContext context, Uri destinationUri)
+		public virtual async Task<Status> Proxy(HttpContext context)
 		{
-			using (var requestMessage = createProxyHttpRequest(context, destinationUri))
+			using (var requestMessage = createProxyHttpRequest(context, proxyOptions.ProxyPath))
 			{
 				await prepareRequest(context.Request, requestMessage);
 
@@ -95,7 +95,8 @@ namespace Fathym.Presentation.Proxy
 
 		protected virtual async Task prepareRequest(HttpRequest request, HttpRequestMessage requestMessage)
 		{
-			requestMessage.Headers.Authorization = proxyOptions.Authorization;
+			if (proxyOptions.Authorization != null)
+				requestMessage.Headers.Authorization = proxyOptions.Authorization;
 		}
 
 		protected virtual async Task<HttpResponseMessage> sendProxyHttpRequest(HttpContext context, ProxyOptions proxyOptions, HttpRequestMessage requestMessage)

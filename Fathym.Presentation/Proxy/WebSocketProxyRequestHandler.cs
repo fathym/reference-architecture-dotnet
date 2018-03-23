@@ -28,9 +28,9 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region API Methods
-		public virtual async Task<Status> Proxy(HttpContext context, Uri destinationUri)
+		public virtual async Task<Status> Proxy(HttpContext context)
 		{
-			return await acceptProxyWebSocketRequest(context, proxyOptions, destinationUri.ToWebSocketScheme());
+			return await acceptProxyWebSocketRequest(context, proxyOptions, proxyOptions.ProxyPath.ToWebSocketScheme());
 		}
 		#endregion
 
