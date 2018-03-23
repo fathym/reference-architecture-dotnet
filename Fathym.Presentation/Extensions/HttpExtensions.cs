@@ -29,6 +29,18 @@ namespace Fathym
 			return (TContext)context.Items[contextLookup];
 		}
 
+		public static void UpdateContext<TContext>(this HttpContext context, string contextLookup, TContext ctxt)
+		{
+			context.Items[contextLookup] = ctxt;
+		}
+
+		public static void UpdateSessionContext<TContext>(this HttpContext context, string contextLookup, TContext ctxt)
+		{
+			context.UpdateContext(contextLookup, ctxt);
+
+			context.Session.Set(contextLookup, context.Items[contextLookup].ToBytes());
+		}
+
 		public static async Task<Status> WithSessionLockedContext<TContext>(this HttpContext context, string contextLookup, SemaphoreSlim readLock, Func<Task<TContext>> action)
 		{
 			if (!context.Session.Keys.Contains(contextLookup))
@@ -36,7 +48,7 @@ namespace Fathym
 				var status = await WithLockedContext(context, contextLookup, readLock, action);
 
 				if (status)
-					context.Session.Set(contextLookup, context.Items[contextLookup].ToBytes());
+					context.UpdateSessionContext(contextLookup, context.Items[contextLookup].ToBytes());
 
 				return status;
 			}
@@ -58,7 +70,7 @@ namespace Fathym
 
 				if (ctxt != null)
 				{
-					context.Items[contextLookup] = ctxt;
+					context.UpdateContext(contextLookup, ctxt);
 
 					return Status.Success;
 				}
