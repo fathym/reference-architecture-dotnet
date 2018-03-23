@@ -73,7 +73,7 @@ namespace Fathym.Presentation.Proxy
 			proxyOptions.NotForwardedWebSocketHeaders = !proxyContext.NotForwardedWebSocketHeaders.IsNullOrEmpty() ?
 				proxyContext.NotForwardedWebSocketHeaders : config.NotForwardedWebSocketHeaders;
 
-			if (!proxyContext.ProxyPath.IsNullOrEmpty())
+			if (proxyContext.ProxyPath != null)
 				proxyOptions.ProxyPath = proxyContext.ProxyPath;
 
 			proxyOptions.StreamCopyBufferSize = !proxyContext.StreamCopyBufferSize.HasValue ?

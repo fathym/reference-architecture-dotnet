@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace Fathym.Presentation.Proxy
+namespace Fathym.Presentation.Prerender
 {
 	public class ProxyResult
 	{
