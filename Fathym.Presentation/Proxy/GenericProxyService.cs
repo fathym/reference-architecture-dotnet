@@ -63,6 +63,9 @@ namespace Fathym.Presentation.Proxy
 				Proxy = proxyContext.Proxy
 			};
 
+			if (proxyContext.Authorization != null)
+				proxyOptions.Authorization = proxyContext.Authorization;
+
 			proxyOptions.ConfigCacheDurationSeconds = !proxyContext.ConfigCacheDurationSeconds.HasValue ?
 				proxyContext.ConfigCacheDurationSeconds.Value : config.ConfigCacheDurationSeconds;
 

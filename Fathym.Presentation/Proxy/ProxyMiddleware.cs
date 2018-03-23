@@ -25,8 +25,6 @@ namespace Fathym.Presentation.Proxy
 
 		public virtual async Task Invoke(HttpContext context)
 		{
-			var proxyContext = (ProxyContext)context.Items[ProxyContext.Lookup];
-
 			var proxied = await proxyService.Proxy(context);
 
 			if (!proxied)

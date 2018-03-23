@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Fathym.Presentation.Proxy
@@ -8,6 +9,8 @@ namespace Fathym.Presentation.Proxy
 	public class ProxyContext
 	{
 		public const string Lookup = "Fathym:Proxy";
+
+		public virtual AuthenticationHeaderValue Authorization { get; set; }
 
 		public virtual int? ConfigCacheDurationSeconds { get; set; }
 
@@ -33,6 +36,8 @@ namespace Fathym.Presentation.Proxy
 	[Serializable]
 	public class ProxyOptions
 	{
+		public virtual AuthenticationHeaderValue Authorization { get; set; }
+
 		public virtual int ConfigCacheDurationSeconds { get; set; }
 
 		public virtual int WebSocketBufferSize { get; set; }
