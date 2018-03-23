@@ -134,7 +134,6 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IServicesPipelineStartup SetupProxy(string proxyConfig)
 		{
-			//if (!isDevelopment())
 			services.Configure<ProxyConfiguration>(config.GetSection(proxyConfig));
 
 			return this;
