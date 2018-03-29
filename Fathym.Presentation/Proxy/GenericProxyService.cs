@@ -67,7 +67,7 @@ namespace Fathym.Presentation.Proxy
 			if (proxyContext.Authorization != null)
 				proxyOptions.Authorization = proxyContext.Authorization;
 
-			proxyOptions.ConfigCacheDurationSeconds = !proxyContext.ConfigCacheDurationSeconds.HasValue ?
+			proxyOptions.ConfigCacheDurationSeconds = proxyContext.ConfigCacheDurationSeconds.HasValue ?
 				proxyContext.ConfigCacheDurationSeconds.Value : config.ConfigCacheDurationSeconds;
 
 			proxyOptions.NotForwardedWebSocketHeaders = !proxyContext.NotForwardedWebSocketHeaders.IsNullOrEmpty() ?
@@ -76,13 +76,13 @@ namespace Fathym.Presentation.Proxy
 			if (proxyContext.ProxyPath != null)
 				proxyOptions.ProxyPath = proxyContext.ProxyPath;
 
-			proxyOptions.StreamCopyBufferSize = !proxyContext.StreamCopyBufferSize.HasValue ?
+			proxyOptions.StreamCopyBufferSize = proxyContext.StreamCopyBufferSize.HasValue ?
 				proxyContext.StreamCopyBufferSize.Value : config.StreamCopyBufferSize;
 
-			proxyOptions.WebSocketBufferSize = !proxyContext.WebSocketBufferSize.HasValue ?
+			proxyOptions.WebSocketBufferSize = proxyContext.WebSocketBufferSize.HasValue ?
 				proxyContext.WebSocketBufferSize.Value : config.DefaultWebSocketBufferSize;
 
-			proxyOptions.WebSocketKeepAliveInterval = !proxyContext.WebSocketKeepAliveInterval.HasValue ?
+			proxyOptions.WebSocketKeepAliveInterval = proxyContext.WebSocketKeepAliveInterval.HasValue ?
 				proxyContext.WebSocketKeepAliveInterval.Value : config.WebSocketKeepAliveInterval;
 
 			return proxyOptions;

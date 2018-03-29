@@ -5,6 +5,7 @@ using Fathym.Presentation.Proxy;
 using Fathym.Presentation.Rewrite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
@@ -86,7 +87,7 @@ namespace Fathym.Presentation.Fluent
 
 			return this;
 		}
-		
+
 		public virtual IBuilderPipelineCloseout WithAppCloseout(Action<IApplicationBuilder> action)
 		{
 			action(app);
@@ -126,9 +127,9 @@ namespace Fathym.Presentation.Fluent
 			provider.Mappings[".json"] = "application/json";
 
 			return SetupStaticFiles(new StaticFileOptions()
-				{
-					OnPrepareResponse = handleStaticFileGZipResponsePreparation,
-					ContentTypeProvider = provider
+			{
+				OnPrepareResponse = handleStaticFileGZipResponsePreparation,
+				ContentTypeProvider = provider
 			});
 		}
 
@@ -160,7 +161,7 @@ namespace Fathym.Presentation.Fluent
 		{
 			//	TODO:  Undo comment out once stable
 			//if (isDevelopment())
-				app.UseDeveloperExceptionPage();
+			app.UseDeveloperExceptionPage();
 			//else
 			//	app.UseExceptionHandler(errorPagePath);
 
@@ -185,10 +186,37 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupProxy()
 		{
+			//WithAppStartup((app) =>
+			//{
+			//	app.Use(
+			//		async (context, next) =>
+			//		{
+			//			manageProxy(context);
+
+			//			await next();
+			//		});
+			//});
+
 			app.UseProxy();
 
 			return this;
 		}
+		//protected virtual void manageProxy(HttpContext context)
+		//{
+		//	context.HandleContext(ProxyContext.Lookup,
+		//		async (ctxt) =>
+		//		{
+		//			ctxt.Proxy = new ProxyConnection()
+		//			{
+		//				Application = "JRS.Web.Fabric",
+		//				Service = "JRS.Web"
+		//			};
+		//		},
+		//		create: async () => new ProxyContext()
+		//		{
+		//			Proxy = new ProxyConnection()
+		//		});
+		//}
 
 		public virtual IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams)
 		{

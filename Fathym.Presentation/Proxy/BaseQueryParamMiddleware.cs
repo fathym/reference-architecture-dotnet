@@ -54,7 +54,7 @@ namespace Fathym.Presentation.Proxy
 
 			context.Request.QueryString = new QueryString(newUri.Query);
 
-			await next.Invoke(context);
+			await next(context);
 		}
 		#endregion
 
