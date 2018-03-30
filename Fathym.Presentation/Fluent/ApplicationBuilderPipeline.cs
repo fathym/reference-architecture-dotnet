@@ -186,16 +186,16 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupProxy()
 		{
-			WithAppStartup((app) =>
-			{
-				app.Use(
-					async (context, next) =>
-					{
-						await manageProxy(context);
+			//WithAppStartup((app) =>
+			//{
+			//	app.Use(
+			//		async (context, next) =>
+			//		{
+			//			await manageProxy(context);
 
-						await next();
-					});
-			});
+			//			await next();
+			//		});
+			//});
 
 			app.UseProxy();
 
