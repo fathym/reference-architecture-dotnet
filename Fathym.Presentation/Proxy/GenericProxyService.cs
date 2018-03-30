@@ -56,7 +56,7 @@ namespace Fathym.Presentation.Proxy
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{
-			if (proxyContext == null || proxyContext.Proxy == null)
+			if (proxyContext == null || proxyContext.Proxy == null || proxyContext.Proxy.Application.IsNullOrEmpty() || proxyContext.Proxy.Service.IsNullOrEmpty())
 				return null;
 
 			var proxyOptions = new ProxyOptions()
