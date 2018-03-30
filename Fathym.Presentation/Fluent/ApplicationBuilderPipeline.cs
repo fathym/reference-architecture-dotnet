@@ -186,37 +186,10 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupProxy()
 		{
-			//WithAppStartup((app) =>
-			//{
-			//	app.Use(
-			//		async (context, next) =>
-			//		{
-			//			manageProxy(context);
-
-			//			await next();
-			//		});
-			//});
-
 			app.UseProxy();
 
 			return this;
 		}
-		//protected virtual void manageProxy(HttpContext context)
-		//{
-		//	context.HandleContext(ProxyContext.Lookup,
-		//		async (ctxt) =>
-		//		{
-		//			ctxt.Proxy = new ProxyConnection()
-		//			{
-		//				Application = "Fathym.RefArch.Fabric",
-		//				Service = "Fathym.RefArch.Web.API"
-		//			};
-		//		},
-		//		create: async () => new ProxyContext()
-		//		{
-		//			Proxy = new ProxyConnection()
-		//		});
-		//}
 
 		public virtual IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams)
 		{
