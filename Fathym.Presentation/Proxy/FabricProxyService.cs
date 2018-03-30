@@ -27,20 +27,11 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region Helpers
-		protected override async Task resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)
+		protected override async Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)
 		{
-			var partResolve = ServicePartitionResolver.GetDefault();
+			var uri = new Uri(UriHelper.BuildAbsolute("http", new HostString("xxx", 80), path: context.Request.Path, query: context.Request.QueryString));
 
-			var serviceUri = fabricAdapter.LoadServiceUri(proxyOptions.Proxy.Application, proxyOptions.Proxy.Service);
-
-			var resolved = await partResolve.ResolveAsync(serviceUri, new ServicePartitionKey(), new System.Threading.CancellationToken());
-
-			var endpoint = resolved.Endpoints.FirstOrDefault();
-
-			var resolvedUri = new Uri(endpoint.Address);
-
-			proxyOptions.ProxyPath = new Uri(UriHelper.BuildAbsolute(resolvedUri.Scheme, new HostString(resolvedUri.Host, resolvedUri.Port), path: context.Request.Path,
-				query: context.Request.QueryString));
+			return uri.PathAndQuery;
 		}
 
 		protected override IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions)
@@ -48,7 +39,7 @@ namespace Fathym.Presentation.Proxy
 			if (context.WebSockets.IsWebSocketRequest)
 				return new WebSocketProxyRequestHandler(proxyOptions, fabricAdapter);
 			else
-				return new HttpClientProxyRequestHandler(proxyOptions, fabricAdapter);	
+				return new HttpClientProxyRequestHandler(proxyOptions, fabricAdapter);
 		}
 		#endregion
 	}

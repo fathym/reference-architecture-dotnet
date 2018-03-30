@@ -8,7 +8,7 @@
 		<ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
 		<ProjectReference Include="..\Fathym\Fathym.csproj" />
 		<PackageReference Include="Autofac" Version="4.6.2" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.1" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.2" />

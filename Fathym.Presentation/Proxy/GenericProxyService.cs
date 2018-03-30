@@ -36,8 +36,8 @@ namespace Fathym.Presentation.Proxy
 
 			if (proxyOptions != null)
 			{
-				if (proxyOptions.ProxyPath == null)
-					await resolveProxyPath(context, proxyOptions);
+				if (proxyOptions.ProxyPath.IsNullOrEmpty())
+					proxyOptions.ProxyPath = await resolveProxyPath(context, proxyOptions);
 
 				var reqHndlr = resolveProxyRequestHandler(context, proxyOptions);
 
@@ -52,7 +52,7 @@ namespace Fathym.Presentation.Proxy
 				return Status.GeneralError.Clone("Proxy options not located.");
 		}
 
-		protected abstract Task resolveProxyPath(HttpContext context, ProxyOptions proxyOptions);
+		protected abstract Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions);
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{

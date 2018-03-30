@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Fathym.Presentation.Proxy
 {
@@ -29,7 +31,7 @@ namespace Fathym.Presentation.Proxy
 		#region API Methods
 		public virtual async Task<Status> Proxy(HttpContext context)
 		{
-			using (var requestMessage = createProxyHttpRequest(context, proxyOptions.ProxyPath))
+			using (var requestMessage = createProxyHttpRequest(context))
 			{
 				await prepareRequest(context.Request, requestMessage);
 
@@ -61,7 +63,7 @@ namespace Fathym.Presentation.Proxy
 				await responseStream.CopyToAsync(response.Body, proxyOptions.StreamCopyBufferSize, context.RequestAborted);
 		}
 
-		protected virtual HttpRequestMessage createProxyHttpRequest(HttpContext context, Uri uri)
+		protected virtual HttpRequestMessage createProxyHttpRequest(HttpContext context)
 		{
 			var request = context.Request;
 
@@ -84,10 +86,6 @@ namespace Fathym.Presentation.Proxy
 					requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
 			}
 
-			requestMessage.Headers.Host = uri.Authority;
-
-			requestMessage.RequestUri = uri;
-
 			requestMessage.Method = new HttpMethod(request.Method);
 
 			return requestMessage;
@@ -106,6 +104,13 @@ namespace Fathym.Presentation.Proxy
 			await withClient(proxyOptions,
 				async (client) =>
 				{
+					requestMessage.Headers.Host = client.BaseAddress.Authority;
+
+					var pathParts = proxyOptions.ProxyPath.Split('?');
+
+					requestMessage.RequestUri = new Uri(UriHelper.BuildAbsolute(client.BaseAddress.Scheme, new HostString(client.BaseAddress.Host, client.BaseAddress.Port), 
+						path: pathParts[0], query: QueryString.FromUriComponent(pathParts[1])));
+
 					responseMessage = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
 				});
 
