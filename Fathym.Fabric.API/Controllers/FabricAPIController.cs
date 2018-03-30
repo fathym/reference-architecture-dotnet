@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric.API.Controllers
 {
-	public abstract class FabricAPIController : Fifty280APIController
+	public abstract class FabricAPIController : FathymAPIController
 	{
 		#region Fields
 		protected IFabricAdapter fabricAdapter;

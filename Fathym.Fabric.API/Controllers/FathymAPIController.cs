@@ -13,7 +13,7 @@ using System.Web.Http;
 
 namespace Fathym.Fabric.API.Controllers
 {
-	public abstract class Fifty280APIController : ApiController
+	public abstract class FathymAPIController : ApiController
 	{
 		#region API Methods
 		[Route("status", Order = 1)]

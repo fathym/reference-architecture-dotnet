@@ -44,7 +44,7 @@ namespace Fathym.Presentation.Web
 
 			output.TagMode = TagMode.StartTagAndEndTag;
 
-			output.PostElement.AppendHtml("<script>window.module = 'fifty280';</script>");
+			output.PostElement.AppendHtml("<script>window.module = 'fathym';</script>");
 
 			var version = (Assembly.GetEntryAssembly() ?? GetType().Assembly)
 						.GetCustomAttribute<AssemblyInformationalVersionAttribute>()

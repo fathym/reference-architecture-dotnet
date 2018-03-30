@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Web
 {
-	[HtmlTargetElement("fifty280", Attributes = viewBagAttributeName)]
+	[HtmlTargetElement("fathym", Attributes = viewBagAttributeName)]
 	public class ViewBagTagHelper : TagHelper
 	{
 		#region Fields

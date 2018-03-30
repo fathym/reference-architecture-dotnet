@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.MVC
 {
-	public class Fifty280Controller : Controller
+	public class FathymController : Controller
 	{
 		#region Fields
 		protected string currentAction;
@@ -18,7 +18,7 @@ namespace Fathym.Presentation.MVC
 		#endregion
 
 		#region Constructors
-		public Fifty280Controller()
+		public FathymController()
 		{ }
 		#endregion
 
