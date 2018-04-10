@@ -27,6 +27,15 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region Helpers
+		protected override bool isValidProxyContext(ProxyContext proxyContext)
+		{
+			var fabricContext = fabricAdapter.GetContext();
+
+			return isValidProxyContext(proxyContext) &&
+				proxyContext.Proxy.Application != fabricContext.ApplicationName &&
+				proxyContext.Proxy.Service != fabricContext.ServiceName;
+		}
+
 		protected override async Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)
 		{
 			var uri = new Uri(UriHelper.BuildAbsolute("http", new HostString("xxx", 80), path: context.Request.Path, query: context.Request.QueryString));

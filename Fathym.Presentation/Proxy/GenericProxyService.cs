@@ -51,12 +51,19 @@ namespace Fathym.Presentation.Proxy
 			else
 				return Status.GeneralError.Clone("Proxy options not located.");
 		}
+		#endregion
+
+		#region Helpers
+		protected virtual bool isValidProxyContext(ProxyContext proxyContext)
+		{
+			return proxyContext != null && proxyContext.Proxy != null && !proxyContext.Proxy.Application.IsNullOrEmpty() && !proxyContext.Proxy.Service.IsNullOrEmpty();
+		}
 
 		protected abstract Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions);
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{
-			if (proxyContext == null || proxyContext.Proxy == null || proxyContext.Proxy.Application.IsNullOrEmpty() || proxyContext.Proxy.Service.IsNullOrEmpty())
+			if (isValidProxyContext(proxyContext))
 				return null;
 
 			var proxyOptions = new ProxyOptions()
@@ -98,10 +105,6 @@ namespace Fathym.Presentation.Proxy
 		}
 
 		protected abstract IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions);
-		#endregion
-
-		#region Helpers
-
 		#endregion
 	}
 }
