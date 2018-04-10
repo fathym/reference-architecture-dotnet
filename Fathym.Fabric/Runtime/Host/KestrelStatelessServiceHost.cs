@@ -58,13 +58,17 @@ namespace Fathym.Fabric.Runtime.Host
 		protected virtual IWebHost buildWebHost(string url, AspNetCoreCommunicationListener listener)
 		{
 			return new WebHostBuilder()
-				.UseKestrel(
-					options =>
-					{
-						options.Limits.MaxRequestHeaderCount = 32;
+				.UseKestrel()
+				//options =>
+				//{
+				//	options.Limits.MaxRequestHeaderCount = 32;
 
-						options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
-					})
+				//	options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+
+				//	options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+
+				//	options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+				//})
 				.ConfigureServices(
 					services =>
 					{
