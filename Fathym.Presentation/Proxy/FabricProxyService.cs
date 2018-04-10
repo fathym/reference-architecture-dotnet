@@ -31,7 +31,7 @@ namespace Fathym.Presentation.Proxy
 		{
 			var fabricContext = fabricAdapter.GetContext();
 
-			return isValidProxyContext(proxyContext) &&
+			return base.isValidProxyContext(proxyContext) &&
 				proxyContext.Proxy.Application != fabricContext.ApplicationName &&
 				proxyContext.Proxy.Service != fabricContext.ServiceName;
 		}
