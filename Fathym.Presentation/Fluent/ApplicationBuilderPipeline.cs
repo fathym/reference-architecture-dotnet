@@ -168,6 +168,13 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
+		public virtual IBuilderPipelineStartup SetupIdentity()
+		{
+			app.UseAuthentication();
+
+			return this;
+		}
+
 		public virtual IBuilderPipelineStartup SetupLogging(string configSectionName)
 		{
 			loggerFactory.AddConsole(config.GetSection("Logging"));
@@ -187,8 +194,6 @@ namespace Fathym.Presentation.Fluent
 		public virtual IBuilderPipelineStartup SetupProxy()
 		{
 			app.UseProxy();
-
-			app.UseAuthentication();
 
 			return this;
 		}
@@ -289,6 +294,8 @@ namespace Fathym.Presentation.Fluent
 		IBuilderPipelineStartup SetupBrowserLink(bool forceSetup = false);
 
 		IBuilderPipelineStartup SetupExceptionHandling(string errorPagePath);
+
+		IBuilderPipelineStartup SetupIdentity();
 
 		IBuilderPipelineStartup SetupLogging(string configSectionName);
 
