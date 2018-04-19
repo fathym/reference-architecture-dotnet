@@ -42,11 +42,11 @@ namespace Fathym.Presentation
 		#endregion
 
 		#region API Methods
-		public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+		public virtual void ConfigureServices(IServiceCollection services)
 		{
 			var pipeline = setupAppServicesPipeline(services);
 
-			return configureAppServicesPipeline(pipeline);
+			configureAppServicesPipeline(pipeline);
 		}
 
 		public virtual void Configure(IApplicationBuilder a)
@@ -89,9 +89,9 @@ namespace Fathym.Presentation
 				.CloseoutAll();
 		}
 
-		protected virtual IServiceProvider configureAppServicesPipeline(IServicesPipelineStartup pipeline)
+		protected virtual void configureAppServicesPipeline(IServicesPipelineStartup pipeline)
 		{
-			return pipeline
+			pipeline
 				.ConfigureAll($"{GetType().Namespace}.Session");
 		}
 

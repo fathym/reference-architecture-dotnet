@@ -1,7 +1,5 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Autofac.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +11,9 @@ using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.Extensions.Logging;
 using Fathym.Presentation.Prerender;
 using Fathym.Presentation.Proxy;
+using Microsoft.AspNetCore.Identity;
+using System.Threading;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fathym.Presentation.Fluent
 {
@@ -22,8 +23,6 @@ namespace Fathym.Presentation.Fluent
 		protected readonly IServiceCollection services;
 
 		protected IConfiguration config;
-
-		protected IContainer container;
 
 		protected readonly IHostingEnvironment env;
 
@@ -52,14 +51,14 @@ namespace Fathym.Presentation.Fluent
 		#endregion
 
 		#region API Methods
-		public virtual IServiceProvider Configure()
+		public virtual void Configure()
 		{
-			return buildServiceProvider(services);
+			services.AddSingleton<IServicesPipelineStartup>(this);
 		}
 
-		public virtual IServiceProvider ConfigureAll(string sessionCookieName)
+		public virtual void ConfigureAll(string sessionCookieName)
 		{
-			return this
+			this
 				.SetupConfig()
 				.SetupCaching()
 				.SetupCompression()
@@ -117,6 +116,46 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
+		public virtual IServicesPipelineStartup SetupIdentity<TUser, TRole, TUserStore, TRoleStore>(Action<IdentityOptions> configureOptions = null, 
+			Action<CookieAuthenticationOptions> configureCookie = null)
+			where TUser : class
+			where TRole : class
+			where TRoleStore : class
+			where TUserStore : class
+		{
+			services.AddIdentity<TUser, TRole>()
+				.AddRoleStore<TRoleStore>()
+				.AddUserStore<TUserStore>()
+				.AddDefaultTokenProviders();
+
+			if (configureOptions != null)
+				services.Configure(configureOptions);
+			else
+				services.Configure<IdentityOptions>(options =>
+				{
+					// Password settings
+					options.Password.RequireDigit = true;
+					options.Password.RequiredLength = 8;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireUppercase = true;
+					options.Password.RequireLowercase = false;
+					options.Password.RequiredUniqueChars = 6;
+
+					// Lockout settings
+					options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+					options.Lockout.MaxFailedAccessAttempts = 10;
+					options.Lockout.AllowedForNewUsers = true;
+
+					// User settings
+					options.User.RequireUniqueEmail = true;
+				});
+
+			if (configureOptions != null)
+				services.ConfigureApplicationCookie(configureCookie);
+
+			return this;
+		}
+
 		public virtual IServicesPipelineStartup SetupMVC()
 		{
 			services.AddMvc();
@@ -160,31 +199,14 @@ namespace Fathym.Presentation.Fluent
 		#endregion
 
 		#region Helpers
-		protected virtual IContainer buildContainer(ContainerBuilder builder)
-		{
-			return builder.Build();
-		}
-
-		protected virtual IServiceProvider buildServiceProvider(IServiceCollection services)
-		{
-			services.AddSingleton<IServicesPipelineStartup>(this);
-
-			var builder = new ContainerBuilder();
-
-			builder.Populate(services);
-
-			container = buildContainer(builder);
-
-			return container.Resolve<IServiceProvider>();
-		}
 		#endregion
 	}
 
 	public interface IServicesPipelineStartup
 	{
-		IServiceProvider Configure();
+		void Configure();
 
-		IServiceProvider ConfigureAll(string sessionCookieName);
+		void ConfigureAll(string sessionCookieName);
 
 		IServicesPipelineStartup SetIsDevelopmentCheck(Func<bool> check);
 
@@ -196,6 +218,13 @@ namespace Fathym.Presentation.Fluent
 
 		IServicesPipelineStartup SetupDataProtection(string connectionConfig, string containerConfig);
 
+		IServicesPipelineStartup SetupIdentity<TUser, TRole, TUserStore, TRoleStore>(Action<IdentityOptions> configureOptions = null,
+			Action<CookieAuthenticationOptions> configureCookie = null)
+			where TUser : class
+			where TRole : class
+			where TRoleStore : class
+			where TUserStore : class;
+
 		IServicesPipelineStartup SetupMVC();
 
 		IServicesPipelineStartup SetupPrerender(string prerenderConfig);
@@ -205,5 +234,121 @@ namespace Fathym.Presentation.Fluent
 		IServicesPipelineStartup SetupSessions(string sessionCookieName, int sessionIdleTimeout);
 
 		IServicesPipelineStartup With(Action<IServiceCollection, IConfiguration> action);
+	}
+
+	public class UserStore : IUserStore<IdentityUser>
+	{
+		public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetUserNameAsync(IdentityUser user, string userName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	public class RoleStore : IRoleStore<IdentityRole>
+	{
+		public Task<IdentityResult> CreateAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityResult> DeleteAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetNormalizedRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetRoleIdAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> GetRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetNormalizedRoleNameAsync(IdentityRole role, string normalizedName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetRoleNameAsync(IdentityRole role, string roleName, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IdentityResult> UpdateAsync(IdentityRole role, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
