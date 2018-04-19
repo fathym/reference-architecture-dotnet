@@ -193,37 +193,38 @@ namespace Fathym.Presentation.Fluent
 
 		public virtual IBuilderPipelineStartup SetupProxy()
 		{
-			WithAppStartup((app) =>
-			{
-				app.Use(
-					async (context, next) =>
-					{
-						await manageProxy(context);
+			//WithAppStartup((app) =>
+			//{
+			//	app.Use(
+			//		async (context, next) =>
+			//		{
+			//			await manageProxy(context);
 
-						await next();
-					});
-			});
+			//			await next();
+			//		});
+			//});
 
 			app.UseProxy();
 
 			return this;
 		}
-		protected virtual async Task manageProxy(HttpContext context)
-		{
-			await context.HandleContext(ProxyContext.Lookup,
-				async (ctxt) =>
-				{
-					ctxt.Proxy = new ProxyConnection()
-					{
-						Application = "Fathym.Forge.Web.Fabric",
-						Service = "Fathym.Forge.Web"
-					};
-				},
-				create: async () => new ProxyContext()
-				{
-					Proxy = new ProxyConnection()
-				});
-		}
+		//	TODO:  Better way to test the proxy, based in the Web test project under Deploy
+		//protected virtual async Task manageProxy(HttpContext context)
+		//{
+		//	await context.HandleContext(ProxyContext.Lookup,
+		//		async (ctxt) =>
+		//		{
+		//			ctxt.Proxy = new ProxyConnection()
+		//			{
+		//				Application = "Fathym.Forge.Web.Fabric",
+		//				Service = "Fathym.Forge.Web"
+		//			};
+		//		},
+		//		create: async () => new ProxyContext()
+		//		{
+		//			Proxy = new ProxyConnection()
+		//		});
+		//}
 
 		public virtual IBuilderPipelineStartup SetupQueryParams(List<string> usernameQueryParams, List<string> clientIpQueryParams)
 		{
