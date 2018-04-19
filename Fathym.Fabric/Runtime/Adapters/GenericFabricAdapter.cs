@@ -113,7 +113,7 @@ namespace Fathym.Fabric.Runtime.Adapters
 				await partitionClient.InvokeWithRetryAsync(
 					async (client) =>
 					{
-						using (client.HttpClient)
+						//using (client.HttpClient)		//	TODO:  Removed in attempt to determine if it was causing slow proxy issue
 						{
 							client.HttpClient.Timeout = TimeSpan.FromSeconds(60);
 
