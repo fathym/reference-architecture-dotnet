@@ -32,8 +32,8 @@ namespace Fathym.Presentation.Proxy
 			var fabricContext = fabricAdapter.GetContext();
 
 			return base.isValidProxyContext(proxyContext) &&
-				proxyContext.Proxy.Application != fabricContext.ApplicationName &&
-				proxyContext.Proxy.Service != fabricContext.ServiceName;
+				(proxyContext.Proxy.Service != fabricContext.ServiceName ||
+				proxyContext.Proxy.Application != fabricContext.ApplicationName);
 		}
 
 		protected override async Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)

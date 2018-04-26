@@ -14,6 +14,7 @@ using Fathym.Presentation.Proxy;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Reflection;
 
 namespace Fathym.Presentation.Fluent
 {
@@ -63,7 +64,10 @@ namespace Fathym.Presentation.Fluent
 				.SetupCaching()
 				.SetupCompression()
 				.SetupSessions(sessionCookieName, 30)
-				.SetupMVC()
+				.SetupMVC(new List<Assembly>()
+				{
+					Assembly.GetEntryAssembly()
+				})
 				.SetupPrerender("Prerender")
 				.SetupDataProtection("Data:Protection:Connection", "Data:Protection:Container")
 				.SetupProxy<FabricProxyService>("Proxy")
@@ -156,9 +160,11 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
-		public virtual IServicesPipelineStartup SetupMVC()
+		public virtual IServicesPipelineStartup SetupMVC(List<Assembly> assemblies)
 		{
-			services.AddMvc();
+			var mvcBuilder = services.AddMvc();
+
+			assemblies.ForEach(assembly => mvcBuilder.AddApplicationPart(assembly));
 
 			return this;
 		}
@@ -228,7 +234,7 @@ namespace Fathym.Presentation.Fluent
 			where TRoleStore : class
 			where TUserStore : class;
 
-		IServicesPipelineStartup SetupMVC();
+		IServicesPipelineStartup SetupMVC(List<Assembly> assemblies);
 
 		IServicesPipelineStartup SetupPrerender(string prerenderConfig);
 
