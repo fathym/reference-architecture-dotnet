@@ -66,7 +66,7 @@ namespace Fathym.Presentation.Fluent
 				.SetupMVC()
 				.SetupPrerender("Prerender")
 				.SetupDataProtection("Data:Protection:Connection", "Data:Protection:Container")
-				.SetupProxy("Proxy")
+				.SetupProxy<FabricProxyService>("Proxy")
 				.Configure();
 		}
 
@@ -116,7 +116,7 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
-		public virtual IServicesPipelineStartup SetupIdentity<TUser, TRole, TUserStore, TRoleStore>(Action<IdentityOptions> configureOptions = null, 
+		public virtual IServicesPipelineStartup SetupIdentity<TUser, TRole, TUserStore, TRoleStore>(Action<IdentityOptions> configureOptions = null,
 			Action<CookieAuthenticationOptions> configureCookie = null)
 			where TUser : class
 			where TRole : class
@@ -171,8 +171,11 @@ namespace Fathym.Presentation.Fluent
 			return this;
 		}
 
-		public virtual IServicesPipelineStartup SetupProxy(string proxyConfig)
+		public virtual IServicesPipelineStartup SetupProxy<TProxyService>(string proxyConfig)
+			where TProxyService : class, IProxyService
 		{
+			services.AddTransient<IProxyService, TProxyService>();
+
 			services.Configure<ProxyConfiguration>(config.GetSection(proxyConfig));
 
 			return this;
@@ -229,7 +232,8 @@ namespace Fathym.Presentation.Fluent
 
 		IServicesPipelineStartup SetupPrerender(string prerenderConfig);
 
-		IServicesPipelineStartup SetupProxy(string proxyConfig);
+		IServicesPipelineStartup SetupProxy<TProxyService>(string proxyConfig)
+			where TProxyService : class, IProxyService;
 
 		IServicesPipelineStartup SetupSessions(string sessionCookieName, int sessionIdleTimeout);
 

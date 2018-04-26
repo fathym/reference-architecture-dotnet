@@ -49,9 +49,9 @@ namespace Fathym.Presentation
 			configureAppServicesPipeline(pipeline);
 		}
 
-		public virtual void Configure(IApplicationBuilder a)
+		public virtual void Configure(IApplicationBuilder app)
 		{
-			var pipeline = setupAppBuilderPipeline(a);
+			var pipeline = setupAppBuilderPipeline(app);
 
 			configureAppBuilderPipeline(pipeline);
 		}

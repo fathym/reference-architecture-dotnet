@@ -17,10 +17,10 @@ namespace Fathym.Presentation.Proxy
 		protected readonly IProxyService proxyService;
 		#endregion
 
-		public ProxyMiddleware(RequestDelegate next, IFabricAdapter fabricAdapter, IOptions<ProxyConfiguration> config)
+		public ProxyMiddleware(RequestDelegate next, IProxyService proxyService)
 			: base(next)
 		{
-			proxyService = new FabricProxyService(fabricAdapter, config);
+			this.proxyService = proxyService;
 		}
 
 		public virtual async Task Invoke(HttpContext context)
