@@ -108,10 +108,12 @@ namespace Fathym.Presentation.Proxy
 
 					var pathParts = proxyOptions.ProxyPath.Split('?');
 
+					var path = $"/{pathParts[0]}".Replace("//", "/");
+
 					var query = pathParts.Length > 1 ? $"?{pathParts[1]}" : "?";
 
 					requestMessage.RequestUri = new Uri(UriHelper.BuildAbsolute(client.BaseAddress.Scheme, new HostString(client.BaseAddress.Host, client.BaseAddress.Port),
-						path: pathParts[0], query: QueryString.FromUriComponent(query)));
+						path: path, query: QueryString.FromUriComponent(query)));
 
 					responseMessage = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
 				});
