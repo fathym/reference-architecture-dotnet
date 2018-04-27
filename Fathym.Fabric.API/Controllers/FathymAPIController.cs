@@ -2,6 +2,7 @@
 using Fathym.API.Fluent;
 using Fathym.Design;
 using Fathym.Fabric.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 using System;
@@ -9,11 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace Fathym.Fabric.API.Controllers
 {
-	public abstract class FathymAPIController : ApiController
+	public abstract class FathymAPIController : ControllerBase
 	{
 		#region API Methods
 		[Route("status", Order = 1)]
@@ -46,13 +46,15 @@ namespace Fathym.Fabric.API.Controllers
 
 		protected virtual void loadApiKey(out string apiKey, out string scheme)
 		{
-			var authHeader = Request.Headers.Authorization;
+			var authHeader = Request.Headers["Authorization"];
 
-			if (authHeader != null)
+			if (!authHeader.IsNullOrEmpty())
 			{
-				apiKey = authHeader.Parameter.Base64Decode();
+				var parts = authHeader.ToString().Split(' ');
 
-				scheme = authHeader.Scheme;
+				apiKey = parts[1].Base64Decode();
+
+				scheme = parts[0];
 			}
 			else
 			{
