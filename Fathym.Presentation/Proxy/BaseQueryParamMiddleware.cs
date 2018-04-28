@@ -9,26 +9,31 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Proxy
 {
-	public abstract class BaseQueryParamMiddleware : BaseMiddleware
+	public abstract class BaseQueryParamProcessor : IQueryParamProcessor
 	{
 		#region Properties
 		public virtual List<string> QueryParameters { get; protected set; }
 		#endregion
 
 		#region Constructors
-		public BaseQueryParamMiddleware(RequestDelegate next, List<string> queryParams)
-			: base(next)
+		public BaseQueryParamProcessor(List<string> queryParams)
 		{
 			QueryParameters = queryParams;
 		}
 		#endregion
 
 		#region API Methods
-		public virtual async Task Invoke(HttpContext context)
+		public virtual async Task Process(HttpContext context)
 		{
-			var request = context.Request;
+			var proxyContext = context.ResolveContext<ProxyContext>(ProxyContext.Lookup);
 
-			var query = QueryHelpers.ParseQuery(request.QueryString.Value).ToDictionary(v => v.Key, v => v.Value.ToString());
+			if (proxyContext == null || proxyContext.Proxy == null)
+				throw new ArgumentException("The proxy context must be set prior to query param processing");
+
+			if (proxyContext.Proxy.Query.IsNullOrEmpty())
+				return;
+
+			var query = QueryHelpers.ParseQuery(proxyContext.Proxy.Query).ToDictionary(v => v.Key, v => v.Value.ToString());
 
 			if (!shouldRemove(context))
 			{
@@ -45,16 +50,15 @@ namespace Fathym.Presentation.Proxy
 				QueryParameters.ForEach(qp => query.Remove(qp));
 			}
 
-			var currentUri = request.GetFullUrl();
+			var uriBldr = new UriBuilder();
+			uriBldr.Host = proxyContext.Proxy.Host ?? "xxx";
+			uriBldr.Path = proxyContext.Proxy.Path;
 
-			if (!request.Query.IsNullOrEmpty())
-				currentUri = currentUri.Replace(WebUtility.UrlDecode(request.QueryString.Value), String.Empty);
+			var currentUri = uriBldr.ToString();
 
 			var newUri = new Uri(QueryHelpers.AddQueryString(currentUri, query));
 
-			context.Request.QueryString = new QueryString(newUri.Query);
-
-			await next(context);
+			proxyContext.Proxy.Query = newUri.Query;
 		}
 		#endregion
 

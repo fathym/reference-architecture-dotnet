@@ -32,15 +32,17 @@ namespace Fathym.Presentation.Proxy
 			var fabricContext = fabricAdapter.GetContext();
 
 			return base.isValidProxyContext(proxyContext) &&
-				(proxyContext.Proxy.Service != fabricContext.ServiceName ||
-				proxyContext.Proxy.Application != fabricContext.ApplicationName);
+				(proxyContext.Proxy.Connection.Service != fabricContext.ServiceName ||
+				proxyContext.Proxy.Connection.Application != fabricContext.ApplicationName);
 		}
 
-		protected override async Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions)
+		protected override Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions, out string query)
 		{
 			var uri = new Uri(UriHelper.BuildAbsolute("http", new HostString("xxx", 80), path: context.Request.Path, query: context.Request.QueryString));
 
-			return uri.PathAndQuery;
+			query = uri.Query;
+
+			return Task.FromResult(uri.AbsolutePath);
 		}
 
 		protected override IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions)

@@ -93,8 +93,8 @@ namespace Fathym.Presentation.Proxy
 
 		protected virtual async Task prepareRequest(HttpRequest request, HttpRequestMessage requestMessage)
 		{
-			if (proxyOptions.Authorization != null)
-				requestMessage.Headers.Authorization = proxyOptions.Authorization;
+			if (proxyOptions.Proxy.Authorization != null)
+				requestMessage.Headers.Authorization = proxyOptions.Proxy.Authorization;
 		}
 
 		protected virtual async Task<HttpResponseMessage> sendProxyHttpRequest(HttpContext context, ProxyOptions proxyOptions, HttpRequestMessage requestMessage)
@@ -104,16 +104,21 @@ namespace Fathym.Presentation.Proxy
 			await withClient(proxyOptions,
 				async (client) =>
 				{
-					requestMessage.Headers.Host = client.BaseAddress.Authority;
+					var host = proxyOptions.Proxy.Host ?? client.BaseAddress.Host;
 
-					var pathParts = proxyOptions.ProxyPath.Split('?');
+					var port = proxyOptions.Proxy.Port ?? client.BaseAddress.Port;
 
-					var path = $"/{pathParts[0]}".Replace("//", "/");
+					var path = $"/{proxyOptions.Proxy.Path}".Replace("//", "/");
 
-					var query = pathParts.Length > 1 ? $"?{pathParts[1]}" : "?";
+					var query = QueryString.FromUriComponent(proxyOptions.Proxy.Query ?? "?");
 
-					requestMessage.RequestUri = new Uri(UriHelper.BuildAbsolute(client.BaseAddress.Scheme, new HostString(client.BaseAddress.Host, client.BaseAddress.Port),
-						path: path, query: QueryString.FromUriComponent(query)));
+					var scheme = proxyOptions.Proxy.Scheme ?? client.BaseAddress.Scheme;
+
+					var fullHost = new HostString(host, port);
+
+					requestMessage.Headers.Host = fullHost.ToString();
+
+					requestMessage.RequestUri = new Uri(UriHelper.BuildAbsolute(scheme, fullHost, path: path, query: query));
 
 					responseMessage = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
 				});
@@ -123,7 +128,7 @@ namespace Fathym.Presentation.Proxy
 
 		protected virtual async Task withClient(ProxyOptions proxyOptions, Func<HttpClient, Task> action)
 		{
-			await fabricAdapter.WithFabricClient(proxyOptions.Proxy.Application, proxyOptions.Proxy.Service, action);
+			await fabricAdapter.WithFabricClient(proxyOptions.Proxy.Connection.Application, proxyOptions.Proxy.Connection.Service, action);
 		}
 		#endregion
 	}

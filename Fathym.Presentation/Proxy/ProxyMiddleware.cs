@@ -15,17 +15,21 @@ namespace Fathym.Presentation.Proxy
 		protected readonly IFabricAdapter fabricAdapter;
 
 		protected readonly IProxyService proxyService;
+
+		protected readonly IDictionary<string, IQueryParamProcessor> queryParamProcessors;
 		#endregion
 
-		public ProxyMiddleware(RequestDelegate next, IProxyService proxyService)
+		public ProxyMiddleware(RequestDelegate next, IProxyService proxyService, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 			: base(next)
 		{
 			this.proxyService = proxyService;
+
+			this.queryParamProcessors = queryParamProcessors;
 		}
 
 		public virtual async Task Invoke(HttpContext context)
 		{
-			var proxied = await proxyService.Proxy(context);
+			var proxied = await proxyService.Proxy(context, queryParamProcessors);
 
 			if (!proxied)
 				await next(context);

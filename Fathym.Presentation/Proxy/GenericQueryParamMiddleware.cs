@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Proxy
 {
-   public class GenericQueryParamMiddleware : BaseQueryParamMiddleware
+   public class GenericQueryParamProcessor : BaseQueryParamProcessor
 	{
 		#region Properties
 		protected readonly Func<HttpContext, string> queryValueLoaderDelegate;
@@ -18,9 +18,9 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region Constructors
-		public GenericQueryParamMiddleware(RequestDelegate next, List<string> queryParams, 
+		public GenericQueryParamProcessor(List<string> queryParams, 
 			Func<HttpContext, string> queryValueLoaderDelegate, Func<HttpContext, bool> shouldRemoveDelegate) 
-			: base(next, queryParams)
+			: base(queryParams)
 		{
 			this.queryValueLoaderDelegate = queryValueLoaderDelegate;
 

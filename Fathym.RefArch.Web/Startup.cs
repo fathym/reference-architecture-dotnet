@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fathym.Fabric.Runtime.Adapters;
 using Fathym.Presentation;
+using Fathym.Presentation.MVC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

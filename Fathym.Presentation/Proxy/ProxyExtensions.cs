@@ -29,19 +29,9 @@ namespace Fathym.Presentation.Proxy
 			return uriBuilder.Uri;
 		}
 
-		public static IApplicationBuilder UseClientIPQueryParam(this IApplicationBuilder app, List<string> queryParams)
+		public static IApplicationBuilder UseProxy(this IApplicationBuilder app, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 		{
-			return app.UseMiddleware<ClientIPQueryParamMiddleware>(queryParams);
-		}
-
-		public static IApplicationBuilder UseProxy(this IApplicationBuilder app)
-		{
-			return app.UseMiddleware<ProxyMiddleware>();
-		}
-
-		public static IApplicationBuilder UseUsernameQueryParam(this IApplicationBuilder app, List<string> queryParams)
-		{
-			return app.UseMiddleware<UsernameQueryParamMiddleware>(queryParams);
+			return app.UseMiddleware<ProxyMiddleware>(queryParamProcessors);
 		}
 	}
 }

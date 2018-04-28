@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Proxy
 {
-   public class ClientIPQueryParamMiddleware : BaseQueryParamMiddleware
+	public class ClientIPQueryParamProcessor : BaseQueryParamProcessor
 	{
 		#region Properties
 		#endregion
 
 		#region Constructors
-		public ClientIPQueryParamMiddleware(RequestDelegate next, List<string> queryParams) 
-			: base(next, queryParams)
+		public ClientIPQueryParamProcessor(List<string> queryParams)
+			: base(queryParams)
 		{ }
 		#endregion
 

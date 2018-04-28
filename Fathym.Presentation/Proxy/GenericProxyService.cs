@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Fathym.Presentation.Proxy
 {
@@ -30,14 +31,21 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region API Methods
-		public virtual async Task<Status> Proxy(HttpContext context)
+		public virtual async Task<Status> Proxy(HttpContext context, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 		{
 			var proxyOptions = resolveProxyOptions(context);
 
 			if (proxyOptions != null)
 			{
-				if (proxyOptions.ProxyPath.IsNullOrEmpty())
-					proxyOptions.ProxyPath = await resolveProxyPath(context, proxyOptions);
+				if (proxyOptions.Proxy.Path.IsNullOrEmpty())
+				{
+					string query;
+					proxyOptions.Proxy.Path = await resolveProxyPath(context, proxyOptions, out query);
+
+					proxyOptions.Proxy.Query = query;
+
+					await processQueryParams(context, proxyOptions.Proxy, queryParamProcessors);
+				}
 
 				var reqHndlr = resolveProxyRequestHandler(context, proxyOptions);
 
@@ -56,10 +64,23 @@ namespace Fathym.Presentation.Proxy
 		#region Helpers
 		protected virtual bool isValidProxyContext(ProxyContext proxyContext)
 		{
-			return proxyContext != null && proxyContext.Proxy != null && !proxyContext.Proxy.Application.IsNullOrEmpty() && !proxyContext.Proxy.Service.IsNullOrEmpty();
+			return proxyContext != null && proxyContext.Proxy != null && proxyContext.Proxy.Connection != null &&
+				!proxyContext.Proxy.Connection.Application.IsNullOrEmpty() && !proxyContext.Proxy.Connection.Service.IsNullOrEmpty();
 		}
 
-		protected abstract Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions);
+		protected virtual async Task processQueryParams(HttpContext context, ProxySetup setup, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
+		{
+			if (queryParamProcessors.IsNullOrEmpty() || setup.QueryParamProcessors.IsNullOrEmpty())
+				return;
+
+			foreach (var qpp in queryParamProcessors)
+			{
+				if (setup.QueryParamProcessors.Contains(qpp.Key))
+					await qpp.Value.Process(context);
+			}
+		}
+
+		protected abstract Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions, out string query);
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{
@@ -71,17 +92,11 @@ namespace Fathym.Presentation.Proxy
 				Proxy = proxyContext.Proxy
 			};
 
-			if (proxyContext.Authorization != null)
-				proxyOptions.Authorization = proxyContext.Authorization;
-
 			proxyOptions.ConfigCacheDurationSeconds = proxyContext.ConfigCacheDurationSeconds.HasValue ?
 				proxyContext.ConfigCacheDurationSeconds.Value : config.ConfigCacheDurationSeconds;
 
 			proxyOptions.NotForwardedWebSocketHeaders = !proxyContext.NotForwardedWebSocketHeaders.IsNullOrEmpty() ?
 				proxyContext.NotForwardedWebSocketHeaders : config.NotForwardedWebSocketHeaders;
-
-			if (proxyContext.ProxyPath != null)
-				proxyOptions.ProxyPath = proxyContext.ProxyPath;
 
 			proxyOptions.StreamCopyBufferSize = proxyContext.StreamCopyBufferSize.HasValue ?
 				proxyContext.StreamCopyBufferSize.Value : config.StreamCopyBufferSize;

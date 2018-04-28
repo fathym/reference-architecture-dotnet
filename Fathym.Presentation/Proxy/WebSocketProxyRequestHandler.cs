@@ -30,13 +30,15 @@ namespace Fathym.Presentation.Proxy
 		#region API Methods
 		public virtual async Task<Status> Proxy(HttpContext context)
 		{
-			return await acceptProxyWebSocketRequest(context, proxyOptions, proxyOptions.ProxyPath);
+			return await acceptProxyWebSocketRequest(context, proxyOptions);
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual async Task<Status> acceptProxyWebSocketRequest(HttpContext context, ProxyOptions proxyOptions, string destinationPath)
+		protected virtual async Task<Status> acceptProxyWebSocketRequest(HttpContext context, ProxyOptions proxyOptions)
 		{
+			string destinationPath = proxyOptions.Proxy.Path + proxyOptions.Proxy.Query;
+
 			//	TODO: Create new Client Communication facility like Http for WebSockets
 			var destinationUri = new Uri("http://www.google.com").ToWebSocketScheme();
 
