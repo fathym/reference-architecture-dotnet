@@ -240,6 +240,8 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline ExceptionHandling(string errorPage);
 
+		ICoreBuilderPipeline Identity();
+
 		ICoreBuilderPipeline Logging(string configSection = null);
 
 		ICoreBuilderPipeline Prerender();
@@ -273,6 +275,18 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region API Methods
+		protected virtual void setupCoreBuilder(ICoreBuilderPipeline pipeline)
+		{
+			pipeline
+				.Logging("Logging")
+				.BrowerLink()
+				.ExceptionHandling(null)
+				.Rewrite(useWww: true/*, useHttps: true*/)
+				.Prerender()
+				.Session()
+				.Build();
+		}
+
 		public virtual IProxyBuilderPipeline AddQueryParamProcessor(string name, IQueryParamProcessor queryParamProcessor)
 		{
 			queryParamProcessors[name] = queryParamProcessor;
