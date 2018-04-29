@@ -59,6 +59,8 @@ namespace Fathym.Presentation.MVC.Fluent
 		#region Fields
 		protected readonly IApplicationBuilder app;
 
+		protected List<Action> appActions;
+
 		protected string exceptionHandlingPage;
 
 		protected string loggingConfigSection;
@@ -82,6 +84,8 @@ namespace Fathym.Presentation.MVC.Fluent
 		public FathymCoreBuilderPipeline(IApplicationBuilder app)
 		{
 			this.app = app;
+
+			appActions = new List<Action>();
 		}
 		#endregion
 
@@ -168,15 +172,22 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual ICoreBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+		public virtual ICoreBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			action(app);
+			appActions.Add(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
+		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
+		{
+			appActions.ForEach(action => action());
+
+			appActions.Clear();
+		}
+
 		protected virtual void buildBrowserLink(IConfigurationRoot config, IHostingEnvironment env)
 		{
 			if (env.IsDevelopment())
@@ -254,7 +265,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline WWW();
 
-		ICoreBuilderPipeline WithApp(Action<IApplicationBuilder> action);
+		ICoreBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
 		void Build(IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory);
 	}
@@ -265,6 +276,8 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
+
+		protected List<Action> appActions;
 
 		protected IDictionary<string, IQueryParamProcessor> queryParamProcessors;
 		#endregion
@@ -292,15 +305,23 @@ namespace Fathym.Presentation.MVC.Fluent
 				buildQueryParamProcessors(config);
 		}
 
-		public virtual IProxyBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+
+		public virtual IProxyBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			action(app);
+			appActions.Add(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
+		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
+		{
+			appActions.ForEach(action => action());
+
+			appActions.Clear();
+		}
+
 		protected virtual void buildQueryParamProcessors(IConfigurationRoot config)
 		{
 			app.UseProxy(queryParamProcessors);
@@ -312,7 +333,7 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		IProxyBuilderPipeline AddQueryParamProcessor(string name, IQueryParamProcessor queryParamProcessor);
 
-		IProxyBuilderPipeline WithApp(Action<IApplicationBuilder> action);
+		IProxyBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
 		void Build(IConfigurationRoot config);
 	}
@@ -323,6 +344,8 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
+
+		protected List<Action> appActions;
 
 		protected Action<IRouteBuilder> mvcConfigureRoutes;
 
@@ -380,15 +403,23 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual IViewBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+
+		public virtual IViewBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			action(app);
+			appActions.Add(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
+		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
+		{
+			appActions.ForEach(action => action());
+
+			appActions.Clear();
+		}
+
 		protected virtual void buildCompression(IConfigurationRoot config)
 		{
 			app.UseResponseCompression();
@@ -419,7 +450,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewBuilderPipeline StaticFiles(StaticFileOptions options);
 
-		IViewBuilderPipeline WithApp(Action<IApplicationBuilder> action);
+		IViewBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
 		void Build(IConfigurationRoot config);
 	}
