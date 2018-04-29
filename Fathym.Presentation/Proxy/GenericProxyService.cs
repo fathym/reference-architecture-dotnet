@@ -56,7 +56,9 @@ namespace Fathym.Presentation.Proxy
 			else
 				return Status.GeneralError.Clone("Proxy options not located.");
 		}
+		#endregion
 
+		#region Helpers
 		protected virtual async Task finalizeProxyContext(HttpContext context, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 		{
 			await context.HandleContext<ProxyContext>(ProxyContext.Lookup,
@@ -73,9 +75,7 @@ namespace Fathym.Presentation.Proxy
 
 			await processQueryParams(context, queryParamProcessors);
 		}
-		#endregion
 
-		#region Helpers
 		protected virtual bool isValidProxyContext(ProxyContext proxyContext)
 		{
 			return proxyContext != null && proxyContext.Proxy != null && proxyContext.Proxy.Connection != null &&
