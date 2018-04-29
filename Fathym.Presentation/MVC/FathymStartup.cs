@@ -52,22 +52,6 @@ namespace Fathym.Presentation.MVC
 
 		public virtual void Configure(IApplicationBuilder app)
 		{
-			app.Use(async (context, next) =>
-			{
-				await context.HandleContext(ProxyContext.Lookup,
-					async (proxyContext) =>
-					{
-						proxyContext.Proxy.Connection = new ProxyConnection()
-						{
-							Application = "Fathym.RefArch.Fabric",
-							Service = "Fathym.RefArch.Web.API"
-						};
-					},
-					create: async () => new ProxyContext() { Proxy = new ProxySetup() });
-
-				await next();
-			});
-
 			buildPipeline(pipeline.Build(app));
 		}
 		#endregion
