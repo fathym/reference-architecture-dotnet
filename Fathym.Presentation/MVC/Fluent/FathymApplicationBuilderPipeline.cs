@@ -167,6 +167,13 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			return this;
 		}
+
+		public virtual ICoreBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+		{
+			action(app);
+
+			return this;
+		}
 		#endregion
 
 		#region Helpers
@@ -247,6 +254,8 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline WWW();
 
+		ICoreBuilderPipeline WithApp(Action<IApplicationBuilder> action);
+
 		void Build(IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory);
 	}
 	#endregion
@@ -282,6 +291,13 @@ namespace Fathym.Presentation.MVC.Fluent
 			if (!queryParamProcessors.IsNullOrEmpty())
 				buildQueryParamProcessors(config);
 		}
+
+		public virtual IProxyBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+		{
+			action(app);
+
+			return this;
+		}
 		#endregion
 
 		#region Helpers
@@ -295,6 +311,8 @@ namespace Fathym.Presentation.MVC.Fluent
 	public interface IProxyBuilderPipeline
 	{
 		IProxyBuilderPipeline AddQueryParamProcessor(string name, IQueryParamProcessor queryParamProcessor);
+
+		IProxyBuilderPipeline WithApp(Action<IApplicationBuilder> action);
 
 		void Build(IConfigurationRoot config);
 	}
@@ -361,6 +379,13 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			return this;
 		}
+
+		public virtual IViewBuilderPipeline WithApp(Action<IApplicationBuilder> action)
+		{
+			action(app);
+
+			return this;
+		}
 		#endregion
 
 		#region Helpers
@@ -393,6 +418,8 @@ namespace Fathym.Presentation.MVC.Fluent
 		IViewBuilderPipeline MVC(Action<IRouteBuilder> configureRoutes = null, bool useDefaultRoutes = false);
 
 		IViewBuilderPipeline StaticFiles(StaticFileOptions options);
+
+		IViewBuilderPipeline WithApp(Action<IApplicationBuilder> action);
 
 		void Build(IConfigurationRoot config);
 	}
