@@ -24,7 +24,7 @@ namespace Fathym.Presentation.MVC
 			pipeline
 				.Logging("Logging")
 				.ExceptionHandling(null)
-				.Build(config, env, loggerFactory);
+				.Build();
 		}
 
 		protected override void setupCoreServices(ICoreServicesPipeline pipeline)
@@ -48,7 +48,7 @@ namespace Fathym.Presentation.MVC
 		{
 			pipeline
 				.MVC()
-				.Build(config);
+				.Build();
 		}
 
 		protected override void setupViewServices(IViewServicesPipeline pipeline)

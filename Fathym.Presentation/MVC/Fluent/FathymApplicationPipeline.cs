@@ -27,8 +27,6 @@ namespace Fathym.Presentation.MVC.Fluent
 		#region Fields
 		protected IApplicationBuilder app;
 
-		protected IConfiguration config;
-
 		protected readonly IHostingEnvironment env;
 
 		protected readonly IFabricAdapter fabricAdapter;
@@ -52,9 +50,9 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region API Methods
-		public IApplicationBuilderPipeline Build(IApplicationBuilder app)
+		public IApplicationBuilderPipeline Build(IApplicationBuilder app, IConfigurationRoot config)
 		{
-			return new FathymApplicationBuilderPipeline(app);
+			return new FathymApplicationBuilderPipeline(app, config, env, loggerFactory);
 		}
 
 		public IApplicationServicesPipeline Services(IServiceCollection services)
@@ -75,7 +73,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 	public interface IApplicationPipeline
 	{
-		IApplicationBuilderPipeline Build(IApplicationBuilder app);
+		IApplicationBuilderPipeline Build(IApplicationBuilder app, IConfigurationRoot config);
 
 		IApplicationServicesPipeline Services(IServiceCollection services);
 

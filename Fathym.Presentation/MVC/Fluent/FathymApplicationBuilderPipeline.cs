@@ -1,4 +1,5 @@
-﻿using Fathym.Presentation.Prerender;
+﻿using Fathym.Presentation.Fluent;
+using Fathym.Presentation.Prerender;
 using Fathym.Presentation.Proxy;
 using Fathym.Presentation.Rewrite;
 using Microsoft.AspNetCore.Builder;
@@ -17,19 +18,31 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
+
+		protected IConfigurationRoot config;
+
+		protected IHostingEnvironment env;
+
+		protected ILoggerFactory loggerFactory;
 		#endregion
 
 		#region Constructors
-		public FathymApplicationBuilderPipeline(IApplicationBuilder app)
+		public FathymApplicationBuilderPipeline(IApplicationBuilder app, IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
 			this.app = app;
+
+			this.config = config;
+
+			this.env = env;
+
+			this.loggerFactory = loggerFactory;
 		}
 		#endregion
 
 		#region API Methods
 		public virtual ICoreBuilderPipeline Core()
 		{
-			return new FathymCoreBuilderPipeline(app);
+			return new FathymCoreBuilderPipeline(app, config, env, loggerFactory);
 		}
 
 		public virtual IProxyBuilderPipeline Proxy()
@@ -54,160 +67,132 @@ namespace Fathym.Presentation.MVC.Fluent
 	}
 
 	#region Core
-	public class FathymCoreBuilderPipeline : ICoreBuilderPipeline
+	public class FathymCoreBuilderPipeline : BaseOrderedPipeline, ICoreBuilderPipeline
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
 
-		protected List<Action> appActions;
+		protected IConfigurationRoot config;
+
+		protected IHostingEnvironment env;
 
 		protected string exceptionHandlingPage;
 
+		protected ILoggerFactory loggerFactory;
+
 		protected string loggingConfigSection;
 
-		protected bool useBrowserLink;
+		protected bool useHttps;
 
-		protected bool useHTTPS;
-
-		protected bool useIdentity;
-
-		protected bool useLogging;
-
-		protected bool usePrerender;
-
-		protected bool useSession;
-
-		protected bool useWWW;
+		protected bool useWww;
 		#endregion
 
 		#region Constructors
-		public FathymCoreBuilderPipeline(IApplicationBuilder app)
+		public FathymCoreBuilderPipeline(IApplicationBuilder app, IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
 			this.app = app;
 
-			appActions = new List<Action>();
+			this.config = config;
+
+			this.env = env;
+
+			this.loggerFactory = loggerFactory;
 		}
 		#endregion
 
 		#region API Methods
 		public virtual ICoreBuilderPipeline BrowerLink()
 		{
-			useBrowserLink = true;
+			addAction(buildBrowserLink);
 
 			return this;
 		}
 
-		public virtual void Build(IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		public virtual void Build()
 		{
-			if (useBrowserLink)
-				buildBrowserLink(config, env);
-
-			if (!exceptionHandlingPage.IsNullOrEmpty())
-				buildExceptionHandling(config, env);
-
-			if (useIdentity)
-				buildIdentity(config, env);
-
-			if (useLogging)
-				buildLogging(config, env, loggerFactory);
-
-			if (usePrerender)
-				buildPrerender(config, env);
-
-			if (useHTTPS || useWWW)
-				buildRewrite(config, env);
-
-			if (useSession)
-				buildSession(config, env);
+			runActions();
 		}
 
 		public virtual ICoreBuilderPipeline ExceptionHandling(string errorPage)
 		{
 			exceptionHandlingPage = errorPage;
 
-			return this;
-		}
-
-		public virtual ICoreBuilderPipeline HTTPS()
-		{
-			useHTTPS = true;
+			addAction(buildExceptionHandling);
 
 			return this;
 		}
 
 		public virtual ICoreBuilderPipeline Identity()
 		{
-			useIdentity = true;
+			addAction(buildIdentity);
 
 			return this;
 		}
 
 		public virtual ICoreBuilderPipeline Logging(string configSection = null)
 		{
-			useLogging = true;
-
 			loggingConfigSection = configSection;
+
+			addAction(buildLogging);
 
 			return this;
 		}
 
 		public virtual ICoreBuilderPipeline Prerender()
 		{
-			usePrerender = true;
+			addAction(buildPrerender);
+
+			return this;
+		}
+
+		public virtual ICoreBuilderPipeline Rewrite(bool useHttps = false, bool useWww = false)
+		{
+			this.useHttps = useHttps;
+
+			this.useWww = useWww;
+
+			if (useHttps || useWww)
+				addAction(buildRewrite);
 
 			return this;
 		}
 
 		public virtual ICoreBuilderPipeline Session()
 		{
-			useSession = true;
-
-			return this;
-		}
-
-		public virtual ICoreBuilderPipeline WWW()
-		{
-			useWWW = true;
+			addAction(buildSession);
 
 			return this;
 		}
 
 		public virtual ICoreBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			appActions.Add(action(app));
+			addAction(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
-		{
-			appActions.ForEach(action => action());
-
-			appActions.Clear();
-		}
-
-		protected virtual void buildBrowserLink(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildBrowserLink()
 		{
 			if (env.IsDevelopment())
 				app.UseBrowserLink();
 		}
 
-		protected virtual void buildExceptionHandling(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildExceptionHandling()
 		{
 			if (env.IsDevelopment())
 				app.UseDeveloperExceptionPage();
-			else
+			else if (!exceptionHandlingPage.IsNullOrEmpty())
 				app.UseExceptionHandler(exceptionHandlingPage);
 		}
 
-		protected virtual void buildIdentity(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildIdentity()
 		{
 			app.UseAuthentication();
 		}
 
-		protected virtual void buildLogging(IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		protected virtual void buildLogging()
 		{
 			if (!loggingConfigSection.IsNullOrEmpty())
 			{
@@ -220,29 +205,29 @@ namespace Fathym.Presentation.MVC.Fluent
 			loggerFactory.AddDebug();
 		}
 
-		protected virtual void buildPrerender(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildPrerender()
 		{
 			if (!env.IsDevelopment())
 				app.UsePrerender();
 		}
 
-		protected virtual void buildRewrite(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildRewrite()
 		{
 			var options = new RewriteOptions();
 
 			if (!env.IsDevelopment())
 			{
-				if (useWWW)
+				if (useWww)
 					options = options.Add(new RedirectWWWRule());
 
-				if (useHTTPS)
+				if (useHttps)
 					options = options.AddRedirectToHttps();
 			}
 
 			app.UseRewriter(options);
 		}
 
-		protected virtual void buildSession(IConfigurationRoot config, IHostingEnvironment env)
+		protected virtual void buildSession()
 		{
 			app.UseSession();
 		}
@@ -255,29 +240,25 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline ExceptionHandling(string errorPage);
 
-		ICoreBuilderPipeline HTTPS();
-
 		ICoreBuilderPipeline Logging(string configSection = null);
 
 		ICoreBuilderPipeline Prerender();
 
-		ICoreBuilderPipeline Session();
+		ICoreBuilderPipeline Rewrite(bool useHttps = false, bool useWww = false);
 
-		ICoreBuilderPipeline WWW();
+		ICoreBuilderPipeline Session();
 
 		ICoreBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build(IConfigurationRoot config, IHostingEnvironment env, ILoggerFactory loggerFactory);
+		void Build();
 	}
 	#endregion
 
 	#region Proxy
-	public class FathymProxyBuilderPipeline : IProxyBuilderPipeline
+	public class FathymProxyBuilderPipeline : BaseOrderedPipeline, IProxyBuilderPipeline
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
-
-		protected List<Action> appActions;
 
 		protected IDictionary<string, IQueryParamProcessor> queryParamProcessors;
 		#endregion
@@ -299,30 +280,28 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual void Build(IConfigurationRoot config)
+		public virtual void Build()
 		{
-			if (!queryParamProcessors.IsNullOrEmpty())
-				buildQueryParamProcessors(config);
+			runActions();
 		}
 
+		public virtual IProxyBuilderPipeline Proxy()
+		{
+			addAction(buildProxy);
+
+			return this;
+		}
 
 		public virtual IProxyBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			appActions.Add(action(app));
+			addAction(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
-		{
-			appActions.ForEach(action => action());
-
-			appActions.Clear();
-		}
-
-		protected virtual void buildQueryParamProcessors(IConfigurationRoot config)
+		protected virtual void buildProxy()
 		{
 			app.UseProxy(queryParamProcessors);
 		}
@@ -333,29 +312,25 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		IProxyBuilderPipeline AddQueryParamProcessor(string name, IQueryParamProcessor queryParamProcessor);
 
+		IProxyBuilderPipeline Proxy();
+
 		IProxyBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build(IConfigurationRoot config);
+		void Build();
 	}
 	#endregion
 
 	#region View
-	public class FathymViewBuilderPipeline : IViewBuilderPipeline
+	public class FathymViewBuilderPipeline : BaseOrderedPipeline, IViewBuilderPipeline
 	{
 		#region Fields
 		protected readonly IApplicationBuilder app;
-
-		protected List<Action> appActions;
 
 		protected Action<IRouteBuilder> mvcConfigureRoutes;
 
 		protected bool mvcUseDefaultRoutes;
 
 		protected StaticFileOptions staticFileOptions;
-
-		protected bool useCompression;
-
-		protected bool useMVC;
 		#endregion
 
 		#region Constructors
@@ -366,32 +341,25 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region API Methods
-		public virtual void Build(IConfigurationRoot config)
+		public virtual void Build()
 		{
-			if (staticFileOptions != null)
-				buildStaticFiles(config);
-
-			if (useMVC)
-				buildMVC(config);
-
-			if (useCompression)
-				buildCompression(config);
+			runActions();
 		}
 
 		public virtual IViewBuilderPipeline Compression()
 		{
-			useCompression = true;
+			addAction(buildCompression);
 
 			return this;
 		}
 
 		public virtual IViewBuilderPipeline MVC(Action<IRouteBuilder> configureRoutes = null, bool useDefaultRoutes = false)
 		{
-			useMVC = true;
-
 			mvcConfigureRoutes = configureRoutes;
 
 			mvcUseDefaultRoutes = useDefaultRoutes;
+
+			addAction(buildMVC);
 
 			return this;
 		}
@@ -400,32 +368,26 @@ namespace Fathym.Presentation.MVC.Fluent
 		{
 			staticFileOptions = options;
 
+			addAction(buildStaticFiles);
+
 			return this;
 		}
 
-
 		public virtual IViewBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action)
 		{
-			appActions.Add(action(app));
+			addAction(action(app));
 
 			return this;
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual void buildActions(IConfigurationRoot config, IHostingEnvironment env)
-		{
-			appActions.ForEach(action => action());
-
-			appActions.Clear();
-		}
-
-		protected virtual void buildCompression(IConfigurationRoot config)
+		protected virtual void buildCompression()
 		{
 			app.UseResponseCompression();
 		}
 
-		protected virtual void buildMVC(IConfigurationRoot config)
+		protected virtual void buildMVC()
 		{
 			if (mvcConfigureRoutes != null)
 				app.UseMvc(mvcConfigureRoutes);
@@ -435,9 +397,12 @@ namespace Fathym.Presentation.MVC.Fluent
 				app.UseMvc();
 		}
 
-		protected virtual void buildStaticFiles(IConfigurationRoot config)
+		protected virtual void buildStaticFiles()
 		{
-			app.UseStaticFiles(staticFileOptions);
+			if (staticFileOptions != null)
+				app.UseStaticFiles(staticFileOptions);
+			else
+				app.UseStaticFiles();
 		}
 		#endregion
 	}
@@ -452,7 +417,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build(IConfigurationRoot config);
+		void Build();
 	}
 	#endregion
 }

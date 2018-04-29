@@ -52,7 +52,7 @@ namespace Fathym.Presentation.MVC
 
 		public virtual void Configure(IApplicationBuilder app)
 		{
-			buildPipeline(pipeline.Build(app));
+			buildPipeline(pipeline.Build(app, config));
 		}
 		#endregion
 
@@ -78,11 +78,10 @@ namespace Fathym.Presentation.MVC
 				.Logging("Logging")
 				.BrowerLink()
 				.ExceptionHandling(null)
-				.WWW()
-				//.HTTPS()
+				.Rewrite(useWww: true/*, useHttps: true*/)
 				.Prerender()
 				.Session()
-				.Build(config, env, loggerFactory);
+				.Build();
 		}
 
 		protected virtual void setupProxyBuilder(IProxyBuilderPipeline pipeline)
@@ -90,7 +89,8 @@ namespace Fathym.Presentation.MVC
 			pipeline
 				.AddQueryParamProcessor("Username", new UsernameQueryParamProcessor(new List<string>() { "username" }))
 				.AddQueryParamProcessor("ClientIP", new ClientIPQueryParamProcessor(new List<string>() { "client-ip" }))
-				.Build(config);
+				.Proxy()
+				.Build();
 		}
 
 		protected virtual void setupViewBuilder(IViewBuilderPipeline pipeline)
@@ -99,7 +99,7 @@ namespace Fathym.Presentation.MVC
 				.StaticFiles(loadStaticFileOptions())
 				.MVC(configureRoutes: registerDefaultRoutes)
 				.Compression()
-				.Build(config);
+				.Build();
 		}
 
 		protected virtual IDictionary<string, string> loadFileExtensionContentTypes()
