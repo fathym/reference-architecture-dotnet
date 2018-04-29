@@ -36,7 +36,7 @@ namespace Fathym.Presentation.Proxy
 				proxyContext.Proxy.Connection.Application != fabricContext.ApplicationName);
 		}
 
-		protected override Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions, out string query)
+		protected override Task<string> resolveProxyPath(HttpContext context, out string query)
 		{
 			var uri = new Uri(UriHelper.BuildAbsolute("http", new HostString("xxx", 80), path: context.Request.Path, query: context.Request.QueryString));
 

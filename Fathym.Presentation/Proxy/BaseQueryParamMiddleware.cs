@@ -25,40 +25,42 @@ namespace Fathym.Presentation.Proxy
 		#region API Methods
 		public virtual async Task Process(HttpContext context)
 		{
-			var proxyContext = context.ResolveContext<ProxyContext>(ProxyContext.Lookup);
+			await context.HandleContext<ProxyContext>(ProxyContext.Lookup, 
+				async (proxyContext) =>
+				{
+					if (proxyContext == null || proxyContext.Proxy == null)
+						throw new ArgumentException("The proxy context must be set prior to query param processing");
 
-			if (proxyContext == null || proxyContext.Proxy == null)
-				throw new ArgumentException("The proxy context must be set prior to query param processing");
+					if (proxyContext.Proxy.Query.IsNullOrEmpty())
+						proxyContext.Proxy.Query = "";
 
-			if (proxyContext.Proxy.Query.IsNullOrEmpty())
-				return;
+					var query = QueryHelpers.ParseQuery(proxyContext.Proxy.Query).ToDictionary(v => v.Key, v => v.Value.ToString());
 
-			var query = QueryHelpers.ParseQuery(proxyContext.Proxy.Query).ToDictionary(v => v.Key, v => v.Value.ToString());
+					if (!shouldRemove(context))
+					{
+						var queryValues = queryValueLoader(context);
 
-			if (!shouldRemove(context))
-			{
-				var queryValues = queryValueLoader(context);
+						if (queryValues.Length != QueryParameters.Count)
+							throw new ArgumentException("The number of query values must match the number of query parameters passed in the constructor.");
 
-				if (queryValues.Length != QueryParameters.Count)
-					throw new ArgumentException("The number of query values must match the number of query parameters passed in the constructor.");
+						for (var i = 0; i < queryValues.Length; i++)
+							query[QueryParameters[i]] = queryValues[i];
+					}
+					else
+					{
+						QueryParameters.ForEach(qp => query.Remove(qp));
+					}
 
-				for (var i = 0; i < queryValues.Length; i++)
-					query[QueryParameters[i]] = queryValues[i];
-			}
-			else
-			{
-				QueryParameters.ForEach(qp => query.Remove(qp));
-			}
+					var uriBldr = new UriBuilder();
+					uriBldr.Host = proxyContext.Proxy.Host ?? "xxx";
+					uriBldr.Path = proxyContext.Proxy.Path;
 
-			var uriBldr = new UriBuilder();
-			uriBldr.Host = proxyContext.Proxy.Host ?? "xxx";
-			uriBldr.Path = proxyContext.Proxy.Path;
+					var currentUri = uriBldr.ToString();
 
-			var currentUri = uriBldr.ToString();
+					var newUri = new Uri(QueryHelpers.AddQueryString(currentUri, query));
 
-			var newUri = new Uri(QueryHelpers.AddQueryString(currentUri, query));
-
-			proxyContext.Proxy.Query = newUri.Query;
+					proxyContext.Proxy.Query = newUri.Query;
+				});
 		}
 		#endregion
 

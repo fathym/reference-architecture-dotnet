@@ -33,20 +33,17 @@ namespace Fathym.Presentation.Proxy
 		#region API Methods
 		public virtual async Task<Status> Proxy(HttpContext context, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 		{
+			var proxyContext = context.ResolveContext<ProxyContext>(ProxyContext.Lookup);
+
+			if (!isValidProxyContext(proxyContext))
+				return null;
+
+			await finalizeProxyContext(context, queryParamProcessors);
+
 			var proxyOptions = resolveProxyOptions(context);
 
 			if (proxyOptions != null)
 			{
-				if (proxyOptions.Proxy.Path.IsNullOrEmpty())
-				{
-					string query;
-					proxyOptions.Proxy.Path = await resolveProxyPath(context, proxyOptions, out query);
-
-					proxyOptions.Proxy.Query = query;
-
-					await processQueryParams(context, proxyOptions.Proxy, queryParamProcessors);
-				}
-
 				var reqHndlr = resolveProxyRequestHandler(context, proxyOptions);
 
 				if (reqHndlr != null)
@@ -59,6 +56,23 @@ namespace Fathym.Presentation.Proxy
 			else
 				return Status.GeneralError.Clone("Proxy options not located.");
 		}
+
+		protected virtual async Task finalizeProxyContext(HttpContext context, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
+		{
+			await context.HandleContext<ProxyContext>(ProxyContext.Lookup,
+				async (proxyContext) =>
+				{
+					if (proxyContext.Proxy.Path.IsNullOrEmpty())
+					{
+						string query;
+						proxyContext.Proxy.Path = await resolveProxyPath(context, out query);
+
+						proxyContext.Proxy.Query = query;
+					}
+				});
+
+			await processQueryParams(context, queryParamProcessors);
+		}
 		#endregion
 
 		#region Helpers
@@ -68,25 +82,25 @@ namespace Fathym.Presentation.Proxy
 				!proxyContext.Proxy.Connection.Application.IsNullOrEmpty() && !proxyContext.Proxy.Connection.Service.IsNullOrEmpty();
 		}
 
-		protected virtual async Task processQueryParams(HttpContext context, ProxySetup setup, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
+		protected virtual async Task processQueryParams(HttpContext context, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 		{
-			if (queryParamProcessors.IsNullOrEmpty() || setup.QueryParamProcessors.IsNullOrEmpty())
+			var proxyContext = context.ResolveContext<ProxyContext>(ProxyContext.Lookup);
+
+			if (queryParamProcessors.IsNullOrEmpty() || proxyContext == null || proxyContext.Proxy == null ||
+				proxyContext.Proxy.QueryParamProcessors.IsNullOrEmpty())
 				return;
 
 			foreach (var qpp in queryParamProcessors)
 			{
-				if (setup.QueryParamProcessors.Contains(qpp.Key))
+				if (proxyContext.Proxy.QueryParamProcessors.Contains(qpp.Key))
 					await qpp.Value.Process(context);
 			}
 		}
 
-		protected abstract Task<string> resolveProxyPath(HttpContext context, ProxyOptions proxyOptions, out string query);
+		protected abstract Task<string> resolveProxyPath(HttpContext context, out string query);
 
 		protected virtual ProxyOptions resolveProxyContextToOptions(ProxyContext proxyContext)
 		{
-			if (!isValidProxyContext(proxyContext))
-				return null;
-
 			var proxyOptions = new ProxyOptions()
 			{
 				Proxy = proxyContext.Proxy

@@ -34,6 +34,8 @@ namespace Fathym.RefArch.Web
 							Application = "Fathym.RefArch.Fabric",
 							Service = "Fathym.RefArch.Web.API"
 						};
+
+						proxyContext.Proxy.QueryParamProcessors = new List<string>() { "Username", "ClientIP" };
 					},
 					create: async () => new ProxyContext() { Proxy = new ProxySetup() });
 
