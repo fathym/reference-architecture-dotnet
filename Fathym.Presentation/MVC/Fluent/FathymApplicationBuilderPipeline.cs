@@ -367,6 +367,13 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
+		public virtual IViewBuilderPipeline Identity()
+		{
+			addAction(buildIdentity);
+
+			return this;
+		}
+
 		public virtual IViewBuilderPipeline MVC(Action<IRouteBuilder> configureRoutes = null, bool useDefaultRoutes = false)
 		{
 			mvcConfigureRoutes = configureRoutes;
@@ -399,6 +406,11 @@ namespace Fathym.Presentation.MVC.Fluent
 		protected virtual void buildCompression()
 		{
 			app.UseResponseCompression();
+		}
+
+		protected virtual void buildIdentity()
+		{
+			app.UseAuthentication();
 		}
 
 		protected virtual void buildMVC()
