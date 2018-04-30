@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -196,6 +197,8 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		protected List<Assembly> mvcPartAssemblies;
 
+		protected bool mvcDefaultContractResolver;
+
 		protected Type proxyServiceType;
 
 		protected readonly IServiceCollection services;
@@ -233,11 +236,13 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual IViewServicesPipeline MVC(List<Assembly> assemblies = null)
+		public virtual IViewServicesPipeline MVC(List<Assembly> assemblies = null, bool defaultContractResolver = true)
 		{
 			useMvc = true;
 
 			mvcPartAssemblies = assemblies;
+
+			mvcDefaultContractResolver = defaultContractResolver;
 
 			return this;
 		}
@@ -298,6 +303,9 @@ namespace Fathym.Presentation.MVC.Fluent
 		{
 			var mvcBuilder = services.AddMvc();
 
+			if (mvcDefaultContractResolver)
+				mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
 			mvcPartAssemblies.ForEach(assembly => mvcBuilder.AddApplicationPart(assembly));
 		}
 
@@ -316,7 +324,7 @@ namespace Fathym.Presentation.MVC.Fluent
 			where TRoleStore : class
 			where TUserStore : class;
 
-		IViewServicesPipeline MVC(List<Assembly> assemblies = null);
+		IViewServicesPipeline MVC(List<Assembly> assemblies = null, bool defaultContractResolver = true);
 
 		IViewServicesPipeline Proxy<TProxyService>() where TProxyService : class, IProxyService;
 

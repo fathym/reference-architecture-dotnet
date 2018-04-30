@@ -130,7 +130,7 @@ namespace Fathym.Fabric.Runtime.Adapters
 			return DesignOutline.Instance.Chain<Func<Func<HttpClient, Task>, Task>>()
 				.AddResponsibilities(
 					() => loadFabricClientHandler(application, service))
-				//() => loadDirectClientHandler(proxyContext))
+					//() => loadDirectClientHandler(proxyContext))
 				.Run().Result;
 		}
 
