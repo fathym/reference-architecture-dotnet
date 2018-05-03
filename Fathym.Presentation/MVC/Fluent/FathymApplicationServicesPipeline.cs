@@ -1,10 +1,12 @@
 ﻿using Fathym.Presentation.Proxy;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,8 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		#region Fields
 		protected Action<ResponseCompressionOptions> compressionConfigure;
+
+		protected string dataProtectionBlobConfig;
 
 		protected string dataProtectionConnectionConfig;
 
@@ -96,8 +100,10 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual ICoreServicesPipeline DataProtection(string connectionConfig, string containerConfig)
+		public virtual ICoreServicesPipeline DataProtection(string connectionConfig, string containerConfig, string blobConfig)
 		{
+			dataProtectionBlobConfig = blobConfig;
+
 			dataProtectionConnectionConfig = connectionConfig;
 
 			dataProtectionContainerConfig = containerConfig;
@@ -156,9 +162,19 @@ namespace Fathym.Presentation.MVC.Fluent
 		{
 			var connStr = config.GetSection(dataProtectionConnectionConfig).Value;
 
-			var cont = config.GetSection(dataProtectionContainerConfig).Value;
+			var contName = config.GetSection(dataProtectionContainerConfig).Value;
 
-			services.AddDataProtection().PersistKeysToAzureStorage(connStr, cont);
+			var blobName = config.GetSection(dataProtectionBlobConfig).Value;
+
+			var account = CloudStorageAccount.Parse(connStr);
+
+			var blobClient = account.CreateCloudBlobClient();
+
+			var container = blobClient.GetContainerReference(contName.ToLower());
+
+			container.CreateIfNotExistsAsync();
+
+			services.AddDataProtection().PersistKeysToAzureBlobStorage(container, blobName);
 			//	TODO:  Anyway to support this by pulling the connnection and container in real time based on enterprise/application context... instead of hard coded to node deploy
 		}
 
@@ -177,7 +193,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreServicesPipeline Compression(Action<ResponseCompressionOptions> configureOptions = null);
 
-		ICoreServicesPipeline DataProtection(string connectionConfig, string containerConfig);
+		ICoreServicesPipeline DataProtection(string connectionConfig, string containerConfig, string blobConfig);
 
 		ICoreServicesPipeline Sessions(Action<SessionOptions> sessionConfigure);
 

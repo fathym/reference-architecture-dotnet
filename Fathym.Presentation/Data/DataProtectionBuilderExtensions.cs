@@ -12,33 +12,33 @@ namespace Fathym.Presentation
 {
 	public static class DataProtectionBuilderExtensions
 	{
-		public static IDataProtectionBuilder PersistKeysToAzureStorage(this IDataProtectionBuilder builder, string connectionString,
-			string containerName)
-		{
-			if (connectionString.IsNullOrEmpty())
-				throw new ArgumentNullException(nameof(connectionString));
+		//public static IDataProtectionBuilder PersistKeysToAzureStorage(this IDataProtectionBuilder builder, string connectionString,
+		//	string containerName)
+		//{
+		//	if (connectionString.IsNullOrEmpty())
+		//		throw new ArgumentNullException(nameof(connectionString));
 
-			builder.Use(ServiceDescriptor.Singleton<IXmlRepository>(
-				(services) =>
-				{
-					return new AzureStorageXmlRepository(connectionString, containerName);
-				}));
+		//	builder.Use(ServiceDescriptor.Singleton<IXmlRepository>(
+		//		(services) =>
+		//		{
+		//			return new AzureStorageXmlRepository(connectionString, containerName);
+		//		}));
 
-			return builder;
-		}
+		//	return builder;
+		//}
 
-		public static IDataProtectionBuilder Use(this IDataProtectionBuilder builder, ServiceDescriptor descriptor)
-		{
-			for (int i = builder.Services.Count - 1; i >= 0; i--)
-			{
-				if (builder.Services[i]?.ServiceType == descriptor.ServiceType)
-				{
-					builder.Services.RemoveAt(i);
-				}
-			}
+		//public static IDataProtectionBuilder Use(this IDataProtectionBuilder builder, ServiceDescriptor descriptor)
+		//{
+		//	for (int i = builder.Services.Count - 1; i >= 0; i--)
+		//	{
+		//		if (builder.Services[i]?.ServiceType == descriptor.ServiceType)
+		//		{
+		//			builder.Services.RemoveAt(i);
+		//		}
+		//	}
 
-			builder.Services.Add(descriptor);
-			return builder;
-		}
+		//	builder.Services.Add(descriptor);
+		//	return builder;
+		//}
 	}
 }

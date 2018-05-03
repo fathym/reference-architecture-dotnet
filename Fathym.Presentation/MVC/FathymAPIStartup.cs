@@ -33,10 +33,12 @@ namespace Fathym.Presentation.MVC
 
 			var dpContConfig = loadDataProtectionContainerConfig();
 
+			var dpBlobConfig = loadDataProtectionBlobConfig();
+
 			pipeline
 				.Config()
 				.Caching()
-				.DataProtection(dpConnConfig, dpContConfig)
+				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
 				.Set(config);
 		}

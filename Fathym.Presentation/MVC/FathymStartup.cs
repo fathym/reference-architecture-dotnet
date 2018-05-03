@@ -168,11 +168,13 @@ namespace Fathym.Presentation.MVC
 
 			var dpContConfig = loadDataProtectionContainerConfig();
 
+			var dpBlobConfig = loadDataProtectionBlobConfig();
+
 			pipeline
 				.Config()
 				.Caching()
 				.Compression()
-				.DataProtection(dpConnConfig, dpContConfig)
+				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
 				.Set(config);
 		}
@@ -193,6 +195,11 @@ namespace Fathym.Presentation.MVC
 			options.IdleTimeout = TimeSpan.FromMinutes(30);
 
 			options.Cookie.Name = $"{GetType().FullName}.Session";
+		}
+
+		protected virtual string loadDataProtectionBlobConfig()
+		{
+			return "Data:Protection:Blob";
 		}
 
 		protected virtual string loadDataProtectionConnectionConfig()
