@@ -175,7 +175,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			var container = blobClient.GetContainerReference(contName.ToLower());
 
-			container.CreateIfNotExistsAsync();
+			container.CreateIfNotExistsAsync().Result.ToString();
 
 			services.AddDataProtection().PersistKeysToAzureBlobStorage(container, blobName);
 			//	TODO:  Anyway to support this by pulling the connnection and container in real time based on enterprise/application context... instead of hard coded to node deploy
