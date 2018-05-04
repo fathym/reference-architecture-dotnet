@@ -1,4 +1,5 @@
-﻿using Fathym.Presentation.Proxy;
+﻿using Fathym.Presentation.Fluent;
+using Fathym.Presentation.Proxy;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -18,24 +19,28 @@ namespace Fathym.Presentation.MVC.Fluent
 	public class FathymApplicationServicesPipeline : IApplicationServicesPipeline
 	{
 		#region Fields
+		protected IConfigurationRoot config;
+
 		protected readonly IServiceCollection services;
 		#endregion
 
 		#region Constructors
-		public FathymApplicationServicesPipeline(IServiceCollection services)
+		public FathymApplicationServicesPipeline(IServiceCollection services, IConfigurationRoot config)
 		{
+			this.config = config;
+
 			this.services = services;
 		}
 		#endregion
 
 		public ICoreServicesPipeline Core()
 		{
-			return new FathymCoreServicesPipeline(services);
+			return new FathymCoreServicesPipeline(services, config);
 		}
 
 		public IViewServicesPipeline View()
 		{
-			return new FathymViewServicesPipeline(services);
+			return new FathymViewServicesPipeline(services, config);
 		}
 	}
 
@@ -47,10 +52,12 @@ namespace Fathym.Presentation.MVC.Fluent
 	}
 
 	#region Core
-	public class FathymCoreServicesPipeline : ICoreServicesPipeline
+	public class FathymCoreServicesPipeline : BaseOrderedPipeline, ICoreServicesPipeline
 	{
 		#region Fields
 		protected Action<ResponseCompressionOptions> compressionConfigure;
+
+		protected IConfigurationRoot config;
 
 		protected string dataProtectionBlobConfig;
 
@@ -61,17 +68,13 @@ namespace Fathym.Presentation.MVC.Fluent
 		protected readonly IServiceCollection services;
 
 		protected Action<SessionOptions> sessionConfigure;
-
-		protected bool useCaching;
-
-		protected bool useCompression;
-
-		protected bool useConfig;
 		#endregion
 
 		#region Constructors
-		public FathymCoreServicesPipeline(IServiceCollection services)
+		public FathymCoreServicesPipeline(IServiceCollection services, IConfigurationRoot config)
 		{
+			this.config = config;
+
 			this.services = services;
 		}
 		#endregion
@@ -79,23 +82,23 @@ namespace Fathym.Presentation.MVC.Fluent
 		#region API Methods
 		public virtual ICoreServicesPipeline Caching()
 		{
-			useCaching = true;
+			addAction(setCaching);
 
 			return this;
 		}
 
 		public virtual ICoreServicesPipeline Compression(Action<ResponseCompressionOptions> configure = null)
 		{
-			useCompression = true;
-
 			compressionConfigure = configure;
+
+			addAction(setCompression);
 
 			return this;
 		}
 
 		public virtual ICoreServicesPipeline Config()
 		{
-			useConfig = true;
+			addAction(setConfig);
 
 			return this;
 		}
@@ -108,6 +111,10 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			dataProtectionContainerConfig = containerConfig;
 
+			if (!dataProtectionConnectionConfig.IsNullOrEmpty() && !dataProtectionContainerConfig.IsNullOrEmpty() &&
+				!dataProtectionBlobConfig.IsNullOrEmpty())
+				addAction(setDataProtection);
+
 			return this;
 		}
 
@@ -115,35 +122,31 @@ namespace Fathym.Presentation.MVC.Fluent
 		{
 			sessionConfigure = configure;
 
+			addAction(setSession);
+
 			return this;
 		}
 
-		public virtual void Set(IConfigurationRoot config)
+		public virtual ICoreServicesPipeline WithServices(Func<IServiceCollection, Action> action)
 		{
-			if (useCaching)
-				setCaching(config);
+			addAction(action(services));
 
-			if (useCompression)
-				setCompression(config);
+			return this;
+		}
 
-			if (useConfig)
-				setConfig(config);
-
-			if (!dataProtectionConnectionConfig.IsNullOrEmpty() && !dataProtectionContainerConfig.IsNullOrEmpty())
-				setDataProtection(config);
-
-			if (sessionConfigure != null)
-				setSession(config);
+		public virtual void Set()
+		{
+			runActions();
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual void setCaching(IConfigurationRoot config)
+		protected virtual void setCaching()
 		{
 			services.AddMemoryCache();
 		}
 
-		protected virtual void setCompression(IConfigurationRoot config)
+		protected virtual void setCompression()
 		{
 			if (compressionConfigure != null)
 				services.AddResponseCompression(compressionConfigure);
@@ -151,14 +154,14 @@ namespace Fathym.Presentation.MVC.Fluent
 				services.AddResponseCompression();
 		}
 
-		protected virtual void setConfig(IConfigurationRoot config)
+		protected virtual void setConfig()
 		{
 			services.AddSingleton(config);
 
 			services.AddOptions();
 		}
 
-		protected virtual void setDataProtection(IConfigurationRoot config)
+		protected virtual void setDataProtection()
 		{
 			var connStr = config.GetSection(dataProtectionConnectionConfig).Value;
 
@@ -178,9 +181,12 @@ namespace Fathym.Presentation.MVC.Fluent
 			//	TODO:  Anyway to support this by pulling the connnection and container in real time based on enterprise/application context... instead of hard coded to node deploy
 		}
 
-		protected virtual void setSession(IConfigurationRoot config)
+		protected virtual void setSession()
 		{
-			services.AddSession(sessionConfigure);
+			if (sessionConfigure == null)
+				services.AddSession();
+			else
+				services.AddSession(sessionConfigure);
 		}
 		#endregion
 	}
@@ -197,14 +203,18 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreServicesPipeline Sessions(Action<SessionOptions> sessionConfigure);
 
-		void Set(IConfigurationRoot config);
+		ICoreServicesPipeline WithServices(Func<IServiceCollection, Action> action);
+
+		void Set();
 	}
 	#endregion
 
 	#region View
-	public class FathymViewServicesPipeline : IViewServicesPipeline
+	public class FathymViewServicesPipeline : BaseOrderedPipeline, IViewServicesPipeline
 	{
 		#region Fields
+		protected IConfigurationRoot config;
+
 		protected Action<CookieAuthenticationOptions> identityConfigureCookie;
 
 		protected Action<IdentityOptions> identityConfigureOptions;
@@ -218,13 +228,13 @@ namespace Fathym.Presentation.MVC.Fluent
 		protected Type proxyServiceType;
 
 		protected readonly IServiceCollection services;
-
-		protected bool useMvc;
 		#endregion
 
 		#region Constructors
-		public FathymViewServicesPipeline(IServiceCollection services)
+		public FathymViewServicesPipeline(IServiceCollection services, IConfigurationRoot config)
 		{
+			this.config = config;
+
 			this.services = services;
 		}
 		#endregion
@@ -249,16 +259,19 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			identityConfigureOptions = configureOptions;
 
+			if (identityStoreSetup != null)
+				addAction(setIdentity);
+
 			return this;
 		}
 
 		public virtual IViewServicesPipeline MVC(List<Assembly> assemblies = null, bool defaultContractResolver = true)
 		{
-			useMvc = true;
-
 			mvcPartAssemblies = assemblies;
 
 			mvcDefaultContractResolver = defaultContractResolver;
+
+			addAction(setMVC);
 
 			return this;
 		}
@@ -268,24 +281,26 @@ namespace Fathym.Presentation.MVC.Fluent
 		{
 			proxyServiceType = typeof(TProxyService);
 
+			addAction(setProxy);
+
 			return this;
 		}
 
-		public virtual void Set(IConfigurationRoot config)
+		public virtual IViewServicesPipeline WithServices(Func<IServiceCollection, Action> action)
 		{
-			if (identityStoreSetup != null)
-				setIdentity(config);
+			addAction(action(services));
 
-			if (useMvc)
-				setMVC(config);
+			return this;
+		}
 
-			if (proxyServiceType != null)
-				setProxy(config);
+		public virtual void Set()
+		{
+			runActions();
 		}
 		#endregion
 
 		#region Helpers
-		protected virtual void setIdentity(IConfigurationRoot config)
+		protected virtual void setIdentity()
 		{
 			identityStoreSetup();
 
@@ -315,7 +330,7 @@ namespace Fathym.Presentation.MVC.Fluent
 				services.ConfigureApplicationCookie(identityConfigureCookie);
 		}
 
-		protected virtual void setMVC(IConfigurationRoot config)
+		protected virtual void setMVC()
 		{
 			var mvcBuilder = services.AddMvc();
 
@@ -325,7 +340,7 @@ namespace Fathym.Presentation.MVC.Fluent
 			mvcPartAssemblies.ForEach(assembly => mvcBuilder.AddApplicationPart(assembly));
 		}
 
-		protected virtual void setProxy(IConfigurationRoot config)
+		protected virtual void setProxy()
 		{
 			services.AddTransient(typeof(IProxyService), proxyServiceType);
 		}
@@ -344,7 +359,9 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewServicesPipeline Proxy<TProxyService>() where TProxyService : class, IProxyService;
 
-		void Set(IConfigurationRoot config);
+		IViewServicesPipeline WithServices(Func<IServiceCollection, Action> action);
+
+		void Set();
 	}
 	#endregion
 }
