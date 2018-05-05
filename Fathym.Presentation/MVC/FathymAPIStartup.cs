@@ -40,7 +40,7 @@ namespace Fathym.Presentation.MVC
 				.Caching()
 				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
-				.Set(config);
+				.Set();
 		}
 
 		protected override void setupProxyBuilder(IProxyBuilderPipeline pipeline)
@@ -60,7 +60,7 @@ namespace Fathym.Presentation.MVC
 				{
 					Assembly.GetEntryAssembly()
 				})
-				.Set(config);
+				.Set();
 		}
 		#endregion
 	}

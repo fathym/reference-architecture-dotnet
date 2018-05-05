@@ -55,9 +55,9 @@ namespace Fathym.Presentation.MVC.Fluent
 			return new FathymApplicationBuilderPipeline(app, config, env, loggerFactory);
 		}
 
-		public IApplicationServicesPipeline Services(IServiceCollection services)
+		public IApplicationServicesPipeline Services(IServiceCollection services, IConfigurationRoot config)
 		{
-			return new FathymApplicationServicesPipeline(services);
+			return new FathymApplicationServicesPipeline(services, config);
 		}
 
 		public IApplicationStartupPipeline Startup()
@@ -75,7 +75,7 @@ namespace Fathym.Presentation.MVC.Fluent
 	{
 		IApplicationBuilderPipeline Build(IApplicationBuilder app, IConfigurationRoot config);
 
-		IApplicationServicesPipeline Services(IServiceCollection services);
+		IApplicationServicesPipeline Services(IServiceCollection services, IConfigurationRoot config);
 
 		IApplicationStartupPipeline Startup();
 	}

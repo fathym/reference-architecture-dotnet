@@ -47,7 +47,7 @@ namespace Fathym.Presentation.MVC
 		#region API Methods
 		public virtual void ConfigureServices(IServiceCollection services)
 		{
-			servicesPipeline(pipeline.Services(services));
+			servicesPipeline(pipeline.Services(services, config));
 		}
 
 		public virtual void Configure(IApplicationBuilder app)
@@ -176,7 +176,7 @@ namespace Fathym.Presentation.MVC
 				.Compression()
 				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
-				.Set(config);
+				.Set();
 		}
 
 		protected virtual void setupViewServices(IViewServicesPipeline pipeline)
@@ -187,7 +187,7 @@ namespace Fathym.Presentation.MVC
 					Assembly.GetEntryAssembly()
 				})
 				.Proxy<FabricProxyService>()
-				.Set(config);
+				.Set();
 		}
 
 		protected virtual void configureSessionOptions(SessionOptions options)
