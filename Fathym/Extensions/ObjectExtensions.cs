@@ -120,6 +120,10 @@ namespace System
 			else
 				token.Replace(JToken.FromObject(newValue));
 		}
+		public static void FireAndForget(this Task task)
+		{
+			Task.Run(async () => await task).ConfigureAwait(false);
+		}
 
 		public static bool IsEmpty(this Guid value)
 		{
