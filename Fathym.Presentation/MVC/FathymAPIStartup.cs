@@ -27,21 +27,23 @@ namespace Fathym.Presentation.MVC
 				.Build();
 		}
 
-		protected override void setupCoreServices(ICoreServicesPipeline pipeline)
-		{
-			var dpConnConfig = loadDataProtectionConnectionConfig();
+		//protected override void setupCoreServices(ICoreServicesPipeline pipeline)
+		//{
+		//	var dpConnConfig = loadDataProtectionConnectionConfig();
 
-			var dpContConfig = loadDataProtectionContainerConfig();
+		//	var dpContConfig = loadDataProtectionContainerConfig();
 
-			var dpBlobConfig = loadDataProtectionBlobConfig();
+		//	var dpBlobConfig = loadDataProtectionBlobConfig();
 
-			pipeline
-				.Config()
-				.Caching()
-				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
-				.Sessions(configureSessionOptions)
-				.Set();
-		}
+		//	pipeline
+		//		.Config()
+		//		.Caching()
+		//		.AppInsights()
+		//		//.Compression()
+		//		.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
+		//		.Sessions(configureSessionOptions)
+		//		.Set();
+		//}
 
 		protected override void setupProxyBuilder(IProxyBuilderPipeline pipeline)
 		{ }
