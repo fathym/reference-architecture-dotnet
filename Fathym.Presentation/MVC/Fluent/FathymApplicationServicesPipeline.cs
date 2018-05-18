@@ -1,5 +1,6 @@
 ﻿using Fathym.Presentation.Fluent;
 using Fathym.Presentation.Proxy;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -55,6 +56,8 @@ namespace Fathym.Presentation.MVC.Fluent
 	public class FathymCoreServicesPipeline : BaseOrderedPipeline, ICoreServicesPipeline
 	{
 		#region Fields
+		protected Action<ApplicationInsightsServiceOptions> appInsightsConfigure;
+
 		protected Action<ResponseCompressionOptions> compressionConfigure;
 
 		protected IConfigurationRoot config;
@@ -80,6 +83,15 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region API Methods
+		public virtual ICoreServicesPipeline AppInsights(Action<ApplicationInsightsServiceOptions> configure = null)
+		{
+			appInsightsConfigure = configure;
+
+			addAction(setAppInsights);
+
+			return this;
+		}
+
 		public virtual ICoreServicesPipeline Caching()
 		{
 			addAction(setCaching);
@@ -141,6 +153,14 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region Helpers
+		protected virtual void setAppInsights()
+		{
+			if (appInsightsConfigure == null)
+				services.AddApplicationInsightsTelemetry();
+			else
+				services.AddApplicationInsightsTelemetry(appInsightsConfigure);
+		}
+
 		protected virtual void setCaching()
 		{
 			services.AddMemoryCache();
@@ -193,6 +213,8 @@ namespace Fathym.Presentation.MVC.Fluent
 
 	public interface ICoreServicesPipeline
 	{
+		ICoreServicesPipeline AppInsights(Action<ApplicationInsightsServiceOptions> configure = null);
+
 		ICoreServicesPipeline Caching();
 
 		ICoreServicesPipeline Config();

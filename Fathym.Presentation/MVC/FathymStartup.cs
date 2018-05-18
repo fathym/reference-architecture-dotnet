@@ -173,6 +173,7 @@ namespace Fathym.Presentation.MVC
 			pipeline
 				.Config()
 				.Caching()
+				.AppInsights()
 				.Compression()
 				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
