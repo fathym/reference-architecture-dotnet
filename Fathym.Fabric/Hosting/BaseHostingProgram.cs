@@ -77,6 +77,8 @@ namespace Fathym.Fabric.Hosting
 		#region Helpers
 		protected virtual void executeHostActions()
 		{
+			var exceptions = new List<Exception>();
+
 			hostActions.Each(ha =>
 			{
 				try
@@ -89,9 +91,12 @@ namespace Fathym.Fabric.Hosting
 				{
 					FabricEventSource.Current.ServiceHostInitializationFailed(e.ToString());
 
-					throw;
+					exceptions.Add(e);
 				}
 			});
+
+			if (!exceptions.IsNullOrEmpty())
+				throw new AggregateException("There was at least 1 exception trying to host services.", exceptions);
 
 			Thread.Sleep(Timeout.Infinite);
 		}

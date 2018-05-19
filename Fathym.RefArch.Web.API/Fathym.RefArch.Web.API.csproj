@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Fathym.Presentation\Fathym.Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="PackageRoot\Config\eventFlowConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

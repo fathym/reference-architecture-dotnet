@@ -1,0 +1,28 @@
+﻿{
+	"inputs": [
+		{
+			"type": "EventSource",
+			"sources": [
+				{ "providerName": "Microsoft-ServiceFabric-Services" },
+				{ "providerName": "Microsoft-ServiceFabric-Actors" },
+				{ "providerName": "Fathym-Fabric" }
+			]
+		},
+		{
+			"type": "Microsoft.Extensions.Logging"
+		}
+	],
+	"filters": [
+		{
+			"type": "drop",
+			"include": "Level == Verbose"
+		}
+	],
+	"outputs": [
+		{
+			"type": "ApplicationInsights",
+			"instrumentationKey": "servicefabric:/EventFlow/AI.Key"
+		}
+	],
+	"schemaVersion": "2016-08-11"
+}

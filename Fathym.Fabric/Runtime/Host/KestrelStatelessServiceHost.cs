@@ -57,6 +57,8 @@ namespace Fathym.Fabric.Runtime.Host
 
 		protected virtual IWebHost buildWebHost(string url, AspNetCoreCommunicationListener listener)
 		{
+			var aiKey = fabricAdapter.GetConfiguration().LoadConfigSetting<string>("EventFlow", "AI.Key");
+
 			return new WebHostBuilder()
 				.UseKestrel()
 				//options =>
@@ -77,7 +79,7 @@ namespace Fathym.Fabric.Runtime.Host
 				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseStartup<TStartup>()
 				.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
-				.UseApplicationInsights()
+				.UseApplicationInsights(aiKey)
 				.UseUrls(url)
 				.Build();
 		}

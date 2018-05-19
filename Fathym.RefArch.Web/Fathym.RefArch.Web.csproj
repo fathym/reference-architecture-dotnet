@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
+    <ProjectReference Include="..\Fathym.Presentation\Fathym.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
-    <ProjectReference Include="..\Fathym.Presentation\Fathym.Presentation.csproj" />
+    <Content Update="PackageRoot\Config\eventFlowConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

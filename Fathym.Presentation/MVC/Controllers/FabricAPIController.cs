@@ -37,16 +37,6 @@ namespace Fathym.Fabric.API.Controllers
 		{
 			return loadConfigSetting<T>(GetType().FullName, name);
 		}
-		
-		protected virtual void logStatelessServiceMessage(string message)
-		{
-			//FabricEventSource.Current.ServiceMessage(serviceAdapter.Context, message);
-		}
-
-		protected virtual void logServiceMessage(string message)
-		{
-			logStatelessServiceMessage(message);
-		}
 		#endregion
 	}
 }
