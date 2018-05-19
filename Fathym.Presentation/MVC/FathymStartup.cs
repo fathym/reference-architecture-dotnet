@@ -81,7 +81,7 @@ namespace Fathym.Presentation.MVC
 				.Rewrite(useWww: true/*, useHttps: true*/)
 				.Prerender()
 				.Session()
-				.Build();
+				.Run();
 		}
 
 		protected virtual void setupProxyBuilder(IProxyBuilderPipeline pipeline)
@@ -90,7 +90,7 @@ namespace Fathym.Presentation.MVC
 				.AddQueryParamProcessor("Username", new UsernameQueryParamProcessor(new List<string>() { "username" }))
 				.AddQueryParamProcessor("ClientIP", new ClientIPQueryParamProcessor(new List<string>() { "client-ip" }))
 				.Proxy()
-				.Build();
+				.Run();
 		}
 
 		protected virtual void setupViewBuilder(IViewBuilderPipeline pipeline)
@@ -99,7 +99,7 @@ namespace Fathym.Presentation.MVC
 				.StaticFiles(loadStaticFileOptions())
 				.MVC(configureRoutes: registerDefaultRoutes)
 				.Compression()
-				.Build();
+				.Run();
 		}
 
 		protected virtual IDictionary<string, string> loadFileExtensionContentTypes()
@@ -121,7 +121,7 @@ namespace Fathym.Presentation.MVC
 
 			var provider = new FileExtensionContentTypeProvider();
 
-			contentTypes.ForEach(ct => provider.Mappings[ct.Key] = ct.Value);
+			contentTypes.Each(ct => provider.Mappings[ct.Key] = ct.Value);
 
 			return new StaticFileOptions()
 			{
@@ -177,7 +177,7 @@ namespace Fathym.Presentation.MVC
 				.Compression()
 				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
 				.Sessions(configureSessionOptions)
-				.Set();
+				.Run();
 		}
 
 		protected virtual void setupViewServices(IViewServicesPipeline pipeline)
@@ -188,7 +188,7 @@ namespace Fathym.Presentation.MVC
 					Assembly.GetEntryAssembly()
 				})
 				.Proxy<FabricProxyService>()
-				.Set();
+				.Run();
 		}
 
 		protected virtual void configureSessionOptions(SessionOptions options)

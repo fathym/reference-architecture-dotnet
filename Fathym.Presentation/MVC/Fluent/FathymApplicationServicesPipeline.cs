@@ -1,4 +1,4 @@
-﻿using Fathym.Presentation.Fluent;
+﻿using Fathym.Fluent;
 using Fathym.Presentation.Proxy;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -145,11 +145,6 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			return this;
 		}
-
-		public virtual void Set()
-		{
-			runActions();
-		}
 		#endregion
 
 		#region Helpers
@@ -227,7 +222,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreServicesPipeline WithServices(Func<IServiceCollection, Action> action);
 
-		void Set();
+		void Run();
 	}
 	#endregion
 
@@ -314,11 +309,6 @@ namespace Fathym.Presentation.MVC.Fluent
 
 			return this;
 		}
-
-		public virtual void Set()
-		{
-			runActions();
-		}
 		#endregion
 
 		#region Helpers
@@ -383,7 +373,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewServicesPipeline WithServices(Func<IServiceCollection, Action> action);
 
-		void Set();
+		void Run();
 	}
 	#endregion
 }

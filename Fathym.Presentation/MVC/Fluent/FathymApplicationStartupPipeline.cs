@@ -73,7 +73,7 @@ namespace Fathym.Presentation.MVC.Fluent
 			var results = configs.Execute(new DirectoryInfoWrapper(new DirectoryInfo(env.ContentRootPath)));
 
 			if (!results.Files.IsNullOrEmpty())
-				results.Files.ForEach(file => builder.AddJsonFile(file.Path));
+				results.Files.Each(file => builder.AddJsonFile(file.Path));
 		}
 
 		protected virtual IConfigurationRoot buildConfigurationRoot(IHostingEnvironment env)
@@ -88,7 +88,7 @@ namespace Fathym.Presentation.MVC.Fluent
 			var builder = new ConfigurationBuilder()
 				.SetBasePath(env.ContentRootPath);
 
-			configFiles.ForEach(file => builder.AddJsonFile(file.Key, optional: true, reloadOnChange: file.Value));
+			configFiles.Each(file => builder.AddJsonFile(file.Key, optional: true, reloadOnChange: file.Value));
 
 			addJsonConfigs(builder, env);
 

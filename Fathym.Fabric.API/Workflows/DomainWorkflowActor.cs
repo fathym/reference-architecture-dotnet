@@ -180,7 +180,7 @@ namespace Fathym.Fabric.API.Workflows
 
 			querySpec.Parameters = new SqlParameterCollection();
 
-			parameters.ForEach(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
+			parameters.Each(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
 
 			var queryDoc = docClient.CreateDocumentQuery<object>(collectionLink, querySpec,
 				new FeedOptions
@@ -258,7 +258,7 @@ namespace Fathym.Fabric.API.Workflows
 
 			querySpec.Parameters = new SqlParameterCollection();
 
-			parameters.ForEach(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
+			parameters.Each(p => querySpec.Parameters.Add(new SqlParameter(p.Key, p.Value)));
 
 			var queryDoc = docClient.CreateDocumentQuery<object>(collectionLink, querySpec,
 				new FeedOptions

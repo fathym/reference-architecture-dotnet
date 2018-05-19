@@ -37,7 +37,7 @@ namespace Fathym.Design.Fluent
 
 		public virtual IWeightedRandomly<T> AddWeightedLookups(IDictionary<T, double> weightRanges)
 		{
-			weightRanges.ForEach(wr => weightRanges.Add(wr));
+			weightRanges.Each(wr => weightRanges.Add(wr));
 
 			return this;
 		}
@@ -60,7 +60,7 @@ namespace Fathym.Design.Fluent
 
 			T retValue = weightRanges.First().Key;
 
-			weightRanges.ForEach(
+			weightRanges.Each(
 				(wr) =>
 				{
 					for (double i = sum; i < wr.Value + sum; i += step)

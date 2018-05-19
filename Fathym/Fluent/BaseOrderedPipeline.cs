@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fathym.Presentation.Fluent
+namespace Fathym.Fluent
 {
     public class BaseOrderedPipeline
 	{
@@ -17,6 +17,13 @@ namespace Fathym.Presentation.Fluent
 		}
 		#endregion
 
+		#region API Methods
+		public virtual void Run()
+		{
+			runActions();
+		} 
+		#endregion
+
 		#region Helpers
 		protected virtual void addAction(Action action)
 		{
@@ -25,7 +32,7 @@ namespace Fathym.Presentation.Fluent
 
 		protected virtual void runActions()
 		{
-			actions.ForEach(action => action());
+			actions.Each(action => action());
 
 			actions.Clear();
 		} 

@@ -34,7 +34,7 @@ namespace System.Collections.Generic
 		}
 		#endregion
 
-		#region For Each
+		#region Each
 		/// <summary>
 		///     Method will execute the action against every item in the collection.
 		/// </summary>
@@ -47,12 +47,12 @@ namespace System.Collections.Generic
 		///         
 		///         int total = 0; 
 		///         
-		///         values.ForEach(value => total += value);
+		///         values.Each(value => total += value);
 		///     </code>
 		/// </example>
-		public static void ForEach<T>(this IEnumerable<T> values, Action<T> action, bool parallel = false)
+		public static void Each<T>(this IEnumerable<T> values, Action<T> action, bool parallel = false)
 		{
-			values.ForEach((value) => { action(value); return false; }, parallel);
+			values.Each((value) => { action(value); return false; }, parallel);
 		}
 
 		/// <summary>
@@ -67,10 +67,10 @@ namespace System.Collections.Generic
 		///         
 		///         int total = 0; 
 		///         
-		///         values.ForEach(value => total += value);
+		///         values.Each(value => total += value);
 		///     </code>
 		/// </example>
-		public static void ForEach<T>(this IEnumerable<T> values, Func<T, bool> action, bool parallel = false)
+		public static void Each<T>(this IEnumerable<T> values, Func<T, bool> action, bool parallel = false)
 		{
 			if (values != null)
 			{
@@ -109,7 +109,7 @@ namespace System.Collections.Generic
 		{
 			var pairs = new List<string>();
 			
-			values.ForEach(value => pairs.Add($"{value.Key}={value.Value.ToString().URLEncode()}"));
+			values.Each(value => pairs.Add($"{value.Key}={value.Value.ToString().URLEncode()}"));
 
 			return string.Join("&", pairs);
 		}
@@ -184,7 +184,7 @@ namespace System.Collections.Generic
 		#region Merge
 		public static IDictionary<TKey, TValue> Merge<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IDictionary<TKey, TValue> toMerge, bool overwrite)
 		{
-			toMerge.ForEach(
+			toMerge.Each(
 				(kvp) =>
 				{
 					if (!dictionary.ContainsKey(kvp.Key) || overwrite)

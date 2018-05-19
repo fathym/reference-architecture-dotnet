@@ -51,7 +51,7 @@ namespace Fathym.Presentation.Web
 
 				var first = true;
 
-				jsFiles.ForEach(
+				jsFiles.Each(
 					(appFile) =>
 					{
 						if (first)
@@ -64,7 +64,7 @@ namespace Fathym.Presentation.Web
 							output.PostElement.AppendHtml($"<script src='{appFile}'></script>");
 					});
 
-				cssFiles.ForEach(
+				cssFiles.Each(
 					(appFile) =>
 					{
 						output.PostElement.AppendHtml($"<link href='{appFile}' rel='stylesheet' />");

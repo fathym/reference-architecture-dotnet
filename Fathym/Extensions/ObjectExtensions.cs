@@ -63,7 +63,7 @@ namespace System
 
 		public static void DeepMap(this JObject mapTo, JObject mapFrom, IDictionary<string, string> map)
 		{
-			map.ForEach(
+			map.Each(
 				(m) =>
 				{
 					var from = mapFrom.SelectToken(m.Key);
@@ -82,7 +82,7 @@ namespace System
 
 				var working = value;
 
-				splits.ForEach(
+				splits.Each(
 					(split) =>
 					{
 						var sub = working.SelectToken(split);
@@ -217,7 +217,7 @@ namespace System
 
 			var children = sourceMap.Children().Cast<JProperty>();
 
-			children.ForEach(s =>
+			children.Each(s =>
 			{
 				var targetToken = targetMap[s.Name];
 

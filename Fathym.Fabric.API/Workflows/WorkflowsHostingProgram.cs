@@ -1,4 +1,5 @@
 ﻿using Fathym.Fabric.Actors;
+using Fathym.Fabric.Hosting;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric.API.Workflows
 {
-	public class WorkflowsHostingProgram
+	public class WorkflowsHostingProgram : BaseHostingProgram<WorkflowsHostingProgram>
 	{
 		#region Properties
-		public static WorkflowsHostingProgram Host = new WorkflowsHostingProgram();
 		#endregion
 
 		#region API Methods
@@ -31,19 +31,12 @@ namespace Fathym.Fabric.API.Workflows
 		public virtual void Start<TActor>(Func<StatefulServiceContext, ActorTypeInformation, ActorService> actorServiceFactory)
 			where TActor : ActorBase
 		{
-			try
-			{
-				ActorRuntime.RegisterActorAsync<TActor>(actorServiceFactory).GetAwaiter().GetResult();
-
-				//Thread.Sleep(Timeout.Infinite);
-			}
-			catch (Exception e)
-			{
-				FabricEventSource.Current.ServiceHostInitializationFailed(e.ToString());
-
-				throw;
-			}
+			ActorRuntime.RegisterActorAsync<TActor>(actorServiceFactory).GetAwaiter().GetResult();
 		}
+		#endregion
+
+		#region API Methods
+
 		#endregion
 	}
 }

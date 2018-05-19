@@ -24,7 +24,7 @@ namespace Fathym.Presentation.MVC
 			pipeline
 				.Logging("Logging")
 				.ExceptionHandling(null)
-				.Build();
+				.Run();
 		}
 
 		//protected override void setupCoreServices(ICoreServicesPipeline pipeline)
@@ -52,7 +52,7 @@ namespace Fathym.Presentation.MVC
 		{
 			pipeline
 				.MVC()
-				.Build();
+				.Run();
 		}
 
 		protected override void setupViewServices(IViewServicesPipeline pipeline)
@@ -62,7 +62,7 @@ namespace Fathym.Presentation.MVC
 				{
 					Assembly.GetEntryAssembly()
 				})
-				.Set();
+				.Run();
 		}
 		#endregion
 	}

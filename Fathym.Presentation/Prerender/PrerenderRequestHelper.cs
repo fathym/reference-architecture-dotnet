@@ -55,7 +55,7 @@ namespace Fathym.Presentation.Prerender
 
 				context.Response.StatusCode = (int)response.StatusCode;
 
-				response.Headers.ForEach(keyValue => context.Response.Headers[keyValue.Key] = new StringValues(keyValue.Value.ToArray()));
+				response.Headers.Each(keyValue => context.Response.Headers[keyValue.Key] = new StringValues(keyValue.Value.ToArray()));
 
 				await context.Response.WriteAsync(response.Body);
 

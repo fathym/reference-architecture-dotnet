@@ -86,7 +86,7 @@ namespace Fathym.Presentation.Web
 
 			Icons?.ForEach(icon => output.PostElement.AppendHtml($"<link href='https://fonts.googleapis.com/icon?family={icon}' rel='stylesheet'>"));
 
-			Fonts?.ForEach(font => output.PostElement.AppendHtml($"<link href='https://fonts.googleapis.com/css?family={font.Key}:{font.Value}' rel='stylesheet' type='text/css'>"));
+			Fonts?.Each(font => output.PostElement.AppendHtml($"<link href='https://fonts.googleapis.com/css?family={font.Key}:{font.Value}' rel='stylesheet' type='text/css'>"));
 		}
 		#endregion
 

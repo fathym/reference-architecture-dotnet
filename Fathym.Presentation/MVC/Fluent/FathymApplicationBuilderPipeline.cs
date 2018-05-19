@@ -1,4 +1,4 @@
-﻿using Fathym.Presentation.Fluent;
+﻿using Fathym.Fluent;
 using Fathym.Presentation.Prerender;
 using Fathym.Presentation.Proxy;
 using Fathym.Presentation.Rewrite;
@@ -106,11 +106,6 @@ namespace Fathym.Presentation.MVC.Fluent
 			addAction(buildBrowserLink);
 
 			return this;
-		}
-
-		public virtual void Build()
-		{
-			runActions();
 		}
 
 		public virtual ICoreBuilderPipeline ExceptionHandling(string errorPage)
@@ -252,7 +247,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build();
+		void Run();
 	}
 	#endregion
 
@@ -284,7 +279,7 @@ namespace Fathym.Presentation.MVC.Fluent
 				.Rewrite(useWww: true/*, useHttps: true*/)
 				.Prerender()
 				.Session()
-				.Build();
+				.Run();
 		}
 
 		public virtual IProxyBuilderPipeline AddQueryParamProcessor(string name, IQueryParamProcessor queryParamProcessor)
@@ -292,11 +287,6 @@ namespace Fathym.Presentation.MVC.Fluent
 			queryParamProcessors[name] = queryParamProcessor;
 
 			return this;
-		}
-
-		public virtual void Build()
-		{
-			runActions();
 		}
 
 		public virtual IProxyBuilderPipeline Proxy()
@@ -330,7 +320,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IProxyBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build();
+		void Run();
 	}
 	#endregion
 
@@ -355,11 +345,6 @@ namespace Fathym.Presentation.MVC.Fluent
 		#endregion
 
 		#region API Methods
-		public virtual void Build()
-		{
-			runActions();
-		}
-
 		public virtual IViewBuilderPipeline Compression()
 		{
 			addAction(buildCompression);
@@ -443,7 +428,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewBuilderPipeline WithApp(Func<IApplicationBuilder, Action> action);
 
-		void Build();
+		void Run();
 	}
 	#endregion
 }

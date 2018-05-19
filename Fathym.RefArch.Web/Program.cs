@@ -14,9 +14,17 @@ namespace Fathym.RefArch.Web
 		/// </summary>
 		private static void Main()
 		{
-			Host.Start<Startup>("Fathym.RefArch.WebType", "ServiceEndpoint");
+			Host.EstablishHostingPipeline()
+				.Log(Host.GetType().FullName)
+				.Host(() =>
+				{
+					var serviceTypeName = "Fathym.RefArch.WebType";
 
-			Thread.Sleep(Timeout.Infinite);
+					Host.Start<Startup>(serviceTypeName, "ServiceEndpoint");
+
+					return serviceTypeName;
+				})
+				.Run();
 		}
 	}
 }

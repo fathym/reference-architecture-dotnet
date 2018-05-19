@@ -10,10 +10,9 @@ using System.Threading;
 
 namespace Fathym.Fabric.Hosting
 {
-	public class StatelessServiceHostingProgram
+	public class StatelessServiceHostingProgram : BaseHostingProgram<StatelessServiceHostingProgram>
 	{
 		#region Properties
-		public static StatelessServiceHostingProgram Host = new StatelessServiceHostingProgram();
 		#endregion
 
 		#region API Methods
@@ -25,18 +24,7 @@ namespace Fathym.Fabric.Hosting
 
 		public virtual void Start(string serviceTypeName, Func<StatelessServiceContext, StatelessService> serviceFactory)
 		{
-			try
-			{
-				ServiceRuntime.RegisterServiceAsync(serviceTypeName, serviceFactory).GetAwaiter().GetResult();
-
-				FabricEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, serviceTypeName);
-			}
-			catch (Exception e)
-			{
-				FabricEventSource.Current.ServiceHostInitializationFailed(e.ToString());
-
-				throw;
-			}
+			ServiceRuntime.RegisterServiceAsync(serviceTypeName, serviceFactory).GetAwaiter().GetResult();
 		}
 		#endregion
 	}

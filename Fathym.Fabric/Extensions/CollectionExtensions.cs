@@ -21,12 +21,12 @@ namespace Fathym.Fabric.Extensions
 			return default(T);
 		}
 
-		public static async Task ForEach<T>(this IAsyncEnumerable<T> values, Func<T, Task> action)
+		public static async Task Each<T>(this IAsyncEnumerable<T> values, Func<T, Task> action)
 		{
-			await values.ForEach(async (value) => { await action(value); return false; });
+			await values.Each(async (value) => { await action(value); return false; });
 		}
 
-		public static async Task ForEach<T>(this IAsyncEnumerable<T> values, Func<T, Task<bool>> action)
+		public static async Task Each<T>(this IAsyncEnumerable<T> values, Func<T, Task<bool>> action)
 		{
 			if (values != null)
 			{

@@ -46,7 +46,7 @@ namespace Fathym.Design.Fluent
 		{
 			T result = default(T);
 
-			responsibilities.ForEach(r =>
+			responsibilities.Each(r =>
 			{
 				bool cont;
 

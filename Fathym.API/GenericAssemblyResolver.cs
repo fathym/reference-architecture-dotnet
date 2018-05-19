@@ -27,7 +27,7 @@ namespace Fathym.API
 
 			var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-			allAssemblies.ForEach(
+			allAssemblies.Each(
 				(assembly) =>
 				{
 					if (assemblies.FirstOrDefault(a => a.FullName == assembly.FullName) == null)

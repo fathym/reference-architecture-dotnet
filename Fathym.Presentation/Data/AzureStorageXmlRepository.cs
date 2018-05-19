@@ -49,7 +49,7 @@ namespace Fathym.Presentation.Data
 			var elements = new List<XElement>();
 
 			if (!blobs.Results.IsNullOrEmpty())
-				blobs.Results.ForEach(
+				blobs.Results.Each(
 					(blob) =>
 					{
 						var blobRef = client.GetBlobReferenceFromServerAsync(blob.StorageUri.PrimaryUri).Result;
