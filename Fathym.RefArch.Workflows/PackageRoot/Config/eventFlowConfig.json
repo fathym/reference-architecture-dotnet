@@ -7,6 +7,9 @@
 				{ "providerName": "Microsoft-ServiceFabric-Actors" },
 				{ "providerName": "Fathym-Fabric" }
 			]
+		},
+		{
+			"type": "Microsoft.Extensions.Logging"
 		}
 	],
 	"filters": [

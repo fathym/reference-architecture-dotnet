@@ -3,5 +3,8 @@
   <Parameters>
     <Parameter Name="Fathym.RefArch.Web.API_InstanceCount" Value="1" />
     <Parameter Name="Fathym.RefArch.Web_InstanceCount" Value="1" />
+    <Parameter Name="WorkflowsActorService_PartitionCount" Value="1" />
+    <Parameter Name="WorkflowsActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="WorkflowsActorService_MinReplicaSetSize" Value="1" />
   </Parameters>
 </Application>

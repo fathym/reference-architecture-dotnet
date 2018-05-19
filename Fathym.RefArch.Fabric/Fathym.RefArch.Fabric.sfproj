@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fathym.RefArch.Web.API\Fathym.RefArch.Web.API.csproj" />
     <ProjectReference Include="..\Fathym.RefArch.Web\Fathym.RefArch.Web.csproj" />
+    <ProjectReference Include="..\Fathym.RefArch.Workflows\Fathym.RefArch.Workflows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
