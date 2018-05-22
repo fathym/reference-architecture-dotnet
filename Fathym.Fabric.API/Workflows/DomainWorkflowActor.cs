@@ -49,8 +49,11 @@ namespace Fathym.Fabric.API.Workflows
 
 			refreshTimer = RegisterTimer(async (s) =>
 			{
+
 				if (docClient != null)
 				{
+					FabricEventSource.Current.ServiceMessage(this, $"Resetting doc client...");
+
 					docClient.Dispose();
 
 					docClient = null;
@@ -59,6 +62,8 @@ namespace Fathym.Fabric.API.Workflows
 				docClient = buildDocumentClient();
 
 				await docClient.OpenAsync();
+
+				FabricEventSource.Current.ServiceMessage(this, $"Doc client configuration complete");
 			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
