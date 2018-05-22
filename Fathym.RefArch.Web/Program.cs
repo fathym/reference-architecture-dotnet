@@ -15,7 +15,7 @@ namespace Fathym.RefArch.Web
 		private static void Main()
 		{
 			Host.EstablishHostingPipeline()
-				.Log(Host.GetType().Namespace)
+				.Log(typeof(Program).Namespace)
 				.Host(() =>
 				{
 					var serviceTypeName = "Fathym.RefArch.WebType";

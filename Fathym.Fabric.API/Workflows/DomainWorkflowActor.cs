@@ -30,6 +30,8 @@ namespace Fathym.Fabric.API.Workflows
 				return Id.GetStringId();
 			}
 		}
+
+		protected IActorTimer refreshTimer;
 		#endregion
 
 		#region Constructors
@@ -45,15 +47,27 @@ namespace Fathym.Fabric.API.Workflows
 			
 			setupLogging();
 
-			docClient = buildDocumentClient();
+			refreshTimer = RegisterTimer(async (s) =>
+			{
+				if (docClient != null)
+				{
+					docClient.Dispose();
 
-			await docClient.OpenAsync();
+					docClient = null;
+				}
+
+				docClient = buildDocumentClient();
+
+				await docClient.OpenAsync();
+			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 		}
 
 		protected override async Task OnDeactivateAsync()
 		{
+			docClient.Dispose();
+
 			await base.OnDeactivateAsync();
 		}
 		#endregion

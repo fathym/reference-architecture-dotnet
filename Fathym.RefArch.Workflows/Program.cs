@@ -16,12 +16,20 @@ namespace Fathym.RefArch.Workflows
         private static void Main()
 		{
 			Host.EstablishHostingPipeline()
-				.Log(Host.GetType().Namespace)
+				.Log(typeof(Program).Namespace)
+				//.Host(() =>
+				//{
+				//	var serviceTypeName = $"{typeof(WorkService).FullName}Type";
+
+				//	Host.Start<WorkService>();
+
+				//	return serviceTypeName;
+				//})
 				.Host(() =>
 				{
-					var serviceTypeName = $"{Host.GetType().Namespace}Type";
+					var serviceTypeName = $"{typeof(WorkService).FullName}Type";
 
-					Host.Start<Workflows>();
+					Host.Start<WorkService>();
 
 					return serviceTypeName;
 				})

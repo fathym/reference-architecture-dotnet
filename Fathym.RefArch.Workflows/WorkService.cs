@@ -19,14 +19,14 @@ namespace Fathym.RefArch.Workflows
     ///  - None: State is kept in memory only and not replicated.
     /// </remarks>
     [StatePersistence(StatePersistence.Persisted)]
-    internal class Workflows : Actor, IWorkflows
+    internal class WorkService : Actor, IWorkService
     {
         /// <summary>
         /// Initializes a new instance of Workflows
         /// </summary>
         /// <param name="actorService">The Microsoft.ServiceFabric.Actors.Runtime.ActorService that will host this actor instance.</param>
         /// <param name="actorId">The Microsoft.ServiceFabric.Actors.ActorId for this actor instance.</param>
-        public Workflows(ActorService actorService, ActorId actorId) 
+        public WorkService(ActorService actorService, ActorId actorId) 
             : base(actorService, actorId)
         {
         }
@@ -51,7 +51,7 @@ namespace Fathym.RefArch.Workflows
         /// TODO: Replace with your own actor method.
         /// </summary>
         /// <returns></returns>
-        Task<int> IWorkflows.GetCountAsync(CancellationToken cancellationToken)
+        Task<int> IWorkService.GetCountAsync(CancellationToken cancellationToken)
         {
             return this.StateManager.GetStateAsync<int>("count", cancellationToken);
         }
@@ -61,7 +61,7 @@ namespace Fathym.RefArch.Workflows
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        Task IWorkflows.SetCountAsync(int count, CancellationToken cancellationToken)
+        Task IWorkService.SetCountAsync(int count, CancellationToken cancellationToken)
         {
             // Requests are not guaranteed to be processed in order nor at most once.
             // The update function here verifies that the incoming count is greater than the current count to preserve order.
