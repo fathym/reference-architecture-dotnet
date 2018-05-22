@@ -60,17 +60,17 @@ namespace Fathym.Fabric.Runtime.Host
 			var aiKey = fabricAdapter.GetConfiguration().LoadConfigSetting<string>("EventFlow", "AI.Key");
 
 			return new WebHostBuilder()
-				.UseKestrel()
-				//options =>
-				//{
-				//	options.Limits.MaxRequestHeaderCount = 32;
+				.UseKestrel(
+					options =>
+					{
+						options.Limits.MaxRequestHeaderCount = 32;
 
-				//	options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+						options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-				//	options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+						options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-				//	options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
-				//})
+						options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+					})
 				.ConfigureServices(
 					services =>
 					{

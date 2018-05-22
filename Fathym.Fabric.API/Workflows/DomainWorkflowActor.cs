@@ -44,27 +44,14 @@ namespace Fathym.Fabric.API.Workflows
 		protected override async Task OnActivateAsync()
 		{
 			await base.OnActivateAsync();
-			
+
 			setupLogging();
 
-			refreshTimer = RegisterTimer(async (s) =>
-			{
+			docClient = buildDocumentClient();
 
-				if (docClient != null)
-				{
-					FabricEventSource.Current.ServiceMessage(this, $"Resetting doc client...");
+			await docClient.OpenAsync();
 
-					docClient.Dispose();
-
-					docClient = null;
-				}
-
-				docClient = buildDocumentClient();
-
-				await docClient.OpenAsync();
-
-				FabricEventSource.Current.ServiceMessage(this, $"Doc client configuration complete");
-			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+			setupDocClientRefresh(TimeSpan.FromMinutes(30));
 
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 		}
@@ -189,7 +176,7 @@ namespace Fathym.Fabric.API.Workflows
 			return new PartitionKey(primaryApiKey);
 		}
 
-		protected virtual async Task<T> lookupDocument<T>(string databaseName, string collectionName, string query, 
+		protected virtual async Task<T> lookupDocument<T>(string databaseName, string collectionName, string query,
 			IDictionary<string, object> parameters)
 			where T : class
 		{
@@ -289,7 +276,7 @@ namespace Fathym.Fabric.API.Workflows
 			return queryDoc.ToJSON();
 		}
 
-		protected virtual async Task<Pageable<T>> searchDocuments<T>(string databaseName, string collectionName, string query, 
+		protected virtual async Task<Pageable<T>> searchDocuments<T>(string databaseName, string collectionName, string query,
 			int page, int pageSize, IDictionary<string, object> parameters)
 		{
 			var search = await searchDocuments(databaseName, collectionName, query, parameters);
@@ -297,6 +284,27 @@ namespace Fathym.Fabric.API.Workflows
 			var queryDoc = search.FromJSON<object[]>();
 
 			return queryDoc.Select(qd => readDocDBSafeAsset<T>(qd)).ToArray().Page(page, pageSize);
+		}
+
+		protected virtual void setupDocClientRefresh(TimeSpan delay)
+		{
+			refreshTimer = RegisterTimer(async (s) =>
+			{
+				if (docClient != null)
+				{
+					FabricEventSource.Current.ServiceMessage(this, $"Resetting doc client...");
+
+					docClient.Dispose();
+
+					docClient = null;
+				}
+
+				docClient = buildDocumentClient();
+
+				await docClient.OpenAsync();
+
+				FabricEventSource.Current.ServiceMessage(this, $"Doc client configuration complete");
+			}, null, delay, delay;
 		}
 
 		protected virtual async Task storeInBlob(string containerName, string connectionString, string blobName,
