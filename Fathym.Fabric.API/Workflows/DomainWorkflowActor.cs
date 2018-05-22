@@ -304,7 +304,7 @@ namespace Fathym.Fabric.API.Workflows
 				await docClient.OpenAsync();
 
 				FabricEventSource.Current.ServiceMessage(this, $"Doc client configuration complete");
-			}, null, delay, delay;
+			}, null, delay, delay);
 		}
 
 		protected virtual async Task storeInBlob(string containerName, string connectionString, string blobName,
