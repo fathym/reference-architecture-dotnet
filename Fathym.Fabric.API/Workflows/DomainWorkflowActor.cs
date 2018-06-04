@@ -51,8 +51,6 @@ namespace Fathym.Fabric.API.Workflows
 
 			await docClient.OpenAsync();
 
-			setupDocClientRefresh(TimeSpan.FromMinutes(30));
-
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 		}
 
@@ -286,7 +284,7 @@ namespace Fathym.Fabric.API.Workflows
 			return queryDoc.Select(qd => readDocDBSafeAsset<T>(qd)).ToArray().Page(page, pageSize);
 		}
 
-		protected virtual void setupDocClientRefresh(TimeSpan delay)
+		protected override void setupActorRefresh(TimeSpan delay)
 		{
 			refreshTimer = RegisterTimer(async (s) =>
 			{

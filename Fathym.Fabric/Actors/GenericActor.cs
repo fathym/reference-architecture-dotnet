@@ -34,6 +34,8 @@ namespace Fathym.Fabric.Actors
 		{
 			setupLogging();
 
+			setupActorRefresh(loadActorRefreshRate());
+
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 
 			await base.OnActivateAsync();
@@ -57,7 +59,15 @@ namespace Fathym.Fabric.Actors
 		{
 			return loadConfigSetting<T>(GetType().FullName, name);
 		}
-		
+
+		protected virtual TimeSpan loadActorRefreshRate()
+		{
+			return TimeSpan.FromMinutes(30);
+		}
+
+		protected virtual void setupActorRefresh(TimeSpan delay)
+		{ }
+
 		protected virtual void setupLogging()
 		{ }
 		#endregion
