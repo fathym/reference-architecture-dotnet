@@ -72,9 +72,7 @@ namespace Fathym.Presentation.Web
 			}
 			else
 			{
-				output.PostElement.AppendHtml($"<span>Unable to locate application files</span>");
-
-				output.PostElement.AppendHtml("<script>setInterval(() => { location.href = location.href; }, 5000);</script>");
+				output.PostElement.AppendHtml("<span>Unable to locate application files</span><script>setInterval(() => { location.href = location.href; }, 5000);</script>");
 			}
 		}
 		#endregion
