@@ -4,17 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fathym.Fabric.API.Workflows
+namespace Fathym.Fabric.Actors
 {
-	public abstract class DomainWorkflowFactory<TWorkflow>
-		where TWorkflow : DomainWorkflowActor, IActor
+	public abstract class ActorFactory<TWorkflow>
+		where TWorkflow : IActor
 	{
 		#region Fields
 		protected readonly IFabricAdapter fabricAdapter;
 		#endregion
 
 		#region Constructors
-		public DomainWorkflowFactory(IFabricAdapter fabricAdapter)
+		public ActorFactory(IFabricAdapter fabricAdapter)
 		{
 			this.fabricAdapter = fabricAdapter;
 		}
