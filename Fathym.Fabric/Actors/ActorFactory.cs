@@ -28,12 +28,22 @@ namespace Fathym.Fabric.Actors
 			if (makeUnique)
 				actorId += $"|{Guid.NewGuid()}";
 
-			return fabricAdapter.BuildActorProxy<TWorkflow>(actorId);
+			return fabricAdapter.BuildActorProxy<TWorkflow>(actorId, applicationName: getApplicationName(), serviceName: getServiceName());
 		}
 		#endregion
 
 		#region Helpers
 		protected abstract string buildActorId(string primaryApiKey);
+
+		protected virtual string getApplicationName()
+		{
+			return null;
+		}
+
+		protected virtual string getServiceName()
+		{
+			return null;
+		}
 		#endregion
 	}
 }
