@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
     <ProjectReference Include="..\Fathym.Presentation\Fathym.Presentation.csproj" />
   </ItemGroup>
 
