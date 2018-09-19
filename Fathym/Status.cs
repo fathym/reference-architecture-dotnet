@@ -23,7 +23,7 @@ namespace Fathym
 
 		#region Properties
 		[DataMember]
-		public virtual long Code { get; set; }
+		public virtual long Code { get; set; } 
 
 		[DataMember]
 		public virtual string Message { get; set; }
