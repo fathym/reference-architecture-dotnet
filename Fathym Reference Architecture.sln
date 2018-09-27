@@ -22,15 +22,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.RefArch.Web.API", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.RefArch.Workflows", "Fathym.RefArch.Workflows\Fathym.RefArch.Workflows.csproj", "{F9B08C66-0C31-4404-BDAC-610676C7A1C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym", "Fathym\Fathym.csproj", "{E76D1990-97EC-4234-9952-40698F034A3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym", "Fathym\Fathym.csproj", "{E76D1990-97EC-4234-9952-40698F034A3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.API", "Fathym.API\Fathym.API.csproj", "{1C179525-1371-478E-B1AB-8D67A7241C6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.API", "Fathym.API\Fathym.API.csproj", "{1C179525-1371-478E-B1AB-8D67A7241C6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Fabric", "Fathym.Fabric\Fathym.Fabric.csproj", "{134A2C7D-37DA-4AF9-A957-73155A4DCD36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Fabric", "Fathym.Fabric\Fathym.Fabric.csproj", "{134A2C7D-37DA-4AF9-A957-73155A4DCD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Fabric.API", "Fathym.Fabric.API\Fathym.Fabric.API.csproj", "{5021FCC8-B7E0-440A-B2C3-3997A5C9C16F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Fabric.API", "Fathym.Fabric.API\Fathym.Fabric.API.csproj", "{5021FCC8-B7E0-440A-B2C3-3997A5C9C16F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Presentation", "Fathym.Presentation\Fathym.Presentation.csproj", "{5ECB4F49-9772-449B-B084-FC73DDFDB44D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Tests", "Fathym.Tests\Fathym.Tests.csproj", "{891B21C4-2CDD-43E6-94BD-EEE850D859F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +114,14 @@ Global
 		{5ECB4F49-9772-449B-B084-FC73DDFDB44D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5ECB4F49-9772-449B-B084-FC73DDFDB44D}.Release|x64.ActiveCfg = Release|Any CPU
 		{5ECB4F49-9772-449B-B084-FC73DDFDB44D}.Release|x64.Build.0 = Release|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Debug|x64.Build.0 = Debug|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Release|x64.ActiveCfg = Release|Any CPU
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +136,7 @@ Global
 		{134A2C7D-37DA-4AF9-A957-73155A4DCD36} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{5021FCC8-B7E0-440A-B2C3-3997A5C9C16F} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{5ECB4F49-9772-449B-B084-FC73DDFDB44D} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+		{891B21C4-2CDD-43E6-94BD-EEE850D859F0} = {E48422AB-D0BB-4071-BCAB-698E3AFF7E83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}
