@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Fabric.API", "Fathym
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Presentation", "Fathym.Presentation\Fathym.Presentation.csproj", "{5ECB4F49-9772-449B-B084-FC73DDFDB44D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Tests", "Fathym.Tests\Fathym.Tests.csproj", "{891B21C4-2CDD-43E6-94BD-EEE850D859F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Tests", "Fathym.Tests\Fathym.Tests.csproj", "{891B21C4-2CDD-43E6-94BD-EEE850D859F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +43,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|Any CPU.Build.0 = Debug|x64
+		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|Any CPU.Deploy.0 = Debug|x64
 		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|x64.ActiveCfg = Debug|x64
 		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|x64.Build.0 = Debug|x64
 		{9ECF92FA-B0F2-41B8-8390-4BB4B80EA509}.Debug|x64.Deploy.0 = Debug|x64
