@@ -13,18 +13,10 @@ namespace Fathym.RefArch.Workflows
         /// <summary>
         /// This is the entry point of the service host process.
         /// </summary>
-        private static void Main()
+        public static void Main()
 		{
 			Host.EstablishHostingPipeline()
 				.Log(typeof(Program).Namespace)
-				//.Host(() =>
-				//{
-				//	var serviceTypeName = $"{typeof(WorkService).FullName}Type";
-
-				//	Host.Start<WorkService>();
-
-				//	return serviceTypeName;
-				//})
 				.Host(() =>
 				{
 					var serviceTypeName = $"{typeof(WorkService).FullName}Type";
