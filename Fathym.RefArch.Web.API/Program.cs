@@ -12,7 +12,7 @@ namespace Fathym.RefArch.Web.API
         /// <summary>
         /// This is the entry point of the service host process.
         /// </summary>
-        private static void Main()
+        public static void Main()
 		{
 			Host.EstablishHostingPipeline()
 				.Log(typeof(Program).Namespace)
