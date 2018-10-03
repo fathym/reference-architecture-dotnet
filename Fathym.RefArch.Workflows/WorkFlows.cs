@@ -7,8 +7,9 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using Fathym.RefArch.Workflows.Interfaces;
+using Fathym.RefArch.Workflows;
 
-namespace Fathym.RefArch.Workflows
+namespace Fathym.RefArch
 {
     /// <remarks>
     /// This class represents an actor.
@@ -19,14 +20,14 @@ namespace Fathym.RefArch.Workflows
     ///  - None: State is kept in memory only and not replicated.
     /// </remarks>
     [StatePersistence(StatePersistence.Persisted)]
-    internal class WorkService : Actor, IWorkService
+    internal class WorkFlows : Actor, IWorkService
     {
         /// <summary>
         /// Initializes a new instance of Workflows
         /// </summary>
         /// <param name="actorService">The Microsoft.ServiceFabric.Actors.Runtime.ActorService that will host this actor instance.</param>
         /// <param name="actorId">The Microsoft.ServiceFabric.Actors.ActorId for this actor instance.</param>
-        public WorkService(ActorService actorService, ActorId actorId) 
+        public WorkFlows(ActorService actorService, ActorId actorId) 
             : base(actorService, actorId)
         {
         }

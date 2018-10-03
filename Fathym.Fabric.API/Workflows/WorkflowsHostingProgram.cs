@@ -19,19 +19,32 @@ namespace Fathym.Fabric.API.Workflows
 		public virtual void Start<TActor>()
 			where TActor : ActorBase
 		{
-			Start<TActor>((context, actorType) => new ActorService(context, actorType));
+			Start<TActor>(
+                (context, actorType) => 
+                    new ActorService(context, actorType)
+            );
 		}
 
 		public virtual void StartWithAutoStart<TActor>()
 			where TActor : ActorBase
 		{
-			Start<TActor>((context, actorType) => new AutoStartActorService(context, actorType));
+			Start<TActor>(
+                (context, actorType) => 
+                    new AutoStartActorService(context, actorType)
+            );
 		}
 
 		public virtual void Start<TActor>(Func<StatefulServiceContext, ActorTypeInformation, ActorService> actorServiceFactory)
 			where TActor : ActorBase
 		{
-			ActorRuntime.RegisterActorAsync<TActor>(actorServiceFactory).GetAwaiter().GetResult();
+            try
+            {
+                ActorRuntime.RegisterActorAsync<TActor>(actorServiceFactory).GetAwaiter().GetResult();
+            }
+            catch(Exception ex)
+            {
+
+            }
 		}
 		#endregion
 
