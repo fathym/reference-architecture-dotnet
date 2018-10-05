@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fathym.API;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
 using Microsoft.ServiceFabric.Services.Remoting;
 
-//[assembly: FabricTransportActorRemotingProvider(RemotingListener = RemotingListener.V2Listener, RemotingClient = RemotingClient.V2Client)]
 namespace Fathym.RefArch.Workflows.Interfaces
 {
 	/// <summary>
@@ -16,17 +16,6 @@ namespace Fathym.RefArch.Workflows.Interfaces
 	/// </summary>
 	public interface IWorkService : IActor
 	{
-		/// <summary>
-		/// TODO: Replace with your own actor method.
-		/// </summary>
-		/// <returns></returns>
-		Task<int> GetCountAsync(CancellationToken cancellationToken);
-
-		/// <summary>
-		/// TODO: Replace with your own actor method.
-		/// </summary>
-		/// <param name="count"></param>
-		/// <returns></returns>
-		Task SetCountAsync(int count, CancellationToken cancellationToken);
-	}
+        Task<BaseResponse> Ping();
+    }
 }

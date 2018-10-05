@@ -19,9 +19,9 @@ namespace Fathym.RefArch.Workflows
 				.Log(typeof(Program).Namespace)
 				.Host(() =>
 				{
-					var serviceTypeName = $"{typeof(WorkService).FullName}Type";
+					var serviceTypeName = $"{typeof(WorkFlows).FullName}Type";
 
-					Host.Start<WorkService>();
+					Host.Start<WorkFlows>();
 
 					return serviceTypeName;
 				})
