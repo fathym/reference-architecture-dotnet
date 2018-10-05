@@ -104,7 +104,7 @@ namespace Fathym.Presentation.Proxy
 			await withClient(proxyOptions,
 				async (client) =>
 				{
-					var host = proxyOptions.Proxy.Host ?? client.BaseAddress.Host;
+					var host = proxyOptions.Proxy.Host ?? client.BaseAddress.Host.Replace(Environment.MachineName.ToLower(), "localhost", StringComparison.InvariantCulture);
 
 					var port = proxyOptions.Proxy.Port ?? client.BaseAddress.Port;
 
