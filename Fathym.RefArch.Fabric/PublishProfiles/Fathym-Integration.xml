@@ -8,4 +8,7 @@
   -->
   <ClusterConnectionParameters />
   <ApplicationParameterFile Path="..\ApplicationParameters\Fathym-Integration.xml" />
+  <UpgradeDeployment Mode="Monitored" Enabled="true">
+    <Parameters FailureAction="Rollback" Force="True" />
+  </UpgradeDeployment>
 </PublishProfile>
