@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Presentation", "Fath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym", "Fathym\Fathym.csproj", "{D9109827-7E42-488F-9D9E-6B867A3110F4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Tests", "Fathym.Tests\Fathym.Tests.csproj", "{56C2C14F-EB99-450C-8505-A007D8084E6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,14 @@ Global
 		{D9109827-7E42-488F-9D9E-6B867A3110F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9109827-7E42-488F-9D9E-6B867A3110F4}.Release|x64.ActiveCfg = Release|Any CPU
 		{D9109827-7E42-488F-9D9E-6B867A3110F4}.Release|x64.Build.0 = Release|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{56C2C14F-EB99-450C-8505-A007D8084E6C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +136,7 @@ Global
 		{5021FCC8-B7E0-440A-B2C3-3997A5C9C16F} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{5ECB4F49-9772-449B-B084-FC73DDFDB44D} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{D9109827-7E42-488F-9D9E-6B867A3110F4} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+		{56C2C14F-EB99-450C-8505-A007D8084E6C} = {E48422AB-D0BB-4071-BCAB-698E3AFF7E83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}
