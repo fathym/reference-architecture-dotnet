@@ -4,6 +4,7 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Fabric.Description;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -20,6 +21,8 @@ namespace Fathym.Fabric.Runtime.Adapters
 		RuntimeContext GetContext();
 
 		IConfigurationManager GetConfiguration();
+
+		ICodePackageActivationContext GetActivationContext();
 
 		Uri LoadServiceUri(string application, string service);
 

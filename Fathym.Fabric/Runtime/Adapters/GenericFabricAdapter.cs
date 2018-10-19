@@ -75,6 +75,11 @@ namespace Fathym.Fabric.Runtime.Adapters
 			};
 		}
 
+		public virtual ICodePackageActivationContext GetActivationContext()
+		{
+			return context.CodePackageActivationContext;
+		}
+
 		public virtual Uri LoadServiceUri(string application, string service)
 		{
 			return new Uri($@"fabric:/{application}/{service}");
