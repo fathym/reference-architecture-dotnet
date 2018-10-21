@@ -1,9 +1,7 @@
 ﻿using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
@@ -11,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.IO;
-using System.Text;
 
 namespace Fathym.Fabric.Runtime.Host
 {
@@ -60,28 +57,30 @@ namespace Fathym.Fabric.Runtime.Host
 			var aiKey = fabricAdapter.GetConfiguration().LoadConfigSetting<string>("EventFlow", "AI.Key");
 
 			return new WebHostBuilder()
-				.UseKestrel(
-					options =>
-					{
-						options.Limits.MaxRequestHeaderCount = 32;
-
-						options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
-
-						options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
-
-						options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
-					})
-				.ConfigureServices(
-					services =>
-					{
-						services.AddSingleton(fabricAdapter);
-					})
+				.UseKestrel(configureKestrelOptions)
+				.ConfigureServices(configureServices)
 				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseStartup<TStartup>()
 				.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
 				.UseApplicationInsights(aiKey)
 				.UseUrls(url)
 				.Build();
+		}
+
+		protected virtual void configureKestrelOptions(KestrelServerOptions options)
+		{
+			options.Limits.MaxRequestHeaderCount = 32;
+
+			options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+
+			options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+
+			options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+		}
+
+		protected virtual void configureServices(IServiceCollection services)
+		{
+			services.AddSingleton(fabricAdapter);
 		}
 		#endregion
 	}
