@@ -17,17 +17,22 @@ namespace Fathym.RefArch
     {
         public WorkFlows(ActorService actorService, ActorId actorId) 
             : base(actorService, actorId)
-        {
-        }
+        { }
+
         #region Runtime
         protected override async Task OnActivateAsync()
         {
             await base.OnActivateAsync();
         }
-        #endregion
+		#endregion
 
-        #region API Methods
-        public virtual async Task<BaseResponse> Ping()
+		#region API Methods
+		public override async Task Refresh()
+		{ }
+		#endregion
+
+		#region API Methods
+		public virtual async Task<BaseResponse> Ping()
         {
             return new BaseResponse()
             {

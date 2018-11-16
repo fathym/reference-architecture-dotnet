@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric.API.Workflows
 {
-	public class DomainWorkflowActor : GenericActor
+	public abstract class DomainWorkflowActor : GenericActor
 	{
 		#region Fields
 		protected DocumentClient docClient;
@@ -45,6 +45,8 @@ namespace Fathym.Fabric.API.Workflows
 		{
 			await base.OnActivateAsync();
 
+			setupDocClientRefresh(TimeSpan.FromMinutes(30));
+
 			setupLogging();
 
 			docClient = buildDocumentClient();
@@ -60,6 +62,11 @@ namespace Fathym.Fabric.API.Workflows
 
 			await base.OnDeactivateAsync();
 		}
+		#endregion
+
+		#region API Methods
+		public override async Task Refresh()
+		{ }
 		#endregion
 
 		#region Helpers
@@ -284,7 +291,7 @@ namespace Fathym.Fabric.API.Workflows
 			return queryDoc.Select(qd => readDocDBSafeAsset<T>(qd)).ToArray().Page(page, pageSize);
 		}
 
-		protected override void setupActorRefresh(TimeSpan delay)
+		protected virtual void setupDocClientRefresh(TimeSpan delay)
 		{
 			refreshTimer = RegisterTimer(async (s) =>
 			{

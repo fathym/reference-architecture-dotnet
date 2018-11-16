@@ -1,22 +1,24 @@
 ﻿using Fathym.Design;
-using Fathym.Fabric.Communications;
-using Fathym.Fabric.Configuration;
 using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.Services.Client;
-using Microsoft.ServiceFabric.Services.Communication.Client;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Fathym.Fabric.Actors
 {
-	public class GenericActor : Actor
+	public abstract class GenericActor : Actor
 	{
 		#region Fields
 		protected readonly IFabricAdapter fabricAdapter;
+
+		protected IActorReminder refreshReminder;
+		#endregion
+
+		#region Properties
+		public virtual bool EnableRefresh { get; set; }
+
+		public virtual string RefreshReminderName { get; set; }
 		#endregion
 
 		#region Constructors
@@ -26,6 +28,8 @@ namespace Fathym.Fabric.Actors
 			DesignOutline.Instance.SetupCommonDefaultJSONSerialization();
 
 			fabricAdapter = new StatefulFabricAdapter(actorService.Context);
+
+			RefreshReminderName = "Refresh";
 		}
 		#endregion
 
@@ -34,7 +38,8 @@ namespace Fathym.Fabric.Actors
 		{
 			setupLogging();
 
-			setupActorRefresh(loadActorRefreshRate());
+			if (EnableRefresh)
+				await setupActorRefresh();
 
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 
@@ -47,9 +52,24 @@ namespace Fathym.Fabric.Actors
 
 			await base.OnDeactivateAsync();
 		}
+
+		public virtual async Task ReceiveReminderAsync(string reminderName, byte[] state, TimeSpan dueTime, TimeSpan period)
+		{
+			if (reminderName == RefreshReminderName)
+				await Refresh();
+		}
+		#endregion
+
+		#region API Methods
+		public abstract Task Refresh();
 		#endregion
 
 		#region Helpers
+		protected virtual async Task<IActorReminder> buildReminder(string name, byte[] state, TimeSpan period)
+		{
+			return await RegisterReminderAsync(name, state, period, period);
+		}
+
 		protected virtual T loadConfigSetting<T>(string section, string name)
 		{
 			return fabricAdapter.GetConfiguration().LoadConfigSetting<T>(section, name);
@@ -65,8 +85,21 @@ namespace Fathym.Fabric.Actors
 			return TimeSpan.FromMinutes(30);
 		}
 
-		protected virtual void setupActorRefresh(TimeSpan delay)
-		{ }
+		protected virtual async Task setupActorRefresh()
+		{
+			var period = loadActorRefreshRate();
+
+			try
+			{
+				refreshReminder = GetReminder(RefreshReminderName);
+			}
+			catch (ReminderNotFoundException rex)
+			{
+			}
+
+			if (refreshReminder == null)
+				refreshReminder = await buildReminder(RefreshReminderName, null, period);
+		}
 
 		protected virtual void setupLogging()
 		{ }
