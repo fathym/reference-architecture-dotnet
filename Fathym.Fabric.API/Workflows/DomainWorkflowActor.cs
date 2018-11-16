@@ -43,15 +43,15 @@ namespace Fathym.Fabric.API.Workflows
 		#region Runtime
 		protected override async Task OnActivateAsync()
 		{
-			await base.OnActivateAsync();
-
-			setupDocClientRefresh(TimeSpan.FromMinutes(30));
-
 			setupLogging();
 
 			docClient = buildDocumentClient();
 
 			await docClient.OpenAsync();
+
+			setupDocClientRefresh(TimeSpan.FromMinutes(30));
+
+			await base.OnActivateAsync();
 
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 		}
