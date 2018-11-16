@@ -48,7 +48,7 @@ namespace Fathym.Fabric.Actors
 			await base.OnActivateAsync();
 
 			if (RefreshOnActivate)
-				await DesignOutline.Instance.Async().Queue(null).SetAction(runActivateRefresh).Run();
+				await Refresh();
 		}
 
 		protected override async Task OnDeactivateAsync()
@@ -88,11 +88,6 @@ namespace Fathym.Fabric.Actors
 		protected virtual TimeSpan loadActorRefreshRate()
 		{
 			return TimeSpan.FromMinutes(30);
-		}
-
-		protected virtual void runActivateRefresh(object state)
-		{
-			Refresh().Wait();
 		}
 
 		protected virtual async Task setupActorRefresh()
