@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric.Actors
 {
-	public abstract class GenericActor : Actor
+	public abstract class GenericActor : Actor, IRemindable
 	{
 		#region Fields
 		protected readonly IFabricAdapter fabricAdapter;
