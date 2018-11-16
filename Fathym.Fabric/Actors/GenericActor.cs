@@ -66,7 +66,8 @@ namespace Fathym.Fabric.Actors
 		#endregion
 
 		#region API Methods
-		public abstract Task Refresh();
+		public virtual async Task Refresh()
+		{ }
 		#endregion
 
 		#region Helpers

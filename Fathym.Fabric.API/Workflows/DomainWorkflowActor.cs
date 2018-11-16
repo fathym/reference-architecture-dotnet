@@ -65,8 +65,6 @@ namespace Fathym.Fabric.API.Workflows
 		#endregion
 
 		#region API Methods
-		public override async Task Refresh()
-		{ }
 		#endregion
 
 		#region Helpers
