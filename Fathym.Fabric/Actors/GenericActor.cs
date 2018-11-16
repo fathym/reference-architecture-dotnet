@@ -19,6 +19,8 @@ namespace Fathym.Fabric.Actors
 		public virtual bool EnableRefresh { get; set; }
 
 		public virtual string RefreshReminderName { get; set; }
+
+		public virtual bool RefreshOnActivate { get; set; }
 		#endregion
 
 		#region Constructors
@@ -44,6 +46,9 @@ namespace Fathym.Fabric.Actors
 			FabricEventSource.Current.ServiceMessage(this, $"Activated {ActorService.Context.ServiceName}");
 
 			await base.OnActivateAsync();
+
+			if (RefreshOnActivate)
+				await DesignOutline.Instance.Async().Queue(null).SetAction(runActivateRefresh).Run();
 		}
 
 		protected override async Task OnDeactivateAsync()
@@ -83,6 +88,11 @@ namespace Fathym.Fabric.Actors
 		protected virtual TimeSpan loadActorRefreshRate()
 		{
 			return TimeSpan.FromMinutes(30);
+		}
+
+		protected virtual void runActivateRefresh(object state)
+		{
+			Refresh().Wait();
 		}
 
 		protected virtual async Task setupActorRefresh()
