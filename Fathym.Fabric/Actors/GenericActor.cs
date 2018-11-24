@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace Fathym.Fabric.Actors
 {
-	public abstract class GenericActor : Actor, IRemindable
+	public abstract class GenericActor : Actor//, IRemindable
 	{
 		#region Fields
 		protected readonly IFabricAdapter fabricAdapter;
 
-		protected IActorReminder refreshReminder;
+		//protected IActorReminder refreshReminder;
+
+		protected IActorTimer refreshTimer;
 		#endregion
 
 		#region Properties
 		public virtual bool EnableRefresh { get; set; }
 
-		public virtual string RefreshReminderName { get; set; }
+		//public virtual string RefreshReminderName { get; set; }
 
 		public virtual bool RefreshOnActivate { get; set; }
 		#endregion
@@ -31,7 +33,7 @@ namespace Fathym.Fabric.Actors
 
 			fabricAdapter = new StatefulFabricAdapter(actorService.Context);
 
-			RefreshReminderName = "Refresh";
+			//RefreshReminderName = "Refresh";
 		}
 		#endregion
 
@@ -58,11 +60,11 @@ namespace Fathym.Fabric.Actors
 			await base.OnDeactivateAsync();
 		}
 
-		public virtual async Task ReceiveReminderAsync(string reminderName, byte[] state, TimeSpan dueTime, TimeSpan period)
-		{
-			if (reminderName == RefreshReminderName)
-				await Refresh();
-		}
+		//public virtual async Task ReceiveReminderAsync(string reminderName, byte[] state, TimeSpan dueTime, TimeSpan period)
+		//{
+		//	if (reminderName == RefreshReminderName)
+		//		await Refresh();
+		//}
 		#endregion
 
 		#region API Methods
@@ -95,16 +97,25 @@ namespace Fathym.Fabric.Actors
 		{
 			var period = loadActorRefreshRate();
 
-			try
-			{
-				refreshReminder = GetReminder(RefreshReminderName);
-			}
-			catch (ReminderNotFoundException rex)
-			{
-			}
+			//try
+			//{
+			//	refreshReminder = GetReminder(RefreshReminderName);
+			//}
+			//catch (ReminderNotFoundException rex)
+			//{
+			//}
 
-			if (refreshReminder == null)
-				refreshReminder = await buildReminder(RefreshReminderName, null, period);
+			//if (refreshReminder == null)
+			//	refreshReminder = await buildReminder(RefreshReminderName, null, period);
+
+			refreshTimer = RegisterTimer(async (s) =>
+			{
+				FabricEventSource.Current.ServiceMessage(this, $"Refreshing...");
+
+				await Refresh();
+
+				FabricEventSource.Current.ServiceMessage(this, $"Refreshing complete");
+			}, null, period, period);
 		}
 
 		protected virtual void setupLogging()
