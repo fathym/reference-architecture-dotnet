@@ -4,6 +4,7 @@ using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,6 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Fathym.Presentation.MVC.Fluent
 {
@@ -244,6 +244,8 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		protected Type proxyServiceType;
 
+		protected Func<HttpContext, ProxyOptions, IProxyRequestHandler> proxyResolveProxyRequestHandler;
+
 		protected readonly IServiceCollection services;
 		#endregion
 
@@ -293,10 +295,13 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual IViewServicesPipeline Proxy<TProxyService>()
+		public virtual IViewServicesPipeline Proxy<TProxyService>(
+			Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler = null)
 			where TProxyService : class, IProxyService
 		{
 			proxyServiceType = typeof(TProxyService);
+
+			proxyResolveProxyRequestHandler = resolveProxyRequestHandler;
 
 			addAction(setProxy);
 
@@ -354,6 +359,9 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		protected virtual void setProxy()
 		{
+			if (proxyResolveProxyRequestHandler != null)
+				services.AddSingleton(typeof(Func<HttpContext, ProxyOptions, IProxyRequestHandler>), proxyResolveProxyRequestHandler);
+
 			services.AddTransient(typeof(IProxyService), proxyServiceType);
 		}
 		#endregion
@@ -369,7 +377,7 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		IViewServicesPipeline MVC(List<Assembly> assemblies = null, bool defaultContractResolver = true);
 
-		IViewServicesPipeline Proxy<TProxyService>() where TProxyService : class, IProxyService;
+		IViewServicesPipeline Proxy<TProxyService>(Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler = null) where TProxyService : class, IProxyService;
 
 		IViewServicesPipeline WithServices(Func<IServiceCollection, Action> action);
 

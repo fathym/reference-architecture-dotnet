@@ -19,7 +19,8 @@ namespace Fathym.Presentation.Proxy
 		protected readonly IDictionary<string, IQueryParamProcessor> queryParamProcessors;
 		#endregion
 
-		public ProxyMiddleware(RequestDelegate next, IProxyService proxyService, IDictionary<string, IQueryParamProcessor> queryParamProcessors)
+		public ProxyMiddleware(RequestDelegate next, IProxyService proxyService, 
+			IDictionary<string, IQueryParamProcessor> queryParamProcessors)
 			: base(next)
 		{
 			this.proxyService = proxyService;

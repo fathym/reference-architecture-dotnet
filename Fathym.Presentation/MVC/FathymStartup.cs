@@ -3,6 +3,7 @@ using Fathym.Presentation.MVC.Fluent;
 using Fathym.Presentation.Proxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -57,6 +58,14 @@ namespace Fathym.Presentation.MVC
 		#endregion
 
 		#region Helpers
+		protected virtual IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions)
+		{
+			if (context.WebSockets.IsWebSocketRequest)
+				return new WebSocketProxyRequestHandler(proxyOptions, fabricAdapter);
+			else
+				return new HttpClientProxyRequestHandler(proxyOptions, fabricAdapter);
+		}
+
 		protected virtual IApplicationPipeline buildApplicationPipeline()
 		{
 			return new FathymApplicationPipeline(env, fabricAdapter, loggerFactory);
@@ -187,7 +196,7 @@ namespace Fathym.Presentation.MVC
 				{
 					Assembly.GetEntryAssembly()
 				})
-				.Proxy<FabricProxyService>()
+				.Proxy<FabricProxyService>(resolveProxyRequestHandler: resolveProxyRequestHandler)
 				.Run();
 		}
 

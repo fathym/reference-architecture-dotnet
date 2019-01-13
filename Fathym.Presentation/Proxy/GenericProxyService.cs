@@ -21,10 +21,13 @@ namespace Fathym.Presentation.Proxy
 	{
 		#region Fields
 		protected readonly ProxyConfiguration config;
+
+		protected readonly Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler;
 		#endregion
 
 		#region Constructors
-		public GenericProxyService(IOptions<ProxyConfiguration> config)
+		public GenericProxyService(IOptions<ProxyConfiguration> config,
+			Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler)
 		{
 			this.config = config.Value;
 		}
@@ -132,8 +135,6 @@ namespace Fathym.Presentation.Proxy
 
 			return proxyOptions;
 		}
-
-		protected abstract IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions);
 		#endregion
 	}
 }

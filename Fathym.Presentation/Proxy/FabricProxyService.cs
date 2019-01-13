@@ -19,8 +19,9 @@ namespace Fathym.Presentation.Proxy
 		#endregion
 
 		#region Constructors
-		public FabricProxyService(IFabricAdapter fabricAdapter, IOptions<ProxyConfiguration> config)
-			: base(config)
+		public FabricProxyService(IFabricAdapter fabricAdapter, IOptions<ProxyConfiguration> config,
+			Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler = null)
+			: base(config, resolveProxyRequestHandler)
 		{
 			this.fabricAdapter = fabricAdapter;
 		}
@@ -43,14 +44,6 @@ namespace Fathym.Presentation.Proxy
 			query = uri.Query;
 
 			return Task.FromResult(uri.AbsolutePath);
-		}
-
-		protected override IProxyRequestHandler resolveProxyRequestHandler(HttpContext context, ProxyOptions proxyOptions)
-		{
-			if (context.WebSockets.IsWebSocketRequest)
-				return new WebSocketProxyRequestHandler(proxyOptions, fabricAdapter);
-			else
-				return new HttpClientProxyRequestHandler(proxyOptions, fabricAdapter);
 		}
 		#endregion
 	}
