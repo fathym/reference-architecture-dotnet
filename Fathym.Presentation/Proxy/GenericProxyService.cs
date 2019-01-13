@@ -30,6 +30,8 @@ namespace Fathym.Presentation.Proxy
 			Func<HttpContext, ProxyOptions, IProxyRequestHandler> resolveProxyRequestHandler)
 		{
 			this.config = config.Value;
+
+			this.resolveProxyRequestHandler = resolveProxyRequestHandler;
 		}
 		#endregion
 
