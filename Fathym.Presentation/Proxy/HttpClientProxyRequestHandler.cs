@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Fathym.Fabric.Runtime.Adapters;
+﻿using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.WebUtilities;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Fathym.Presentation.Proxy
 {
@@ -130,7 +127,20 @@ namespace Fathym.Presentation.Proxy
 
 		protected virtual async Task withClient(ProxyOptions proxyOptions, Func<HttpClient, Task> action)
 		{
-			await fabricAdapter.WithFabricClient(proxyOptions.Proxy.Connection.Application, proxyOptions.Proxy.Connection.Service, action);
+			if (proxyOptions.Proxy.Connection.Application.StartsWith("@"))
+			{
+				var client = new HttpClient();
+
+				client.BaseAddress = new Uri(proxyOptions.Proxy.Connection.Application.Substring(1));
+
+				var parts = proxyOptions.Proxy.Connection.Service.Split('|');
+
+				client.DefaultRequestHeaders.Add(parts[0], parts[1]);
+
+				await action(client);
+			}
+			else
+				await fabricAdapter.WithFabricClient(proxyOptions.Proxy.Connection.Application, proxyOptions.Proxy.Connection.Service, action);
 		}
 		#endregion
 	}
