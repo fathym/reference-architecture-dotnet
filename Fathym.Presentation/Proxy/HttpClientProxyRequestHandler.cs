@@ -133,7 +133,7 @@ namespace Fathym.Presentation.Proxy
 
 				client.BaseAddress = new Uri(proxyOptions.Proxy.Connection.Application.Substring(1));
 
-				var parts = proxyOptions.Proxy.Connection.Service.Split('|');
+				var parts = proxyOptions.Proxy.Connection.Service.Split('~');
 
 				client.DefaultRequestHeaders.Add(parts[0], parts[1]);
 
