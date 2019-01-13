@@ -117,7 +117,7 @@ namespace Fathym.Presentation.Proxy
 
 					requestMessage.RequestUri = new Uri(UriHelper.BuildAbsolute(scheme, fullHost, path: path, query: query));
 
-					client.Timeout = TimeSpan.FromMinutes(5);
+					client.Timeout = TimeSpan.FromMinutes(60);
 
 					responseMessage = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
 				});
