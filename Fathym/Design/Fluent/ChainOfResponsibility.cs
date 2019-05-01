@@ -118,7 +118,11 @@ namespace Fathym.Design.Fluent
 	{
 		IChained<T> AddResponsibilities(params Func<T>[] responsibilities);
 
+		IChained<T> AddResponsibilities(params Func<Task<T>>[] responsibilities);
+
 		IChained<T> AddResponsibility(Func<T> responsibility);
+
+		IChained<T> AddResponsibility(Func<Task<T>> responsibility);
 
 		Task<T> Run();
 
