@@ -11,7 +11,7 @@ namespace Fathym.Design.Fluent
 		#region Fields
 		protected Func<Exception, bool> continueOnException;
 
-		protected readonly List<Func<T>> responsibilities;
+		protected readonly List<Func<Task<T>>> responsibilities;
 
 		protected Func<T, bool> shouldContinue;
 		#endregion
@@ -21,7 +21,7 @@ namespace Fathym.Design.Fluent
 		{
 			continueOnException = (ex) => false;
 
-			responsibilities = new List<Func<T>>();
+			responsibilities = new List<Func<Task<T>>>();
 
 			shouldContinue = (t) => t == null;
 		}
@@ -30,6 +30,16 @@ namespace Fathym.Design.Fluent
 		#region API Methods
 		public virtual IChained<T> AddResponsibilities(params Func<T>[] responsibilities)
 		{
+			responsibilities.Each(r =>
+			{
+				AddResponsibility(r);
+			});
+
+			return this;
+		}
+
+		public virtual IChained<T> AddResponsibilities(params Func<Task<T>>[] responsibilities)
+		{
 			this.responsibilities.AddRange(responsibilities);
 
 			return this;
@@ -37,7 +47,14 @@ namespace Fathym.Design.Fluent
 
 		public virtual IChained<T> AddResponsibility(Func<T> responsibility)
 		{
-			responsibilities.Add(responsibility);
+			AddResponsibility(() => Task.FromResult(responsibility()));
+
+			return this;
+		}
+
+		public virtual IChained<T> AddResponsibility(Func<Task<T>> responsibility)
+		{
+			AddResponsibilities(new[] { responsibility });
 
 			return this;
 		}
@@ -46,13 +63,13 @@ namespace Fathym.Design.Fluent
 		{
 			T result = default(T);
 
-			responsibilities.Each(r =>
+			await responsibilities.Each(async r =>
 			{
 				bool cont;
 
 				try
 				{
-					result = r();
+					result = await r();
 
 					cont = shouldContinue(result);
 				}
@@ -90,7 +107,11 @@ namespace Fathym.Design.Fluent
 	{
 		IChained<T> AddResponsibilities(params Func<T>[] responsibilities);
 
+		IChained<T> AddResponsibilities(params Func<Task<T>>[] responsibilities);
+
 		IChained<T> AddResponsibility(Func<T> responsibility);
+
+		IChained<T> AddResponsibility(Func<Task<T>> responsibility);
 	}
 
 	public interface IChained<T>

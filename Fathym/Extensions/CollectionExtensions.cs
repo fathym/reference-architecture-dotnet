@@ -56,6 +56,26 @@ namespace System.Collections.Generic
 		}
 
 		/// <summary>
+		///     Method will execute the action against every item in the collection.
+		/// </summary>
+		/// <typeparam name="T">The type of items in the collection.</typeparam>
+		/// <param name="values">The collection of values.</param>
+		/// <param name="action">The action to execute.</param>
+		/// <example>
+		///     <code>
+		///         string[] values = new string[] { "1", "2", "3" };
+		///         
+		///         int total = 0; 
+		///         
+		///         values.Each(value => total += value);
+		///     </code>
+		/// </example>
+		public static async Task Each<T>(this IEnumerable<T> values, Func<T, Task> action, bool parallel = false)
+		{
+			await values.Each(async (value) => { await action(value); return false; }, parallel);
+		}
+
+		/// <summary>
 		///     Method will execute the action against every item in the collection and will break once true is returned from one of the actions.
 		/// </summary>
 		/// <typeparam name="T">The type of items in the collection.</typeparam>
@@ -72,6 +92,29 @@ namespace System.Collections.Generic
 		/// </example>
 		public static void Each<T>(this IEnumerable<T> values, Func<T, bool> action, bool parallel = false)
 		{
+			values.Each((t) =>
+			{
+				return Task.FromResult(action(t));
+			}, parallel).Wait();
+		}
+
+		/// <summary>
+		///     Method will execute the action against every item in the collection and will break once true is returned from one of the actions.
+		/// </summary>
+		/// <typeparam name="T">The type of items in the collection.</typeparam>
+		/// <param name="values">The collection of values.</param>
+		/// <param name="action">The action to execute.</param>
+		/// <example>
+		///     <code>
+		///         string[] values = new string[] { "1", "2", "3" };
+		///         
+		///         int total = 0; 
+		///         
+		///         values.Each(value => total += value);
+		///     </code>
+		/// </example>
+		public static async Task Each<T>(this IEnumerable<T> values, Func<T, Task<bool>> action, bool parallel = false)
+		{
 			if (values != null)
 			{
 				if (parallel)
@@ -82,7 +125,7 @@ namespace System.Collections.Generic
 
 					foreach (T value in values)
 					{
-						shouldBreak = action(value);
+						shouldBreak = await action(value);
 
 						if (shouldBreak)
 							break;
