@@ -38,6 +38,20 @@ namespace Fathym.Fabric.API.Controllers
 		{
 			return new APIBoundary<T>();
 		}
+		protected virtual IAPIBoundaried<T> withAPIBoundary<T>(Func<T, Task<T>> action)
+			 where T : BaseResponse, new()
+		{
+			return withAPIBoundaried<T>(api =>
+			{
+				return api.SetAction(action);
+			});
+		}
+
+		protected virtual IAPIBoundaried<T> withAPIBoundaried<T>(Func<IAPIBoundary<T>, IAPIBoundaried<T>> api)
+			 where T : BaseResponse, new()
+		{
+			return api(withAPIBoundary<T>());
+		}
 
 		protected virtual IAPIBoundary<BaseResponse<T>> withModeledAPIBoundary<T>()
 		{
