@@ -10,6 +10,23 @@ namespace System.Net.Http
 {
 	public static class HttpExtensions
 	{
+		public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, HttpContent content)
+		{
+			return await PatchAsync(client, new Uri(client.BaseAddress + requestUri), content);
+		}
+
+		public static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri requestUri, HttpContent content)
+		{
+			var request = new HttpRequestMessage
+			{
+				Method = new HttpMethod("PATCH"),
+				RequestUri = requestUri,
+				Content = content
+			};
+
+			return await client.SendAsync(request);
+		}
+
 		public static async Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client,
 			string requestUri, T value)
 		{
