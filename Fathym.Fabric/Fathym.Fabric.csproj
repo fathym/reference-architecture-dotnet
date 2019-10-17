@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Copyright>2019</Copyright>
+    <Company>Fathym, Inc</Company>
+    <Product>Fathym Reference Architecture</Product>
+    <Version>1.0.0.1</Version>
+    <Authors />
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>keyfile.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>    
   </PropertyGroup>
 
 	<ItemGroup>

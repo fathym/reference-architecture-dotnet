@@ -9,7 +9,14 @@
 		<ServicePackagePath>PackageRoot</ServicePackagePath>
 		<ServicePackagePrefix>$(MSBuildProjectName)</ServicePackagePrefix>
 		<FabActUtilWorkingDir>$(BaseIntermediateOutputPath)\FabActUtilTemp</FabActUtilWorkingDir>
-	</PropertyGroup>
+    <Copyright>2019</Copyright>
+    <Company>Fathym, Inc</Company>
+    <Product>Fathym Reference Architecture</Product>
+    <Authors />
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>keyfile.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>    
+  </PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="PackageRoot\Config\eventFlowConfig.json" />
