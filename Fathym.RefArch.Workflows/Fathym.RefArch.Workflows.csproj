@@ -12,10 +12,7 @@
     <Copyright>2019</Copyright>
     <Company>Fathym, Inc</Company>
     <Product>Fathym Reference Architecture</Product>
-    <Authors />
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>keyfile.pfx</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>    
+    <Authors /> 
   </PropertyGroup>
 
 	<ItemGroup>
