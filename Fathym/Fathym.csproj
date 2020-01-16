@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Copyright>2019</Copyright>
+    <Company>Fathym, Inc</Company>
+    <Product>Fathym Reference Architecture</Product>
+    <Authors />  
   </PropertyGroup>
 
   <ItemGroup>
