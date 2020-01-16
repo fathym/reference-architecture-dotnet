@@ -10,7 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Fathym.Fabric.API\Fathym.Fabric.API.csproj" />
+	  <ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
 	</ItemGroup>
 
 </Project>
