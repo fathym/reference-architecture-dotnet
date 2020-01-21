@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fathym.API;
 using Microsoft.ServiceFabric.Actors;
-using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
-using Microsoft.ServiceFabric.Services.Remoting;
 
 namespace Fathym.RefArch.Workflows.Interfaces
 {

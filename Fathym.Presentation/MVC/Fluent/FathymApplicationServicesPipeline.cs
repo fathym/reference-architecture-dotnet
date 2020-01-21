@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -130,6 +133,23 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
+		public virtual ICoreServicesPipeline Logging(string loggingConfigSection = null)
+		{
+			services.AddLogging(opt =>
+			{
+				if (!loggingConfigSection.IsNullOrEmpty())
+				{
+					var section = config.GetSection(loggingConfigSection);
+
+					if (section == null)
+						opt.AddConsole();
+				}
+				opt.AddDebug();
+			});
+
+			return this;
+		}
+
 		public virtual ICoreServicesPipeline Sessions(Action<SessionOptions> configure)
 		{
 			sessionConfigure = configure;
@@ -217,6 +237,8 @@ namespace Fathym.Presentation.MVC.Fluent
 		ICoreServicesPipeline Compression(Action<ResponseCompressionOptions> configureOptions = null);
 
 		ICoreServicesPipeline DataProtection(string connectionConfig, string containerConfig, string blobConfig);
+
+		ICoreServicesPipeline Logging(string loggingConfigSection);
 
 		ICoreServicesPipeline Sessions(Action<SessionOptions> sessionConfigure);
 
@@ -349,10 +371,13 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		protected virtual void setMVC()
 		{
-			var mvcBuilder = services.AddMvc();
+			var mvcBuilder = services.AddRazorPages();
 
 			if (mvcDefaultContractResolver)
-				mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+				mvcBuilder.AddNewtonsoftJson(options =>
+				{
+					options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+				});
 
 			mvcPartAssemblies.ForEach(assembly => mvcBuilder.AddApplicationPart(assembly));
 		}

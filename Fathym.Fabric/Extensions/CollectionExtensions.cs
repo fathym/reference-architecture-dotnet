@@ -10,7 +10,7 @@ namespace Fathym.Fabric.Extensions
 {
 	public static class IAsyncEnumerableExtensions
 	{
-		public static async Task<T> FirstOrDefault<T>(this IAsyncEnumerable<T> values, Func<T, bool> predicate)
+		public static async Task<T> FirstOrDefault<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, bool> predicate)
 		{
 			var enumerator = values.GetAsyncEnumerator();
 
@@ -21,12 +21,12 @@ namespace Fathym.Fabric.Extensions
 			return default(T);
 		}
 
-		public static async Task Each<T>(this IAsyncEnumerable<T> values, Func<T, Task> action)
+		public static async Task Each<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, Task> action)
 		{
 			await values.Each(async (value) => { await action(value); return false; });
 		}
 
-		public static async Task Each<T>(this IAsyncEnumerable<T> values, Func<T, Task<bool>> action)
+		public static async Task Each<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, Task<bool>> action)
 		{
 			if (values != null)
 			{
@@ -44,7 +44,7 @@ namespace Fathym.Fabric.Extensions
 			}
 		}
 
-		public static async Task<T> LastOrDefault<T>(this IAsyncEnumerable<T> values, Func<T, bool> predicate)
+		public static async Task<T> LastOrDefault<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, bool> predicate)
 		{
 			var value = default(T);
 
@@ -57,7 +57,7 @@ namespace Fathym.Fabric.Extensions
 			return value;
 		}
 
-		public static async Task<bool> IsNullOrEmpty<T>(this IAsyncEnumerable<T> values)
+		public static async Task<bool> IsNullOrEmpty<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values)
 		{
 			if (values == null)
 				return true;
@@ -70,7 +70,7 @@ namespace Fathym.Fabric.Extensions
 			return true;
 		}
 
-		public static async Task<IEnumerable<TTo>> Select<T, TTo>(this IAsyncEnumerable<T> values, Func<T, TTo> action)
+		public static async Task<IEnumerable<TTo>> Select<T, TTo>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, TTo> action)
 		{
 			var selected = new List<TTo>();
 
@@ -82,7 +82,7 @@ namespace Fathym.Fabric.Extensions
 			return selected;
 		}
 
-		public static async Task<IEnumerable<T>> Where<T>(this IAsyncEnumerable<T> values, Func<T, bool> predicate)
+		public static async Task<IEnumerable<T>> Where<T>(this Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> values, Func<T, bool> predicate)
 		{
 			var matches = new List<T>();
 

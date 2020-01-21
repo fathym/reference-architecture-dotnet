@@ -84,7 +84,6 @@ namespace Fathym.Presentation.MVC
 		protected virtual void setupCoreBuilder(ICoreBuilderPipeline pipeline)
 		{
 			pipeline
-				.Logging("Logging")
 				.BrowerLink()
 				.ExceptionHandling(null)
 				.Rewrite(useWww: true/*, useHttps: true*/)
@@ -185,6 +184,7 @@ namespace Fathym.Presentation.MVC
 				.AppInsights()
 				.Compression()
 				.DataProtection(dpConnConfig, dpContConfig, dpBlobConfig)
+				.Logging("Logging")
 				.Sessions(configureSessionOptions)
 				.Run();
 		}

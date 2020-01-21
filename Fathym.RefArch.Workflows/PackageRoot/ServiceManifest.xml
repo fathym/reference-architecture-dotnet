@@ -1,16 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fathym.RefArch.WorkflowsPkg" Version="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <ServiceTypes>
-    <StatefulServiceType ServiceTypeName="WorkflowsActorServiceType">
+    <StatefulServiceType ServiceTypeName="WorkFlowsActorServiceType">
       <Extensions>
-        <Extension Name="__GeneratedServiceType__" GeneratedId="85b7a75b-a934-4b30-8e18-0c7c73ac109a|Persisted">
+        <Extension Name="__GeneratedServiceType__" GeneratedId="434ffb59-01e1-491d-9346-797ac1a5393b|None">
           <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-            <DefaultService Name="WorkflowsActorService" />
-            <ReplicatorEndpoint Name="WorkflowsActorServiceReplicatorEndpoint" />
-            <ReplicatorConfigSection Name="WorkflowsActorServiceReplicatorConfig" />
-            <ReplicatorSecurityConfigSection Name="WorkflowsActorServiceReplicatorSecurityConfig" />
-            <StoreConfigSection Name="WorkflowsActorServiceLocalStoreConfig" />
-            <ServiceEndpointV2 Name="WorkflowsActorServiceEndpointV2" />
+            <DefaultService Name="WorkServiceActorService" />
+            <ReplicatorEndpoint Name="WorkFlowsActorServiceReplicatorEndpoint" />
+            <ReplicatorConfigSection Name="WorkFlowsActorServiceReplicatorConfig" />
+            <ReplicatorSecurityConfigSection Name="WorkFlowsActorServiceReplicatorSecurityConfig" />
+            <StoreConfigSection Name="WorkFlowsActorServiceLocalStoreConfig" />
+            <ServiceEndpointV2 Name="WorkFlowsActorServiceEndpointV2" />
+          </GeneratedNames>
+        </Extension>
+      </Extensions>
+    </StatefulServiceType>
+    <StatefulServiceType ServiceTypeName="DoStuffActorServiceType">
+      <Extensions>
+        <Extension Name="__GeneratedServiceType__" GeneratedId="4044a0a5-fabf-45e9-ba86-fbb1a7187626|None">
+          <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
+            <DefaultService Name="DoStuffActorService" />
+            <ReplicatorEndpoint Name="DoStuffActorServiceReplicatorEndpoint" />
+            <ReplicatorConfigSection Name="DoStuffActorServiceReplicatorConfig" />
+            <ReplicatorSecurityConfigSection Name="DoStuffActorServiceReplicatorSecurityConfig" />
+            <StoreConfigSection Name="DoStuffActorServiceLocalStoreConfig" />
+            <ServiceEndpointV2 Name="DoStuffActorServiceEndpointV2" />
           </GeneratedNames>
         </Extension>
       </Extensions>
@@ -27,7 +41,10 @@
   <Resources>
     <Endpoints>
       <Endpoint Name="WorkflowsActorServiceEndpointV2" />
-      <Endpoint Name="WorkflowsActorServiceReplicatorEndpoint" />
+      <Endpoint Name="WorkFlowsActorServiceEndpointV2" />
+      <Endpoint Name="WorkFlowsActorServiceReplicatorEndpoint" />
+      <Endpoint Name="DoStuffActorServiceEndpointV2" />
+      <Endpoint Name="DoStuffActorServiceReplicatorEndpoint" />
     </Endpoints>
   </Resources>
   <!-- The content will be generated during build -->

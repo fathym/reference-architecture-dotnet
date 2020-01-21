@@ -124,15 +124,6 @@ namespace Fathym.Presentation.MVC.Fluent
 			return this;
 		}
 
-		public virtual ICoreBuilderPipeline Logging(string configSection = null)
-		{
-			loggingConfigSection = configSection;
-
-			addAction(buildLogging);
-
-			return this;
-		}
-
 		public virtual ICoreBuilderPipeline Prerender()
 		{
 			addAction(buildPrerender);
@@ -187,19 +178,6 @@ namespace Fathym.Presentation.MVC.Fluent
 			app.UseAuthentication();
 		}
 
-		protected virtual void buildLogging()
-		{
-			if (!loggingConfigSection.IsNullOrEmpty())
-			{
-				var section = config.GetSection(loggingConfigSection);
-
-				if (section == null)
-					loggerFactory.AddConsole(section);
-			}
-
-			loggerFactory.AddDebug();
-		}
-
 		protected virtual void buildPrerender()
 		{
 			if (!env.IsDevelopment())
@@ -237,8 +215,6 @@ namespace Fathym.Presentation.MVC.Fluent
 
 		ICoreBuilderPipeline Identity();
 
-		ICoreBuilderPipeline Logging(string configSection = null);
-
 		ICoreBuilderPipeline Prerender();
 
 		ICoreBuilderPipeline Rewrite(bool useHttps = false, bool useWww = false);
@@ -273,7 +249,6 @@ namespace Fathym.Presentation.MVC.Fluent
 		protected virtual void setupCoreBuilder(ICoreBuilderPipeline pipeline)
 		{
 			pipeline
-				.Logging("Logging")
 				.BrowerLink()
 				.ExceptionHandling(null)
 				.Rewrite(useWww: true/*, useHttps: true*/)

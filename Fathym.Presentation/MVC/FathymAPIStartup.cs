@@ -22,7 +22,6 @@ namespace Fathym.Presentation.MVC
 		protected override void setupCoreBuilder(ICoreBuilderPipeline pipeline)
 		{
 			pipeline
-				.Logging("Logging")
 				.ExceptionHandling(null)
 				.Run();
 		}

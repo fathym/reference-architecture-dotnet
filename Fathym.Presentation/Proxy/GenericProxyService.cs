@@ -11,8 +11,6 @@ using Fathym.Design;
 using Fathym.Fabric.Communications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.ServiceFabric.Services.Client;
-using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace Fathym.Presentation.Proxy

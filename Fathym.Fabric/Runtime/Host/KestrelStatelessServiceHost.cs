@@ -1,6 +1,6 @@
 ﻿using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
@@ -54,33 +54,39 @@ namespace Fathym.Fabric.Runtime.Host
 
 		protected virtual IWebHost buildWebHost(string url, AspNetCoreCommunicationListener listener)
 		{
-			var aiKey = fabricAdapter.GetConfiguration().LoadConfigSetting<string>("EventFlow", "AI.Key");
-
 			return new WebHostBuilder()
-				.UseKestrel(configureKestrelOptions)
+				.UseKestrel((serverOptions) => { configureKestrelOptions(serverOptions); })
 				.ConfigureServices(configureServices)
 				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseStartup<TStartup>()
 				.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
-				.UseApplicationInsights(aiKey)
+				//.UseApplicationInsights(aiKey)
 				.UseUrls(url)
 				.Build();
 		}
 
-		protected virtual void configureKestrelOptions(KestrelServerOptions options)
+		protected virtual KestrelServerOptions configureKestrelOptions(KestrelServerOptions options)
 		{
-			options.Limits.MaxRequestHeaderCount = 32;
+			//options.Limits.MaxRequestHeaderCount = 32;
 
-			options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+			//options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-			options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+			//options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-			options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+			//options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+
+			options.MaxRequestBufferSize = 2000000 + 2000000;
+
+			return options;
 		}
 
 		protected virtual void configureServices(IServiceCollection services)
 		{
+			var aiKey = fabricAdapter.GetConfiguration().LoadConfigSetting<string>("EventFlow", "AI.Key");
+
 			services.AddSingleton(fabricAdapter);
+
+			services.AddApplicationInsightsTelemetry(aiKey);
 		}
 		#endregion
 	}
