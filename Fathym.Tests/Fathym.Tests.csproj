@@ -12,8 +12,4 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Fathym\FathymOld.csproj" />
-  </ItemGroup>
-
 </Project>
