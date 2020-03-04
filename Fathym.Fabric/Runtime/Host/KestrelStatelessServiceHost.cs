@@ -1,6 +1,7 @@
 ﻿using Fathym.Fabric.Runtime.Adapters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
@@ -67,15 +68,15 @@ namespace Fathym.Fabric.Runtime.Host
 
 		protected virtual KestrelServerOptions configureKestrelOptions(KestrelServerOptions options)
 		{
-			//options.Limits.MaxRequestHeaderCount = 32;
+			options.Limits.MaxRequestHeaderCount = 32;
 
-			//options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+			options.Limits.MaxRequestHeadersTotalSize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-			//options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
+			options.Limits.MaxRequestBodySize = 2000000;//  Is this really how to handle the HTTP 431 error we were getting?
 
-			//options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
+			options.Limits.MaxRequestBufferSize = options.Limits.MaxRequestHeadersTotalSize + options.Limits.MaxRequestBodySize;
 
-			options.MaxRequestBufferSize = 2000000 + 2000000;
+			//options.Limits.MaxRequestBufferSize = 2000000 + 2000000;
 
 			return options;
 		}
