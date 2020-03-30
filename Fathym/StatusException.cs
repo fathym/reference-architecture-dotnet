@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Fathym
 {
 	public class StatusException : Exception
 	{
 		#region Properties
-		public virtual Status Status { get; protected set; }
+		public virtual Status Status { get; set; }
 		#endregion
 
 		#region Constructors
+		public StatusException()
+			: base()
+		{ }
+
 		public StatusException(Status status)
 			: base(status.Message)
 		{
