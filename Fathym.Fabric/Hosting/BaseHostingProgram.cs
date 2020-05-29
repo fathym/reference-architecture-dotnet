@@ -1,7 +1,7 @@
 ﻿using Fathym.Fabric.Runtime;
 using Fathym.Fabric.Runtime.Host;
 using Fathym.Fluent;
-using Microsoft.Diagnostics.EventFlow.ServiceFabric;
+//using Microsoft.Diagnostics.EventFlow.ServiceFabric;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using System;
@@ -111,7 +111,7 @@ namespace Fathym.Fabric.Hosting
 				}
 				else
 				{
-					using (var diagnosticsPipeline = ServiceFabricDiagnosticPipelineFactory.CreatePipeline(loggingName))
+					//using (var diagnosticsPipeline = ServiceFabricDiagnosticPipelineFactory.CreatePipeline(loggingName))
 					{
 						executeHostActions();
 					}
