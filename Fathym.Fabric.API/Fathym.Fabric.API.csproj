@@ -4,7 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+<<<<<<< HEAD
   <ItemGroup>
+=======
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.10.3" />
+>>>>>>> integration
 		<PackageReference Include="runtime.native.System" Version="4.3.1" />
 		<PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
 		<PackageReference Include="System.Net.Primitives" Version="4.3.1" />

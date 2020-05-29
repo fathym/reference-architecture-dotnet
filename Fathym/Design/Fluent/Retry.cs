@@ -9,7 +9,7 @@ namespace Fathym.Design.Fluent
     public class Retry : IRetry, IRetried
 	{
 		#region Fields
-		protected Func<bool> action;
+		protected Func<Task<bool>> action;
 
 		protected int cycles;
 
@@ -43,7 +43,7 @@ namespace Fathym.Design.Fluent
 
 			while (action != null && currentCycle <= cycles)
 			{
-				shouldRetry = action();
+				shouldRetry = await action();
 
 				if (shouldRetry)
 				{
@@ -62,6 +62,13 @@ namespace Fathym.Design.Fluent
 		}
 
 		public virtual IRetried SetAction(Func<bool> action)
+		{
+			this.action = () => Task.FromResult(action());
+
+			return this;
+		}
+
+		public virtual IRetried SetActionAsync(Func<Task<bool>> action)
 		{
 			this.action = action;
 
@@ -101,6 +108,8 @@ namespace Fathym.Design.Fluent
 	public interface IRetry
 	{
 		IRetried SetAction(Func<bool> action);
+
+		IRetried SetActionAsync(Func<Task<bool>> action);
 	}
 
 	public interface IRetried
