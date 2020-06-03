@@ -44,8 +44,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Fathym.API\Fathym.API.csproj" />
-	  <ProjectReference Include="..\Fathym.Fabric\Fathym.Fabric.csproj" />
-	  <ProjectReference Include="..\Fathym\Fathym.csproj" />
 	</ItemGroup>
 
 </Project>
