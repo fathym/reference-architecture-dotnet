@@ -1,10 +1,7 @@
 ﻿using Fathym.API;
 using Fathym.API.Fluent;
 using Fathym.Design;
-using Fathym.Fabric.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.ServiceFabric.Actors;
-using Microsoft.ServiceFabric.Actors.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;

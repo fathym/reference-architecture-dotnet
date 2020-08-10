@@ -1,5 +1,4 @@
-﻿using Fathym.Fabric;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,8 +98,6 @@ namespace Fathym
 			}
 			catch (Exception ex)
 			{
-				FabricEventSource.Current.Exception(ex.ToString());
-
 				throw;
 			}
 			finally
