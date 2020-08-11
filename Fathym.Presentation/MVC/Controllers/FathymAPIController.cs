@@ -20,7 +20,8 @@ namespace Fathym.Fabric.API.Controllers
 			return await withAPIBoundary<BaseResponse>()
 				.SetAction(async (response) =>
 				{
-					await DesignOutline.Instance.Async().Delay().Run();
+					await DesignOutline.Instance.Async()
+						.Delay().Run();
 
 					response.Status = Status.Success;
 
