@@ -5,7 +5,10 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B8712432-B8DA-47BB-85EE-8DCEB2E810B4}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.config = .nuget\NuGet.config
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		NuGet.config = NuGet.config
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{2CF09551-A580-4EC9-B6D5-F852724C1017}"
