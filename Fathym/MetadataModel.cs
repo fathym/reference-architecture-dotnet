@@ -37,4 +37,35 @@ namespace Fathym
 		}
 		#endregion
 	}
+
+	[DataContract]
+	public class MetadataModelV2
+	{
+		#region Properties
+		[IgnoreDataMember]
+		[System.Text.Json.Serialization.JsonExtensionData]
+		public virtual IDictionary<string, object> Metadata { get; set; }
+
+		[DataMember(Name = "Metadata")]
+		[System.Text.Json.Serialization.JsonIgnore]
+		public virtual string MetadataProxy
+		{
+			get
+			{
+				return System.Text.Json.JsonSerializer.Serialize(Metadata);
+			}
+			set
+			{
+				Metadata = System.Text.Json.JsonSerializer.Deserialize<IDictionary<string, object>>(value);
+			}
+		}
+		#endregion
+
+		#region Constructors
+		public MetadataModelV2()
+		{
+			Metadata = new Dictionary<string, object>();
+		}
+		#endregion
+	}
 }

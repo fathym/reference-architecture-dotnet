@@ -27,6 +27,9 @@ namespace Fathym
 
 		[DataMember]
 		public virtual string Description { get; set; }
+
+		[DataMember]
+		public virtual string Details { get; set; }
 		#endregion
 	}
 }

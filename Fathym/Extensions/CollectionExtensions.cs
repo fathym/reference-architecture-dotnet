@@ -148,7 +148,18 @@ namespace System.Collections.Generic
         //    Parallel.ForEach()
         //}
         #endregion
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            var seenKeys = new HashSet<TKey>();
 
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
         #region Is Null Or Empty
         public static bool IsNullOrEmpty<TValue>(this IEnumerable<TValue> values)
         {
@@ -156,12 +167,29 @@ namespace System.Collections.Generic
         }
         #endregion
 
-        #region To Query String
-        public static string ToQueryString<TKey, TValue>(this IDictionary<TKey, TValue> values)
+        #region Query String
+        public static IDictionary<string, string> FromQueryString(this string query)
+        {
+            query = query.TrimStart('?');
+
+            var paramSplits = query.Split('&', StringSplitOptions.RemoveEmptyEntries);
+
+            return paramSplits.ToDictionary(ps => ps.Split('=')[0], ps => ps.Split('=')[1]);
+        }
+
+        public static string ToQueryString<TKey, TValue>(this IDictionary<TKey, TValue> values, bool urlEncode = true)
         {
             var pairs = new List<string>();
 
-            values.Each(value => pairs.Add($"{value.Key}={value.Value.ToString().URLEncode()}"));
+            values.Each(value =>
+            {
+                var val = value.Value.ToString();
+
+                if (urlEncode)
+                    val = val.URLEncode();
+
+                pairs.Add($"{value.Key}={val}");
+            });
 
             return string.Join("&", pairs);
         }
