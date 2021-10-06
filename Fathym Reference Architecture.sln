@@ -14,9 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{2CF09551-A580-4EC9-B6D5-F852724C1017}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Develop", "Develop", "{0ECE3374-01E2-40C6-B99D-9A1B6C892455}"
-	ProjectSection(SolutionItems) = preProject
-		Fathym.API\Fathym.API.csproj = Fathym.API\Fathym.API.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E48422AB-D0BB-4071-BCAB-698E3AFF7E83}"
 EndProject
@@ -25,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Presentation", "Fathym.Presentation\Fathym.Presentation.csproj", "{C22BAC46-7B89-4E01-B9FE-5E889B86F488}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Testing", "Fathym.Testing\Fathym.Testing.csproj", "{8438DEBB-F338-4580-9D86-CB66D6F9AE43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.API", "Fathym.API\Fathym.API.csproj", "{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +43,10 @@ Global
 		{8438DEBB-F338-4580-9D86-CB66D6F9AE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8438DEBB-F338-4580-9D86-CB66D6F9AE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8438DEBB-F338-4580-9D86-CB66D6F9AE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +55,7 @@ Global
 		{84F36991-2696-4D88-94EE-753CAEE97EC7} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{C22BAC46-7B89-4E01-B9FE-5E889B86F488} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{8438DEBB-F338-4580-9D86-CB66D6F9AE43} = {E48422AB-D0BB-4071-BCAB-698E3AFF7E83}
+		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}
