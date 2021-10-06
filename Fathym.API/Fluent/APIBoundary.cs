@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,104 +7,138 @@ using System.Threading.Tasks;
 
 namespace Fathym.API.Fluent
 {
-	public class APIBoundary<T> : IAPIBoundary<T>, IAPIBoundaried<T>, IAPIBoundaryWithDefault<T>
-		where T : BaseResponse, new()
-	{
-		#region Fields
-		protected Func<T, Task<T>> action;
+    public class APIResponseBoundary<T> : APIBoundary<T>
+        where T : BaseResponse, new()
+    {
+        #region Constructors
+        public APIResponseBoundary(ILogger logger)
+            : base(logger)
+        { }
+        #endregion
 
-		protected T defaultResponse;
+        #region Helpers
+        protected override Func<Exception, T, Task<T>> createDefaultExceptionHandle()
+        {
+            return (ex, resp) =>
+            {
 
-		protected Func<Exception, T, Task<T>> excceptionHandle;
-		#endregion
+                resp.Status = Status.GeneralError.Clone(ex.ToString());
 
-		#region Constructors
-		public APIBoundary()
-		{
-			excceptionHandle = (ex, resp) =>
-			{
-				resp.Status = Status.GeneralError.Clone(ex.ToString());
+                return Task.FromResult(resp);
+            };
+        }
 
-				return Task.FromResult(resp);
-			};
-		}
-		#endregion
+        protected override T getDefaultResponse()
+        {
+            return new T();
+        }
+        #endregion
+    }
 
-		#region API Methods
-		public virtual async Task<T> Run()
-		{
-			try
-			{
-				if (defaultResponse == null)
-					defaultResponse = new T();
+    public class APIBoundary<T> : IAPIBoundary<T>, IAPIBoundaried<T>, IAPIBoundaryWithDefault<T>
+    {
+        #region Fields
+        protected Func<T, Task<T>> action;
 
-				defaultResponse = await action(defaultResponse);
-			}
-			catch (Exception ex)
-			{
-				//FabricEventSource.Current.ServiceRequestFailed(ActionContext.ActionDescriptor.ActionName, ex.ToString());
+        protected T defaultResponse;
 
-				if (defaultResponse == null)
-					defaultResponse = new T();
+        protected Func<Exception, T, Task<T>> excceptionHandle;
 
-				if (excceptionHandle != null)
-					defaultResponse = await excceptionHandle(ex, defaultResponse);
-			}
+        protected readonly ILogger logger;
+        #endregion
 
-			return defaultResponse;
-		}
+        #region Constructors
+        public APIBoundary(ILogger logger)
+        {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-		public virtual IAPIBoundaried<T> SetAction(Func<T, Task<T>> action)
-		{
-			this.action = action;
+            excceptionHandle = createDefaultExceptionHandle();
+        }
+        #endregion
 
-			return this;
-		}
+        #region API Methods
+        public virtual async Task<T> Run()
+        {
+            try
+            {
+                if (defaultResponse == null)
+                    defaultResponse = getDefaultResponse();
 
-		public virtual IAPIBoundaryWithDefault<T> SetDefaultResponse(T response)
-		{
-			defaultResponse = response;
+                defaultResponse = await action(defaultResponse);
+            }
+            catch (Exception ex)
+            {
+                //FabricEventSource.Current.ServiceRequestFailed(ActionContext.ActionDescriptor.ActionName, ex.ToString());
 
-			return this;
-		}
+                if (defaultResponse == null)
+                    defaultResponse = getDefaultResponse();
 
-		public virtual IAPIBoundaried<T> SetExceptionHandler(Func<Exception, T, Task<T>> excceptionHandler)
-		{
-			this.excceptionHandle = excceptionHandler;
+                if (excceptionHandle != null)
+                    defaultResponse = await excceptionHandle(ex, defaultResponse);
+            }
 
-			return this;
-		}
+            return defaultResponse;
+        }
 
-		//public virtual IAPIBoundary<BaseResponse<TModel>> WithModel<TModel>()
-		//{
-		//	return new ModeledAPIBoundary<T>();
-		//}
-		#endregion
+        public virtual IAPIBoundaried<T> SetAction(Func<T, Task<T>> action)
+        {
+            this.action = action;
 
-		#region Helpers
+            return this;
+        }
 
-		#endregion
-	}
+        public virtual IAPIBoundaryWithDefault<T> SetDefaultResponse(T response)
+        {
+            defaultResponse = response;
 
-	public interface IAPIBoundary<T>
-	{
-		IAPIBoundaryWithDefault<T> SetDefaultResponse(T response);
+            return this;
+        }
 
-		IAPIBoundaried<T> SetAction(Func<T, Task<T>> action);
-		
-		//IAPIBoundary<T> WithModel<TModel>();
-	}
+        public virtual IAPIBoundaried<T> SetExceptionHandler(Func<Exception, T, Task<T>> excceptionHandler)
+        {
+            this.excceptionHandle = excceptionHandler;
 
-	public interface IAPIBoundaryWithDefault<T>
-	{
-		IAPIBoundaried<T> SetAction(Func<T, Task<T>> action);
-	}
+            return this;
+        }
+        #endregion
 
-	public interface IAPIBoundaried<T>
-	{
-		IAPIBoundaried<T> SetExceptionHandler(Func<Exception, T, Task<T>> excceptionHandler);
+        #region Helpers
+        protected virtual Func<Exception, T, Task<T>> createDefaultExceptionHandle()
+        {
+            return (ex, resp) =>
+            {
+                logger.LogError(ex, $"There was an exception in the API boundary for {GetType().FullName}");
 
-		Task<T> Run();
-	}
+                throw ex;
+            };
+        }
+
+        protected virtual T getDefaultResponse()
+        {
+            return default(T);
+        }
+        #endregion
+    }
+
+    public interface IAPIBoundary<T>
+    {
+        IAPIBoundaryWithDefault<T> SetDefaultResponse(T response);
+
+        IAPIBoundaried<T> SetAction(Func<T, Task<T>> action);
+
+        //IAPIBoundary<T> WithModel<TModel>();
+    }
+
+    public interface IAPIBoundaryWithDefault<T>
+    {
+        IAPIBoundaried<T> SetAction(Func<T, Task<T>> action);
+    }
+
+    public interface IAPIBoundaried<T>
+    {
+        IAPIBoundaried<T> SetExceptionHandler(Func<Exception, T, Task<T>> excceptionHandler);
+
+        Task<T> Run();
+    }
 
 }

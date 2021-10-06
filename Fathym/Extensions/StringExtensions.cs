@@ -60,6 +60,16 @@ namespace System
 			return replace + text.Substring(search.Length);
 		}
 
+		public static string ToApexHost(this string host)
+		{
+			var apexHostParts = host.Split('.');
+
+			var apexHost = apexHostParts.Length > 1 ? $"{apexHostParts.ElementAt(apexHostParts.Length - 2)}.{apexHostParts.ElementAt(apexHostParts.Length - 1)}"
+				: host;
+
+			return apexHost;
+		}
+
 		public static T ToEnum<T>(this string value)
 		{
 			return (T)ToEnum(value, typeof(T));

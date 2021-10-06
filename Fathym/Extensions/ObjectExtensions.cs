@@ -13,287 +13,308 @@ using System.Threading.Tasks;
 
 namespace System
 {
-	public static class ObjectExtensions
-	{
-		public static object As(this object value, Type type, object defaultValue)
-		{
-			try
-			{
-				if (value.GetType() == type)
-					defaultValue = value;
-				else if (type == typeof(Guid) && value is string)
-					defaultValue = new Guid((string)value);
-				else if (type == typeof(DateTimeOffset) && value is string)
-					defaultValue = DateTimeOffset.Parse((string)value);
-				else if (type.IsEnum && value is string)
-					defaultValue = ((string)value).ToEnum(type);
-				else if (type.IsEnum && (value is int || value is long))
-					defaultValue = ((long)value).ToEnum(type);
-				else if (value is Newtonsoft.Json.Linq.JToken)
-					defaultValue = ((Newtonsoft.Json.Linq.JToken)value).ToObject(type);
-				else if (value != null)
-					defaultValue = Convert.ChangeType(value, type);
-			}
-			catch (InvalidCastException)
-			{
-				defaultValue = value;
-			}
-			catch { }
+    public static class ObjectExtensions
+    {
+        public static object As(this object value, Type type, object defaultValue)
+        {
+            try
+            {
+                if (value == null) { }
+                else if (value.GetType() == type)
+                    defaultValue = value;
+                else if (type == typeof(Guid) && value is string)
+                    defaultValue = new Guid((string)value);
+                else if (type == typeof(DateTimeOffset) && value is string)
+                    defaultValue = DateTimeOffset.Parse((string)value);
+                else if (type.IsEnum && value is string)
+                    defaultValue = ((string)value).ToEnum(type);
+                else if (type.IsEnum && (value is int || value is long))
+                    defaultValue = ((long)value).ToEnum(type);
+                else if (value is JToken)
+                    defaultValue = ((JToken)value).ToObject(type);
+                else if (value != null)
+                    defaultValue = Convert.ChangeType(value, type);
+            }
+            catch (InvalidCastException)
+            {
+                defaultValue = value;
+            }
+            catch { }
 
-			return defaultValue;
-		}
+            return defaultValue;
+        }
 
-		/// <summary>
-		///     Method will use the <see cref="System.Convert.ChangeType" /> method to change the type of the object to the specified type.
-		/// </summary>
-		/// <typeparam name="T">The type to change the object to.</typeparam>
-		/// <param name="value">The object to change the type of.</param>
-		/// <param name="defaultValue">The default value to return if the object cannot be converted to the type.</param>
-		/// <returns>Returns the changed type value of the object.</returns>
-		/// <example>
-		///     This method can be used in many ways.  It can be used to get a string value as a boolean:
-		///     <code>
-		///         bool value = "true".As<bool>(false);
-		///     </code>
-		/// </example>
-		public static T As<T>(this object value, T defaultValue = default(T))
-		{
-			return (T)As(value, typeof(T), defaultValue);
-		}
+        /// <summary>
+        ///     Method will use the <see cref="System.Convert.ChangeType" /> method to change the type of the object to the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to change the object to.</typeparam>
+        /// <param name="value">The object to change the type of.</param>
+        /// <param name="defaultValue">The default value to return if the object cannot be converted to the type.</param>
+        /// <returns>Returns the changed type value of the object.</returns>
+        /// <example>
+        ///     This method can be used in many ways.  It can be used to get a string value as a boolean:
+        ///     <code>
+        ///         bool value = "true".As<bool>(false);
+        ///     </code>
+        /// </example>
+        public static T As<T>(this object value, T defaultValue = default(T))
+        {
+            return (T)As(value, typeof(T), defaultValue);
+        }
 
-		public static void DeepMap(this JObject mapTo, JObject mapFrom, IDictionary<string, string> map)
-		{
-			map.Each(
-				(m) =>
-				{
-					var from = mapFrom.SelectToken(m.Key);
+        public static async Task<MemoryStream> CopyTo(this Stream value)
+        {
+            var stream = new MemoryStream();
 
-					mapTo.DotSet(m.Value, from);
-				});
-		}
+            if (value.CanSeek)
+                value.Seek(0, SeekOrigin.Begin);
 
-		public static void DotSet<T>(this JObject value, string dotPath, T newValue)
-		{
-			var token = value.SelectToken(dotPath);
+            await value.CopyToAsync(stream);
 
-			if (token == null)
-			{
-				var splits = dotPath.Split('.');
+            stream.Seek(0, SeekOrigin.Begin);
 
-				var working = value;
+            return stream;
+        }
 
-				splits.Each(
-					(split) =>
-					{
-						var sub = working.SelectToken(split);
+        public static void DeepMap(this JObject mapTo, JObject mapFrom, IDictionary<string, string> map)
+        {
+            map.Each(
+                (m) =>
+                {
+                    var from = mapFrom.SelectToken(m.Key);
 
-						if (sub.IsNullOrEmpty())
-						{
-							JToken propVal = null;
+                    mapTo.DotSet(m.Value, from);
+                });
+        }
 
-							if (split == splits.Last())
-							{
-								if (newValue != null)
-									propVal = JToken.FromObject(newValue);
-							}
-							else
-								propVal = new { }.JSONConvert<JObject>();
+        public static void DotSet<T>(this JObject value, string dotPath, T newValue)
+        {
+            var token = value.SelectToken(dotPath);
 
-							if (sub == null)
-								working.Add(split, propVal);
-							else
-								working[split] = propVal;
+            if (token == null)
+            {
+                var splits = dotPath.Split('.');
 
-							sub = working.SelectToken(split);
-						}
+                var working = value;
 
-						if (sub is JObject)
-						{
-							working = sub as JObject;
+                splits.Each(
+                    (split) =>
+                    {
+                        var sub = working.SelectToken(split);
 
-							return false;
-						}
-						else
-							return true;
-					});
-			}
-			else
-				token.Replace(JToken.FromObject(newValue));
-		}
+                        if (sub.IsNullOrEmpty())
+                        {
+                            JToken propVal = null;
 
-		public static void FireAndForget(this Task task)
-		{
-			Task.Run(async () => await task).ConfigureAwait(false);
-		}
+                            if (split == splits.Last())
+                            {
+                                if (newValue != null)
+                                    propVal = JToken.FromObject(newValue);
+                            }
+                            else
+                                propVal = new { }.JSONConvert<JObject>();
 
-		public static bool IsEmpty(this Guid value)
-		{
-			return value == Guid.Empty;
-		}
+                            if (sub == null)
+                                working.Add(split, propVal);
+                            else
+                                working[split] = propVal;
 
-		public static bool IsNullOrEmpty(this JToken token)
-		{
-			return (token == null) ||
-				   (token.Type == JTokenType.Null ||
-				   (token.Type == JTokenType.Array && !token.HasValues) ||
-				   (token.Type == JTokenType.Object && !token.HasValues) ||
-				   (token.Type == JTokenType.String && token.ToString() == String.Empty));
-		}
+                            sub = working.SelectToken(split);
+                        }
 
-		public static byte[] ToBytes(this object value)
-		{
-			var stream = new MemoryStream();
+                        if (sub is JObject)
+                        {
+                            working = sub as JObject;
 
-			var binFormatter = new BinaryFormatter();
+                            return false;
+                        }
+                        else
+                            return true;
+                    });
+            }
+            else
+                token.Replace(JToken.FromObject(newValue));
+        }
 
-			binFormatter.Serialize(stream, value);
+        public static void FireAndForget(this Task task)
+        {
+            Task.Run(async () => await task).ConfigureAwait(false);
+        }
 
-			return stream.ToArray();
-		}
+        public static bool IsEmpty(this Guid value)
+        {
+            return value == Guid.Empty;
+        }
 
-		public static object FromBytes(this byte[] bytes)
-		{
-			MemoryStream stream = new MemoryStream(bytes);
+        public static bool IsNullOrEmpty(this JToken token)
+        {
+            return (token == null) ||
+                   (token.Type == JTokenType.Null ||
+                   (token.Type == JTokenType.Array && !token.HasValues) ||
+                   (token.Type == JTokenType.Object && !token.HasValues) ||
+                   (token.Type == JTokenType.String && token.ToString() == String.Empty));
+        }
 
-			var binFormatter = new BinaryFormatter();
+        public static byte[] ToBytes(this object value)
+        {
+            var stream = new MemoryStream();
 
-			return binFormatter.Deserialize(stream);
-		}
+            var binFormatter = new BinaryFormatter();
 
-		public static Guid GetUniqueGuid(this IEnumerable<Guid> existingGuids)
-		{
-			Guid newGuid;
+            binFormatter.Serialize(stream, value);
 
-			do
-			{
-				newGuid = Guid.NewGuid();
-			}
-			while (!existingGuids.IsNullOrEmpty() && existingGuids.Contains(newGuid));
+            return stream.ToArray();
+        }
 
-			return newGuid;
-		}
+        public static object FromBytes(this byte[] bytes)
+        {
+            MemoryStream stream = new MemoryStream(bytes);
 
-		public static T DataContractDeserialize<T>(this byte[] value)
-		{
-			var srlzr = new DataContractSerializer(typeof(T));
+            var binFormatter = new BinaryFormatter();
 
-			using (var stream = new MemoryStream(value))
-			{
-				return (T)srlzr.ReadObject(stream);
-			}
-		}
+            return binFormatter.Deserialize(stream);
+        }
 
-		public static byte[] DataContractSerialize<T>(this T value)
-		{
-			var srlzr = new DataContractSerializer(typeof(T));
+        public static Guid GetUniqueGuid(this IEnumerable<Guid> existingGuids)
+        {
+            Guid newGuid;
 
-			using (var stream = new MemoryStream())
-			{
-				srlzr.WriteObject(stream, value);
+            do
+            {
+                newGuid = Guid.NewGuid();
+            }
+            while (!existingGuids.IsNullOrEmpty() && existingGuids.Contains(newGuid));
 
-				return stream.ToArray();
-			}
-		}
+            return newGuid;
+        }
 
-		public static T JSONConvert<T>(this object value, JsonSerializerSettings serializationSettings = null)
-		{
-			return value.JSONConvert<T>(serializationSettings, serializationSettings);
-		}
+        public static T DataContractDeserialize<T>(this byte[] value)
+        {
+            var srlzr = new DataContractSerializer(typeof(T));
 
-		public static T JSONConvert<T>(this object value, JsonSerializerSettings toSerializationSettings,
-			JsonSerializerSettings fromSerializationSettings)
-		{
-			var json = value.ToJSON(toSerializationSettings);
+            using var stream = new MemoryStream(value);
 
-			var val = json.FromJSON<T>(fromSerializationSettings);
+            return (T)srlzr.ReadObject(stream);
+        }
 
-			return val;
-		}
+        public static byte[] DataContractSerialize<T>(this T value)
+        {
+            var srlzr = new DataContractSerializer(typeof(T));
 
-		public static T Merge<T>(this T target, T source)
-		{
-			var targetMap = target is JToken ? target.As<JToken>() : target.JSONConvert<JToken>();
+            using var stream = new MemoryStream();
 
-			var sourceMap = source is JToken ? source.As<JToken>() : source.JSONConvert<JToken>();
+            srlzr.WriteObject(stream, value);
 
-			var children = sourceMap.Children().Cast<JProperty>();
+            return stream.ToArray();
+        }
 
-			children.Each(s =>
-			{
-				var targetToken = targetMap[s.Name];
+        public static T JSONConvert<T>(this object value, JsonSerializerSettings serializationSettings = null)
+        {
+            return value.JSONConvert<T>(serializationSettings, serializationSettings);
+        }
 
-				var sourceToken = sourceMap[s.Name];
+        public static T JSONConvert<T>(this object value, JsonSerializerSettings toSerializationSettings,
+            JsonSerializerSettings fromSerializationSettings)
+        {
+            var json = value.ToJSON(toSerializationSettings);
 
-				if ((sourceToken is JValue && ((JValue)sourceToken).Value != null) ||
-					(!(sourceToken is JValue) && sourceToken.HasValues))
-				{
-					if (targetToken != null)
-					{
-						var replaceToken = sourceToken;
+            var val = json.FromJSON<T>(fromSerializationSettings);
 
-						if (!(sourceToken is JValue))
-							replaceToken = targetToken.Merge(sourceToken);
+            return val;
+        }
 
-						targetToken.Replace(replaceToken);
-					}
-					else
-						((JObject)targetMap).Add(s.Name, sourceToken);
-				}
-			});
+        public static T Merge<T>(this T target, T source)
+        {
+            var targetMap = target is JToken ? target.As<JToken>() : target.JSONConvert<JToken>();
 
-			return targetMap.JSONConvert<T>();
-		}
+            var sourceMap = source is JToken ? source.As<JToken>() : source.JSONConvert<JToken>();
 
-		public static dynamic ToDynamic(this object value)
-		{
-			IDictionary<string, object> expando = new ExpandoObject();
+            var children = sourceMap.Children().Cast<JProperty>();
 
-			if (value != null)
-				foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
-					expando.Add(property.Name, property.GetValue(value));
+            children.Each(s =>
+            {
+                var targetToken = targetMap[s.Name];
 
-			return expando as ExpandoObject;
-		}
+                var sourceToken = sourceMap[s.Name];
 
-		public static T ToEnum<T>(this long value)
-		{
-			return (T)ToEnum(value, typeof(T));
-		}
+                if ((sourceToken is JValue && ((JValue)sourceToken).Value != null) ||
+                    (!(sourceToken is JValue) && sourceToken.HasValues))
+                {
+                    if (targetToken != null)
+                    {
+                        var replaceToken = sourceToken;
 
-		public static object ToEnum(this long value, Type type)
-		{
-			return Enum.ToObject(type, value);
-		}
+                        if (!(sourceToken is JValue))
+                            replaceToken = targetToken.Merge(sourceToken);
 
-		public static T ToEnum<T>(this int value)
-		{
-			return (T)ToEnum(value, typeof(T));
-		}
+                        targetToken.Replace(replaceToken);
+                    }
+                    else
+                        ((JObject)targetMap).Add(s.Name, sourceToken);
+                }
+            });
 
-		public static object ToEnum(this int value, Type type)
-		{
-			return ToEnum((long)value, type);
-		}
+            return targetMap.JSONConvert<T>();
+        }
 
-		public static long ToEpoch(this DateTime date, DateTime? epoch = null)
-		{
-			if (date == null)
-				return Int32.MinValue;
+        public static dynamic ToDynamic(this object value)
+        {
+            IDictionary<string, object> expando = new ExpandoObject();
 
-			if (!epoch.HasValue)
-				epoch = new DateTime(1970, 1, 1);
+            if (value != null)
+                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
+                    expando.Add(property.Name, property.GetValue(value));
 
-			var epochTimeSpan = date - epoch.Value;
+            return expando as ExpandoObject;
+        }
 
-			return (long)epochTimeSpan.TotalSeconds;
-		}
+        public static T ToEnum<T>(this long value)
+        {
+            return (T)ToEnum(value, typeof(T));
+        }
 
-		public static string ToJSON(this object value, JsonSerializerSettings serializationSettings = null)
-		{
-			if (value == null)
-				return String.Empty;
+        public static object ToEnum(this long value, Type type)
+        {
+            return Enum.ToObject(type, value);
+        }
 
-			return JsonConvert.SerializeObject(value, serializationSettings);
-		}
-	}
+        public static T ToEnum<T>(this int value)
+        {
+            return (T)ToEnum(value, typeof(T));
+        }
+
+        public static object ToEnum(this int value, Type type)
+        {
+            return ToEnum((long)value, type);
+        }
+
+        public static long ToEpoch(this DateTime date, DateTime? epoch = null)
+        {
+            if (date == null)
+                return Int32.MinValue;
+
+            if (!epoch.HasValue)
+                epoch = new DateTime(1970, 1, 1);
+
+            var epochTimeSpan = date - epoch.Value;
+
+            return (long)epochTimeSpan.TotalSeconds;
+        }
+
+        public static string ToJSON(this object value, JsonSerializerSettings serializationSettings = null)
+        {
+            if (value == null)
+                return String.Empty;
+
+            return JsonConvert.SerializeObject(value, serializationSettings);
+        }
+
+        public static string ToJSON(this object value, Formatting formatting)
+        {
+            if (value == null)
+                return String.Empty;
+
+            return JsonConvert.SerializeObject(value, formatting);
+        }
+    }
 }
