@@ -1,11 +1,11 @@
 ﻿using Fathym.Design.Fluent;
 using Fathym.Design.Singleton;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Fathym.Design
@@ -69,19 +69,16 @@ namespace Fathym.Design
 		#endregion
 
 		#region Setup Common Default JSON Serialization
-		public virtual JsonSerializerSettings BuildCommonDefaultJSONSerialization(bool indent = false)
+		public virtual JsonSerializerOptions BuildCommonDefaultJSONSerialization(bool indent = false,
+			bool propNameCaseSen= false)
 		{
-			return new JsonSerializerSettings()
-			{
-				Converters = new[] { new StringEnumConverter() },
-				Formatting = indent ? Formatting.Indented : Formatting.None
-			};
-		}
+			var options = new JsonSerializerOptions();
 
-		public virtual void SetupCommonDefaultJSONSerialization(bool indent = true)
-		{
-			if (JsonConvert.DefaultSettings == null)
-				JsonConvert.DefaultSettings = () => BuildCommonDefaultJSONSerialization(indent);
+			options.Converters.Add(new JsonStringEnumConverter());
+
+			options.WriteIndented = indent;
+
+			return options;
 		}
 		#endregion
 		#endregion

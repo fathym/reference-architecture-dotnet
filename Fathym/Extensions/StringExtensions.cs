@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Fathym.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace System
@@ -19,20 +20,31 @@ namespace System
 			return Convert.ToBase64String(Encoding.ASCII.GetBytes(value));
 		}
 		
-		public static dynamic FromJSON(this string value)
+		public static dynamic FromJSON(this string value, JsonSerializerOptions options = null)
 		{
-			if (value.IsNullOrEmpty())
-				return null;
-
-			return JsonConvert.DeserializeObject(value);
+			return value.FromJSON<object>(options: options);
 		}
 
-		public static T FromJSON<T>(this string value, JsonSerializerSettings serializationSettings = null)
+		public static T FromJSON<T>(this string value, JsonSerializerOptions options = null)
 		{
 			if (value.IsNullOrEmpty())
 				return default(T);
 
-			return JsonConvert.DeserializeObject<T>(value, serializationSettings);
+			if (options == null)
+				options = DesignOutline.Instance.BuildCommonDefaultJSONSerialization();
+
+			return JsonSerializer.Deserialize<T>(value, options);
+		}
+
+		public static object FromJSON(this string value, Type type, JsonSerializerOptions options = null)
+		{
+			if (value.IsNullOrEmpty())
+				return null;
+
+			if (options == null)
+				options = DesignOutline.Instance.BuildCommonDefaultJSONSerialization();
+
+			return JsonSerializer.Deserialize(value, type, options);
 		}
 
 		public static bool IsNullOrEmpty(this string value)
