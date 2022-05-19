@@ -76,6 +76,8 @@ namespace Fathym.Design
 
 			options.Converters.Add(new JsonStringEnumConverter());
 
+			options.PropertyNamingPolicy = null;
+
 			options.WriteIndented = indent;
 
 			return options;
