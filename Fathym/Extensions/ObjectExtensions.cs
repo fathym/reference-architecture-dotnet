@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace System
 {
@@ -30,8 +30,8 @@ namespace System
                     defaultValue = ((string)value).ToEnum(type);
                 else if (type.IsEnum && (value is int || value is long))
                     defaultValue = ((long)value).ToEnum(type);
-                else if (value is JToken)
-                    defaultValue = ((JToken)value).ToObject(type);
+                else if (value is JsonNode)
+                    defaultValue = ((JsonNode)value).ToJsonString().FromJSON(type);
                 else if (value != null)
                     defaultValue = Convert.ChangeType(value, type);
             }
@@ -76,65 +76,65 @@ namespace System
             return stream;
         }
 
-        public static void DeepMap(this JObject mapTo, JObject mapFrom, IDictionary<string, string> map)
-        {
-            map.Each(
-                (m) =>
-                {
-                    var from = mapFrom.SelectToken(m.Key);
+        //public static void DeepMap(this JsonObject mapTo, JsonObject mapFrom, IDictionary<string, string> map)
+        //{
+        //    map.Each(
+        //        (m) =>
+        //        {
+        //            var from = mapFrom.SelectToken(m.Key);
 
-                    mapTo.DotSet(m.Value, from);
-                });
-        }
+        //            mapTo.DotSet(m.Value, from);
+        //        });
+        //}
 
-        public static void DotSet<T>(this JObject value, string dotPath, T newValue)
-        {
-            var token = value.SelectToken(dotPath);
+        //public static void DotSet<T>(this JsonObject value, string dotPath, T newValue)
+        //{
+        //    var token = value.SelectToken(dotPath);
 
-            if (token == null)
-            {
-                var splits = dotPath.Split('.');
+        //    if (token == null)
+        //    {
+        //        var splits = dotPath.Split('.');
 
-                var working = value;
+        //        var working = value;
 
-                splits.Each(
-                    (split) =>
-                    {
-                        var sub = working.SelectToken(split);
+        //        splits.Each(
+        //            (split) =>
+        //            {
+        //                var sub = working.SelectToken(split);
 
-                        if (sub.IsNullOrEmpty())
-                        {
-                            JToken propVal = null;
+        //                if (sub.IsNullOrEmpty())
+        //                {
+        //                    JsonNode propVal = null;
 
-                            if (split == splits.Last())
-                            {
-                                if (newValue != null)
-                                    propVal = JToken.FromObject(newValue);
-                            }
-                            else
-                                propVal = new { }.JSONConvert<JObject>();
+        //                    if (split == splits.Last())
+        //                    {
+        //                        if (newValue != null)
+        //                            propVal = JsonNode.FromObject(newValue);
+        //                    }
+        //                    else
+        //                        propVal = new { }.JSONConvert<JObject>();
 
-                            if (sub == null)
-                                working.Add(split, propVal);
-                            else
-                                working[split] = propVal;
+        //                    if (sub == null)
+        //                        working.Add(split, propVal);
+        //                    else
+        //                        working[split] = propVal;
 
-                            sub = working.SelectToken(split);
-                        }
+        //                    sub = working.SelectToken(split);
+        //                }
 
-                        if (sub is JObject)
-                        {
-                            working = sub as JObject;
+        //                if (sub is JObject)
+        //                {
+        //                    working = sub as JObject;
 
-                            return false;
-                        }
-                        else
-                            return true;
-                    });
-            }
-            else
-                token.Replace(JToken.FromObject(newValue));
-        }
+        //                    return false;
+        //                }
+        //                else
+        //                    return true;
+        //            });
+        //    }
+        //    else
+        //        token.Replace(JsonNode.FromObject(newValue));
+        //}
 
         public static void FireAndForget(this Task task)
         {
@@ -146,13 +146,13 @@ namespace System
             return value == Guid.Empty;
         }
 
-        public static bool IsNullOrEmpty(this JToken token)
+        public static bool IsNullOrEmpty(this JsonNode token)
         {
-            return (token == null) ||
-                   (token.Type == JTokenType.Null ||
-                   (token.Type == JTokenType.Array && !token.HasValues) ||
-                   (token.Type == JTokenType.Object && !token.HasValues) ||
-                   (token.Type == JTokenType.String && token.ToString() == String.Empty));
+            return (token == null);// ||
+                                   //(token.Type == JsonNodeType.Null ||
+                                   //(token.Type == JsonNodeType.Array && !token.HasValues) ||
+                                   //(token.Type == JsonNodeType.Object && !token.HasValues) ||
+                                   //(token.Type == JsonNodeType.String && token.ToString() == String.Empty));
         }
 
         public static byte[] ToBytes(this object value)
@@ -208,54 +208,54 @@ namespace System
             return stream.ToArray();
         }
 
-        public static T JSONConvert<T>(this object value, JsonSerializerSettings serializationSettings = null)
+        public static T JSONConvert<T>(this object value, JsonSerializerOptions options = null)
         {
-            return value.JSONConvert<T>(serializationSettings, serializationSettings);
+            return value.JSONConvert<T>(options, options);
         }
 
-        public static T JSONConvert<T>(this object value, JsonSerializerSettings toSerializationSettings,
-            JsonSerializerSettings fromSerializationSettings)
+        public static T JSONConvert<T>(this object value, JsonSerializerOptions toOptions,
+            JsonSerializerOptions fromOptions)
         {
-            var json = value.ToJSON(toSerializationSettings);
+            var json = value.ToJSON(toOptions);
 
-            var val = json.FromJSON<T>(fromSerializationSettings);
+            var val = json.FromJSON<T>(fromOptions);
 
             return val;
         }
 
-        public static T Merge<T>(this T target, T source)
-        {
-            var targetMap = target is JToken ? target.As<JToken>() : target.JSONConvert<JToken>();
+        //public static T Merge<T>(this T target, T source)
+        //{
+        //    var targetMap = target is JsonNode ? target.As<JsonNode>() : target.JSONConvert<JsonNode>();
 
-            var sourceMap = source is JToken ? source.As<JToken>() : source.JSONConvert<JToken>();
+        //    var sourceMap = source is JsonNode ? source.As<JsonNode>() : source.JSONConvert<JsonNode>();
 
-            var children = sourceMap.Children().Cast<JProperty>();
+        //    var children = sourceMap.Children().Cast<JProperty>();
 
-            children.Each(s =>
-            {
-                var targetToken = targetMap[s.Name];
+        //    children.Each(s =>
+        //    {
+        //        var targetToken = targetMap[s.Name];
 
-                var sourceToken = sourceMap[s.Name];
+        //        var sourceToken = sourceMap[s.Name];
 
-                if ((sourceToken is JValue && ((JValue)sourceToken).Value != null) ||
-                    (!(sourceToken is JValue) && sourceToken.HasValues))
-                {
-                    if (targetToken != null)
-                    {
-                        var replaceToken = sourceToken;
+        //        if ((sourceToken is JValue && ((JValue)sourceToken).Value != null) ||
+        //            (!(sourceToken is JValue) && sourceToken.HasValues))
+        //        {
+        //            if (targetToken != null)
+        //            {
+        //                var replaceToken = sourceToken;
 
-                        if (!(sourceToken is JValue))
-                            replaceToken = targetToken.Merge(sourceToken);
+        //                if (!(sourceToken is JValue))
+        //                    replaceToken = targetToken.Merge(sourceToken);
 
-                        targetToken.Replace(replaceToken);
-                    }
-                    else
-                        ((JObject)targetMap).Add(s.Name, sourceToken);
-                }
-            });
+        //                targetToken.Replace(replaceToken);
+        //            }
+        //            else
+        //                ((JObject)targetMap).Add(s.Name, sourceToken);
+        //        }
+        //    });
 
-            return targetMap.JSONConvert<T>();
-        }
+        //    return targetMap.JSONConvert<T>();
+        //}
 
         public static dynamic ToDynamic(this object value)
         {
@@ -301,20 +301,12 @@ namespace System
             return (long)epochTimeSpan.TotalSeconds;
         }
 
-        public static string ToJSON(this object value, JsonSerializerSettings serializationSettings = null)
+        public static string ToJSON(this object value, JsonSerializerOptions options = null)
         {
             if (value == null)
                 return String.Empty;
 
-            return JsonConvert.SerializeObject(value, serializationSettings);
-        }
-
-        public static string ToJSON(this object value, Formatting formatting)
-        {
-            if (value == null)
-                return String.Empty;
-
-            return JsonConvert.SerializeObject(value, formatting);
+            return JsonSerializer.Serialize(value, options);
         }
     }
 }
