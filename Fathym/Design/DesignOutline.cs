@@ -74,10 +74,12 @@ namespace Fathym.Design
 		{
 			var options = new JsonSerializerOptions();
 
-			return BuildCommonDefaultJSONSerialization(options, indent: indent, propNameCaseSen: propNameCaseSen);
+			BuildCommonDefaultJSONSerialization(options, indent: indent, propNameCaseSen: propNameCaseSen);
+
+			return options;
 		}
 
-		public virtual JsonSerializerOptions BuildCommonDefaultJSONSerialization(JsonSerializerOptions options, 
+		public virtual void BuildCommonDefaultJSONSerialization(JsonSerializerOptions options, 
 			bool indent = false, bool propNameCaseSen = false)
 		{
 			options.Converters.Add(new JsonStringEnumConverter());
@@ -87,8 +89,6 @@ namespace Fathym.Design
 			options.PropertyNameCaseInsensitive = propNameCaseSen;
 
 			options.WriteIndented = indent;
-
-			return options;
 		}
 		#endregion
 		#endregion
