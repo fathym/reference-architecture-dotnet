@@ -12,10 +12,6 @@
 	<!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
 	<DebugType>embedded</DebugType>  	
   </PropertyGroup>
-
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
