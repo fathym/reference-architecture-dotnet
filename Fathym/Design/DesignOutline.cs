@@ -70,17 +70,25 @@ namespace Fathym.Design
 
 		#region Setup Common Default JSON Serialization
 		public virtual JsonSerializerOptions BuildCommonDefaultJSONSerialization(bool indent = false,
-			bool propNameCaseSen= false)
+			bool propNameCaseSen = false)
 		{
 			var options = new JsonSerializerOptions();
 
+			BuildCommonDefaultJSONSerialization(options, indent: indent, propNameCaseSen: propNameCaseSen);
+
+			return options;
+		}
+
+		public virtual void BuildCommonDefaultJSONSerialization(JsonSerializerOptions options, 
+			bool indent = false, bool propNameCaseSen = false)
+		{
 			options.Converters.Add(new JsonStringEnumConverter());
 
 			options.PropertyNamingPolicy = null;
 
-			options.WriteIndented = indent;
+			options.PropertyNameCaseInsensitive = propNameCaseSen;
 
-			return options;
+			options.WriteIndented = indent;
 		}
 		#endregion
 		#endregion
