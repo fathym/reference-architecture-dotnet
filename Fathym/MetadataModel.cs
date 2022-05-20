@@ -13,7 +13,7 @@ namespace Fathym
 		#region Properties
 		[IgnoreDataMember]
 		[JsonExtensionData]
-		public virtual IDictionary<string, JsonNode> Metadata { get; set; }
+		public virtual IDictionary<string, JsonObject> Metadata { get; set; }
 
 		[DataMember(Name = "Metadata")]
 		[JsonIgnore]
@@ -25,7 +25,7 @@ namespace Fathym
 			}
 			set
 			{
-				Metadata = value.FromJSON<IDictionary<string, JsonNode>>();
+				Metadata = value.FromJSON<IDictionary<string, JsonObject>>();
 			}
 		}
 		#endregion
@@ -33,7 +33,7 @@ namespace Fathym
 		#region Constructors
 		public MetadataModel()
 		{
-			Metadata = new Dictionary<string, JsonNode>();
+			Metadata = new Dictionary<string, JsonObject>();
 		}
 		#endregion
 	}
