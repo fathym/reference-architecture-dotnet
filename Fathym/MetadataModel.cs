@@ -11,23 +11,23 @@ namespace Fathym
 	public class MetadataModel
 	{
 		#region Properties
-		[IgnoreDataMember]
+		//[IgnoreDataMember]
 		[JsonExtensionData]
 		public virtual JsonObject Metadata { get; set; }
 
-		[DataMember(Name = "Metadata")]
-		[JsonIgnore]
-		public virtual string MetadataProxy
-		{
-			get
-			{
-				return Metadata.ToJSON();
-			}
-			set
-			{
-				Metadata = value.FromJSON<JsonObject>();
-			}
-		}
+		//[DataMember(Name = "Metadata")]
+		//[JsonIgnore]
+		//public virtual string MetadataProxy
+		//{
+		//	get
+		//	{
+		//		return Metadata.ToJSON();
+		//	}
+		//	set
+		//	{
+		//		Metadata = value.FromJSON<JsonObject>();
+		//	}
+		//}
 		#endregion
 
 		#region Constructors

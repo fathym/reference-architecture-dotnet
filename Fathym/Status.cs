@@ -44,7 +44,7 @@ namespace Fathym
 		{
 			var status = new Status() { Code = Code, Message = message };
 
-			status.MetadataProxy = ((object)metadata).ToJSON();
+			//status.MetadataProxy = ((object)metadata).ToJSON();
 
 			return status;
 		}
