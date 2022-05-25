@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Fathym
 {
 	[Serializable]
 	[DataContract]
-	public class Status : MetadataModel
+	public class Status
 	{
 		#region Constants
 		public static Status Success { get { return new Status() { Code = (int)StatusCodeTypes.Success, Message = "Success" }; } }
@@ -22,6 +24,9 @@ namespace Fathym
 		#endregion
 
 		#region Properties
+		[JsonExtensionData]
+		public virtual JsonObject Metadata { get; set; }
+
 		[DataMember]
 		public virtual long Code { get; set; } 
 
@@ -40,11 +45,11 @@ namespace Fathym
 			return Clone(Message);
 		}
 
-		public virtual Status Clone(string message, dynamic metadata = null)
+		public virtual Status Clone(string message, JsonObject metadata = null)
 		{
 			var status = new Status() { Code = Code, Message = message };
 
-			status.MetadataProxy = ((object)metadata).ToJSON();
+			status.Metadata = metadata;
 
 			return status;
 		}
