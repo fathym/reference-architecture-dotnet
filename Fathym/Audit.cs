@@ -14,9 +14,6 @@ namespace Fathym
 	public class Audit
 	{
 		#region Properties
-		[JsonExtensionData]
-		public virtual JsonObject Metadata { get; set; }
-
 		[DataMember]
 		public virtual DateTime At { get; set; }
 
