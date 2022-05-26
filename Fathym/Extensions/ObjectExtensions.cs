@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -155,26 +153,6 @@ namespace System
                                    //(token.Type == JsonNodeType.String && token.ToString() == String.Empty));
         }
 
-        public static byte[] ToBytes(this object value)
-        {
-            var stream = new MemoryStream();
-
-            var binFormatter = new BinaryFormatter();
-
-            binFormatter.Serialize(stream, value);
-
-            return stream.ToArray();
-        }
-
-        public static object FromBytes(this byte[] bytes)
-        {
-            MemoryStream stream = new MemoryStream(bytes);
-
-            var binFormatter = new BinaryFormatter();
-
-            return binFormatter.Deserialize(stream);
-        }
-
         public static Guid GetUniqueGuid(this IEnumerable<Guid> existingGuids)
         {
             Guid newGuid;
@@ -186,26 +164,6 @@ namespace System
             while (!existingGuids.IsNullOrEmpty() && existingGuids.Contains(newGuid));
 
             return newGuid;
-        }
-
-        public static T DataContractDeserialize<T>(this byte[] value)
-        {
-            var srlzr = new DataContractSerializer(typeof(T));
-
-            using var stream = new MemoryStream(value);
-
-            return (T)srlzr.ReadObject(stream);
-        }
-
-        public static byte[] DataContractSerialize<T>(this T value)
-        {
-            var srlzr = new DataContractSerializer(typeof(T));
-
-            using var stream = new MemoryStream();
-
-            srlzr.WriteObject(stream, value);
-
-            return stream.ToArray();
         }
 
         public static T JSONConvert<T>(this object value, JsonSerializerOptions options = null)
