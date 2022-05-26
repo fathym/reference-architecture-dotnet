@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Fathym
 {
-	[Serializable]
-	[DataContract]
 	public class Status
 	{
 		#region Constants
@@ -27,10 +24,8 @@ namespace Fathym
 		[JsonExtensionData]
 		public virtual JsonObject Metadata { get; set; }
 
-		[DataMember]
 		public virtual long Code { get; set; } 
 
-		[DataMember]
 		public virtual string Message { get; set; }
 		#endregion
 
@@ -102,25 +97,18 @@ namespace Fathym
 	}
 
 	[Serializable]
-	[DataContract]
 	public enum StatusCodeTypes : long
 	{
-		[EnumMember]
 		Initialized = -1,
 
-		[EnumMember]
 		Success = 0,
 
-		[EnumMember]
 		GeneralError = 1,
 
-		[EnumMember]
 		NotLocated = 2,
 
-		[EnumMember]
 		Conflict = 3,
 
-		[EnumMember]
 		Unauthorized = 4
 	}
 }
