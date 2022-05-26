@@ -57,7 +57,7 @@ namespace Fathym
 		{
 			context.UpdateContext(contextLookup, ctxt);
 
-			context.Session.Set(contextLookup, ctxt.ToBytes());
+			context.Session.SetString(contextLookup, ctxt.ToJSON());
 		}
 
 		public static async Task<Status> WithSessionLockedContext<TContext>(this HttpContext context, string contextLookup, SemaphoreSlim readLock, Func<Task<TContext>> action)
@@ -73,7 +73,7 @@ namespace Fathym
 			}
 			else
 			{
-				context.Items[contextLookup] = (TContext)context.Session.Get(contextLookup).FromBytes();
+				context.Items[contextLookup] = context.Session.GetString(contextLookup).FromJSON<TContext>();
 
 				return Status.Success;
 			}

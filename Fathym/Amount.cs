@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Fathym
 {
-	[Serializable]
-	[DataContract]
 	public class Amount
 	{
 		#region Properties
-		[DataMember]
 		public virtual string Currency { get; set; }
 
-		[DataMember]
 		public virtual decimal Total { get; set; }
 		#endregion
 
