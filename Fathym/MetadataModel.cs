@@ -12,7 +12,7 @@ namespace Fathym
 	//	#region Properties
 	//	[IgnoreDataMember]
 	//	[JsonExtensionData]
-	//	public virtual JsonObject Metadata { get; set; }
+	//	public virtual Dictionary<string, JsonElement> Metadata { get; set; }
 
 	//	[DataMember(Name = "Metadata")]
 	//	[JsonIgnore]
