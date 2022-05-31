@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -22,7 +24,7 @@ namespace Fathym
 
 		#region Properties
 		[JsonExtensionData]
-		public virtual JsonObject Metadata { get; set; }
+		public virtual Dictionary<string, JsonElement> Metadata { get; set; }
 
 		public virtual long Code { get; set; } 
 
@@ -40,7 +42,7 @@ namespace Fathym
 			return Clone(Message);
 		}
 
-		public virtual Status Clone(string message, JsonObject metadata = null)
+		public virtual Status Clone(string message, Dictionary<string, JsonElement> metadata = null)
 		{
 			var status = new Status() { Code = Code, Message = message };
 

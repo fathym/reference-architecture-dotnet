@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B8712432-B8DA-47BB-85EE-8DCEB2E810B4}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.Testing", "Fathym.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fathym.API", "Fathym.API\Fathym.API.csproj", "{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fathym.Tests", "Fathym.Tests\Fathym.Tests.csproj", "{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,8 +60,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{84F36991-2696-4D88-94EE-753CAEE97EC7} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{C22BAC46-7B89-4E01-B9FE-5E889B86F488} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
-		{8438DEBB-F338-4580-9D86-CB66D6F9AE43} = {E48422AB-D0BB-4071-BCAB-698E3AFF7E83}
+		{8438DEBB-F338-4580-9D86-CB66D6F9AE43} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
 		{E9554F2A-CEE3-4845-8C2C-93F764DCDEFA} = {0ECE3374-01E2-40C6-B99D-9A1B6C892455}
+		{EDD00431-8A4F-4E13-ACD4-9293AE2C9DEC} = {E48422AB-D0BB-4071-BCAB-698E3AFF7E83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7220669-D0BE-4D25-A4CD-999A4BFBC220}
