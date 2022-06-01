@@ -30,6 +30,8 @@ namespace System
                     defaultValue = ((long)value).ToEnum(type);
                 else if (value is JsonNode)
                     defaultValue = ((JsonNode)value).ToJsonString().FromJSON(type);
+                else if (value is JsonElement)
+                    defaultValue = value.ToString().As(type, defaultValue: defaultValue);
                 else if (value != null)
                     defaultValue = Convert.ChangeType(value, type);
             }

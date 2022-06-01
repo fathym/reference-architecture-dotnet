@@ -21,7 +21,7 @@ namespace Fathym
 		public virtual string Details { get; set; }
 
 		[JsonExtensionData]
-		public virtual Dictionary<string, JsonElement> Metadata { get; set; }
+		public virtual Dictionary<string, object> Metadata { get; set; }
 		#endregion
 
 		#region Constructors
