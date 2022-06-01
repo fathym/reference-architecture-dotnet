@@ -24,7 +24,7 @@ namespace Fathym
 
 		#region Properties
 		[JsonExtensionData]
-		public virtual Dictionary<string, JsonElement> Metadata { get; set; }
+		public virtual Dictionary<string, object> Metadata { get; set; }
 
 		public virtual long Code { get; set; } 
 
@@ -42,7 +42,7 @@ namespace Fathym
 			return Clone(Message);
 		}
 
-		public virtual Status Clone(string message, Dictionary<string, JsonElement> metadata = null)
+		public virtual Status Clone(string message, Dictionary<string, object> metadata = null)
 		{
 			var status = new Status() { Code = Code, Message = message };
 

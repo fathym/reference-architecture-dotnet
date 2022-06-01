@@ -13,7 +13,7 @@ namespace Fathym.Business.Models
 	{
 		#region Properties
 		[JsonExtensionData]
-		public virtual Dictionary<string, JsonElement> Metadata { get; set; }
+		public virtual Dictionary<string, object> Metadata { get; set; }
 
 		public virtual Audit Created { get; set; }
 
