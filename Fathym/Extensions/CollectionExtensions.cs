@@ -286,6 +286,14 @@ namespace System.Collections.Generic
             return new DynamicDictionary(dictionary.ToDictionary((kvp) => getPropertyName(kvp.Key), (kvp) => getPropertyValue(kvp.Value)));
         }
         #endregion
+
+        #region To Dictionary Safe
+        public static Dictionary<TKey, TElement> ToDictionarySafe<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector)
+        {
+            return source?.GroupBy(keySelector)?.ToDictionary(g => g.Key, g => elementSelector(g.First()));
+        }
+        #endregion
     }
 }
 
