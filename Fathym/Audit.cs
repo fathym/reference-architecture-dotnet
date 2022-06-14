@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fathym
 {
-	public class Audit
+	public class Audit : MetadataModel
 	{
 		#region Properties
 		public virtual DateTime At { get; set; }
@@ -19,9 +19,6 @@ namespace Fathym
 		public virtual string Description { get; set; }
 
 		public virtual string Details { get; set; }
-
-		[JsonExtensionData]
-		public virtual Dictionary<string, object> Metadata { get; set; }
 		#endregion
 
 		#region Constructors

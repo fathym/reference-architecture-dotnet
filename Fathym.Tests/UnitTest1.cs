@@ -4,17 +4,15 @@ using System.Text.Json.Serialization;
 
 namespace Fathym.Tests
 {
-    public class FathymJSONTestsModel
+    public class FathymJSONTestsModel : MetadataModel
     {
-        [JsonExtensionData]
-        public virtual Dictionary<string, object>? Metadata { get; set; }
     }
 
     [TestClass]
     public class FathymJSONTests
     {
         [TestMethod]
-        public void BasicExtensionData()
+        public async Task BasicExtensionData()
         {
             var modelStr = @"{""Hey"":""World""}";
 
@@ -31,6 +29,10 @@ namespace Fathym.Tests
             Assert.AreEqual(expectedModelStr, newModelStr);
 
             model = newModelStr.FromJSON<FathymJSONTestsModel>();
+
+            Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
+
+            model = Newtonsoft.Json.JsonConvert.DeserializeObject<FathymJSONTestsModel>(newModelStr);
 
             Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
         }

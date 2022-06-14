@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace Fathym.Business.Models
 {
-	public class BusinessModel<TID>
+	public class BusinessModel<TID> : MetadataModel
 	{
 		#region Properties
-		[JsonExtensionData]
-		public virtual Dictionary<string, object> Metadata { get; set; }
-
 		public virtual Audit Created { get; set; }
 
 		public virtual TID ID { get; set; }
