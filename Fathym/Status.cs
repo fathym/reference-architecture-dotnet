@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 namespace Fathym
 {
-	public class Status
+    public class Status : MetadataModel
 	{
 		#region Constants
 		public static Status Success { get { return new Status() { Code = (int)StatusCodeTypes.Success, Message = "Success" }; } }
@@ -23,9 +22,6 @@ namespace Fathym
 		#endregion
 
 		#region Properties
-		[JsonExtensionData]
-		public virtual Dictionary<string, object> Metadata { get; set; }
-
 		public virtual long Code { get; set; } 
 
 		public virtual string Message { get; set; }
