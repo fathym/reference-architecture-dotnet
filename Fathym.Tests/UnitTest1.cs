@@ -32,6 +32,10 @@ namespace Fathym.Tests
 
             Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
 
+            var newtonStr = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+
+            //Assert.AreEqual(expectedModelStr, newtonStr);
+
             model = Newtonsoft.Json.JsonConvert.DeserializeObject<FathymJSONTestsModel>(newModelStr);
 
             Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
