@@ -65,8 +65,8 @@ jobs:
           
 
       # Publish Fathym
-      - name: Publish Nuget
-        id: publish_nuget
+      - name: Publish Fathym
+        id: publish_fathym
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
@@ -97,8 +97,8 @@ jobs:
           INCLUDE_SYMBOLS: ${{ env.IncludeSymbols }}     
 
       # Publish Fathym.API
-      - name: Publish Nuget
-        id: publish_nuget
+      - name: Publish Fathym API
+        id: publish_fathym_api
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
@@ -129,8 +129,8 @@ jobs:
           INCLUDE_SYMBOLS: ${{ env.IncludeSymbols }}   
           
       # Publish Fathym.Presentation
-      - name: Publish Nuget
-        id: publish_nuget
+      - name: Publish Fathym Presentation
+        id: publish_fathym_presentation
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
@@ -161,8 +161,8 @@ jobs:
           INCLUDE_SYMBOLS: ${{ env.IncludeSymbols }}         
 
       # Publish Fathym.Presentation.MVC
-      - name: Publish Nuget
-        id: publish_nuget
+      - name: Publish Fathym Presentation MVC
+        id: publish_fathym_presentation_mvc
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
