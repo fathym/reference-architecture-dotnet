@@ -87,9 +87,6 @@ jobs:
           # Flag to toggle git tagging, enabled by default
           TAG_COMMIT: false
 
-          # Format of the git tag, [*] gets replaced with actual version
-          TAG_FORMAT: *
-
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
@@ -121,9 +118,6 @@ jobs:
 
           # Flag to toggle git tagging, enabled by default
           TAG_COMMIT: false
-
-          # Format of the git tag, [*] gets replaced with actual version
-          TAG_FORMAT: *
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
@@ -157,9 +151,6 @@ jobs:
           # Flag to toggle git tagging, enabled by default
           TAG_COMMIT: false
 
-          # Format of the git tag, [*] gets replaced with actual version
-          TAG_FORMAT: *
-
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
@@ -191,9 +182,6 @@ jobs:
 
           # Flag to toggle git tagging, enabled by default
           TAG_COMMIT: false
-
-          # Format of the git tag, [*] gets replaced with actual version
-          TAG_FORMAT: *
 
           # API key to authenticate with NuGet server
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
