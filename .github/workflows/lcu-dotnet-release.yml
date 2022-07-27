@@ -64,7 +64,7 @@ jobs:
           nuget-version: '5.x'        
 
       - name: Restore dependencies
-        run: nuget restore ${{ env.SolutionFile }}
+        run: nuget restore '${{ env.SolutionFile }}'
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
@@ -73,7 +73,7 @@ jobs:
 
       # Publish Fathym
       - name: Build
-        run: dotnet build ${{ env.SolutionFile }} --configuration ${{ env.BuildConfiguration }} -p:Version=${{ steps.versionBump.outputs.new_tag }} --no-restore
+        run: dotnet build '${{ env.SolutionFile }}' --configuration ${{ env.BuildConfiguration }} -p:Version=${{ steps.versionBump.outputs.new_tag }} --no-restore
         
       - name: Publish        
         run: nuget push **\*.nupkg -Source {{ env.NugetSource }} -ApiKey ${{secrets.NUGET_API_KEY}}        
