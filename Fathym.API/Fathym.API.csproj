@@ -3,29 +3,49 @@
 	<PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
 
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
-		<!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-		<!-- Embed source files that are not tracked by the source control manager in the PDB -->
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright>2022 Fathym, Inc.</Copyright>
+    <PackageProjectUrl>www.fathym.com</PackageProjectUrl>
+    <PackageIcon>fathym-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>
+  </PropertyGroup>
 
-		<!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-		<DebugType>embedded</DebugType>
-	</PropertyGroup>
+  <PropertyGroup>
+    <PackageLicenseUrl>https://github.com/fathym/reference-architecture-dotnet/blob/master/LICENSE</PackageLicenseUrl>
+    <Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
+  </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
+    <None Include="..\fathym-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Fathym\Fathym.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
 
