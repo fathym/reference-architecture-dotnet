@@ -56,6 +56,11 @@ jobs:
           RELEASE_BRANCHES: .*
           WITH_V: false
       - run: echo "New version is ${{ steps.versionBump.outputs.new_tag }}"
+      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'         
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
@@ -64,12 +69,7 @@ jobs:
           nuget-version: '5.x'        
 
       - name: Restore dependencies
-        run: nuget restore '${{ env.SolutionFile }}'
-
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'          
+        run: nuget restore '${{ env.SolutionFile }}'       
 
       # Publish Fathym
       - name: Build
