@@ -21,12 +21,16 @@
 	  <RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>  	
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageLicenseUrl>https://github.com/fathym/reference-architecture-dotnet/blob/master/LICENSE</PackageLicenseUrl>
+  <PropertyGroup>    
     <Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
-  <ItemGroup> 
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\fathym-logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -39,7 +43,7 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />		
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 	</ItemGroup>

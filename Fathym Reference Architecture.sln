@@ -8,8 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B8712432
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		fathym-logo.png = fathym-logo.png
+		LICENSE = LICENSE
 		NuGet.config = NuGet.config
-		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject

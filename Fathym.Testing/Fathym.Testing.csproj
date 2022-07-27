@@ -20,13 +20,17 @@
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>  
 	</PropertyGroup>
-  
+
   <PropertyGroup>
-    <PackageLicenseUrl>https://github.com/fathym/reference-architecture-dotnet/blob/master/LICENSE</PackageLicenseUrl>
     <Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\fathym-logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -35,7 +39,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>  
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
