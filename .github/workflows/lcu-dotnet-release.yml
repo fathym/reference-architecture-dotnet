@@ -68,7 +68,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: "../Fathym/Fathym.csproj"
+          PROJECT_FILE_PATH: Fathym/Fathym.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym         
@@ -94,7 +94,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: "../Fathym.API/Fathym.API.csproj"
+          PROJECT_FILE_PATH: Fathym.API/Fathym.API.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.API         
@@ -120,7 +120,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: "../Fathym.Presentation/Fathym.Presentation.csproj"
+          PROJECT_FILE_PATH: Fathym.Presentation/Fathym.Presentation.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.Presentation         
@@ -146,7 +146,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: "../Fathym.Presentation.MVC/Fathym.Presentation.MVC.csproj"
+          PROJECT_FILE_PATH: Fathym.Presentation.MVC/Fathym.Presentation.MVC.csproj
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.Presentation.MVC         
