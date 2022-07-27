@@ -11,8 +11,6 @@ env:
   MainBranch: master
   NugetSource: https://api.nuget.org
   IncludeSymbols: false
-  BuildConfiguration: Release
-  BuildPlatform: x64
 
 jobs:
   build:
@@ -70,13 +68,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: ../Fathym/Fathym.csproj
-          
-          # Configuration to build and package
-          BUILD_CONFIGURATION: ${{ env.BuildConfiguration }}
-          
-          # Platform target to compile (default is empty/AnyCPU)
-          BUILD_PLATFORM: ${{ env.BuildPlatform }}     
+          PROJECT_FILE_PATH: "../Fathym/Fathym.csproj"
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym         
@@ -102,13 +94,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: ../Fathym.API/Fathym.API.csproj
-          
-          # Configuration to build and package
-          BUILD_CONFIGURATION: ${{ env.BuildConfiguration }}
-          
-          # Platform target to compile (default is empty/AnyCPU)
-          BUILD_PLATFORM: ${{ env.BuildPlatform }}     
+          PROJECT_FILE_PATH: "../Fathym.API/Fathym.API.csproj"
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.API         
@@ -134,13 +120,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: ../Fathym.Presentation/Fathym.Presentation.csproj
-          
-          # Configuration to build and package
-          BUILD_CONFIGURATION: ${{ env.BuildConfiguration }}
-          
-          # Platform target to compile (default is empty/AnyCPU)
-          BUILD_PLATFORM: ${{ env.BuildPlatform }}     
+          PROJECT_FILE_PATH: "../Fathym.Presentation/Fathym.Presentation.csproj"
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.Presentation         
@@ -166,13 +146,7 @@ jobs:
         uses: brandedoutcast/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: ../Fathym.Presentation.MVC/Fathym.Presentation.MVC.csproj
-          
-          # Configuration to build and package
-          BUILD_CONFIGURATION: ${{ env.BuildConfiguration }}
-          
-          # Platform target to compile (default is empty/AnyCPU)
-          BUILD_PLATFORM: ${{ env.BuildPlatform }}     
+          PROJECT_FILE_PATH: "../Fathym.Presentation.MVC/Fathym.Presentation.MVC.csproj"
           
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Fathym.Presentation.MVC         
