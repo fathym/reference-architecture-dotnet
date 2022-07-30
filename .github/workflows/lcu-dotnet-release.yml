@@ -46,8 +46,8 @@ jobs:
           echo "Current branch is ${{ steps.vars.outputs.branchName }}"
           echo "Version bump type is ${{ steps.vars.outputs.versionBump }}"
 
-      # bump version and push tag
-      - name: Bump version and push tag
+      # bump version
+      - name: Bump version
         uses: fathym/github-tag-action@master
         id: versionBump
         env:
@@ -55,6 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: .*
           WITH_V: false
+          DRY_RUN: true
       - run: echo "New version is ${{ steps.versionBump.outputs.new_tag }}"
       
       - name: Setup dotnet
@@ -76,4 +77,16 @@ jobs:
         run: dotnet build '${{ env.SolutionFile }}' --configuration ${{ env.BuildConfiguration }} -p:Version=${{ steps.versionBump.outputs.new_tag }} --no-restore
         
       - name: Publish        
-        run: nuget push **\*.nupkg -Source ${{ env.NugetSource }} -ApiKey ${{secrets.NUGET_API_KEY}} -Verbosity detailed        
+        run: nuget push **\*.nupkg -Source ${{ env.NugetSource }} -ApiKey ${{secrets.NUGET_API_KEY}} -Verbosity detailed     
+        
+      # bump version and push tag
+      - name: Bump version and push tag
+        uses: fathym/github-tag-action@master
+        id: pushTag
+        env:
+          DEFAULT_BUMP: ${{ steps.vars.outputs.versionBump }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCHES: .*
+          WITH_V: false
+          DRY_RUN: false
+      - run: echo "New version is ${{ steps.pushTag.outputs.new_tag }}"          
