@@ -1,17 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
-	<!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
-	<!-- Embed source files that are not tracked by the source control manager in the PDB -->
-	<EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-	<!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-	<DebugType>embedded</DebugType>  
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright>2022 Fathym, Inc.</Copyright>
+    <PackageProjectUrl>www.fathym.com</PackageProjectUrl>
+    <PackageIcon>fathym-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\fathym-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fathym\Fathym.csproj" />
@@ -21,7 +49,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
-		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 
 
