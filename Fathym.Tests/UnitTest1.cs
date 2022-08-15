@@ -6,11 +6,24 @@ namespace Fathym.Tests
 {
     public class FathymJSONTestsModel : MetadataModel
     {
-    }
+    }    
 
     [TestClass]
     public class FathymJSONTests
     {
+        [TestMethod]
+        public async Task TestFathymPackage()
+        {
+            var blah = new Fathym.Address()
+            {
+                City = "Denver",
+                Country = "USA"
+            };
+
+            var place = $"{blah.City}, {blah.Country}";
+            Console.WriteLine(place);
+        }
+
         [TestMethod]
         public async Task BasicExtensionData()
         {
@@ -33,6 +46,8 @@ namespace Fathym.Tests
             Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
 
             var newtonStr = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+
+            
 
             //Assert.AreEqual(expectedModelStr, newtonStr);
 
