@@ -47,12 +47,12 @@ namespace System
 			return JsonSerializer.Deserialize(value, type, options);
 		}
 
-		public static bool IsNullOrEmpty(this string value)
-		{
-			return String.IsNullOrEmpty(value);
-		}
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return String.IsNullOrEmpty(value);
+        }
 
-		public static string ReplaceFirst(this string text, string search, string replace)
+        public static string ReplaceFirst(this string text, string search, string replace)
 		{
 			int pos = text.IndexOf(search);
 
