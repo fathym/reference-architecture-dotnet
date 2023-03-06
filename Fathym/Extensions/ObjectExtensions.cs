@@ -62,6 +62,11 @@ namespace System
             return (T)As(value, typeof(T), defaultValue);
         }
 
+        public static bool Check(this bool? value)
+        {
+            return value ?? false;
+        }
+
         public static async Task<MemoryStream> CopyTo(this Stream value)
         {
             var stream = new MemoryStream();
