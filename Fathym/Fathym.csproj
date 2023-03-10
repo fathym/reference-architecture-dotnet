@@ -1,57 +1,58 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  
-	  <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
 
-	  <!-- Embed source files that are not tracked by the source control manager in the PDB -->
-	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 
-      <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-	  <DebugType>embedded</DebugType>
-	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Copyright>2022 Fathym, Inc.</Copyright>
-	  <PackageProjectUrl>www.fathym.com</PackageProjectUrl>
-	  <PackageIcon>fathym-logo.png</PackageIcon>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>  	
-  </PropertyGroup>
+		<!-- Embed source files that are not tracked by the source control manager in the PDB -->
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-  <PropertyGroup>    
-    <Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
+		<!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+		<DebugType>embedded</DebugType>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Copyright>2022 Fathym, Inc.</Copyright>
+		<PackageProjectUrl>www.fathym.com</PackageProjectUrl>
+		<PackageIcon>fathym-logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/fathym/reference-architecture-dotnet</RepositoryUrl>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>The Fathym reference architecture projects provide the foundation for building Fathym's dotnet applications.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\fathym-logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None> 
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />		
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\fathym-logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JsonFlatten" Version="1.0.2" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 	</ItemGroup>
