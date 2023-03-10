@@ -55,5 +55,25 @@ namespace Fathym.Tests
 
             Assert.AreEqual(model?.Metadata?["Hey"]?.As<bool>(), true);
         }
+
+        [TestMethod]
+        public async Task FlattenUnflatten()
+        {
+            var modelStr = @"{""Hey"":""World"", ""Complex"": { ""Another"": ""hello"", ""Now"": [ { ""An"": ""Array"" } ] } }";
+
+            var model = modelStr.FromJSON<FathymJSONTestsModel>();
+
+            var flat = model.Flatten();
+
+            Assert.AreEqual("World", flat["Hey"]);
+            Assert.AreEqual("hello", flat["Complex.Another"]);
+            Assert.AreEqual("Array", flat["Complex.Now[0].An"]);
+
+            var unflat = flat.Unflatten<JsonNode>();
+
+            Assert.AreEqual("World", unflat["Hey"].ToString());
+            Assert.AreEqual("hello", unflat["Complex"]["Another"].ToString());
+            Assert.AreEqual("Array", unflat["Complex"]["Now"][0]["An"].ToString());
+        }
     }
 }
