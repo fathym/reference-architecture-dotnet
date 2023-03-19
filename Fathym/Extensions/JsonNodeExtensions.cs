@@ -11,24 +11,24 @@ using JsonFlatten;
 public static class JsonNodeExtensions
 {
     public static Dictionary<string, object> Flatten<T>(this T node)
+        where T : class
     {
-        var jo = JObject.Parse(node.ToJSON());
+        var jo = node != null ? JObject.Parse(node.ToJSON()) : null;
 
-        var flat = jo.Flatten(false);
+        var flat = jo?.Flatten(false);
 
-        //flatDraft = flatDraft.Where(kvp => kvp.Value != null).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-        return new Dictionary<string, object>(flat);
+        return flat != null ? new Dictionary<string, object>(flat) : null;
     }
 
 
     public static T Unflatten<T>(this IDictionary<string, object> flat)
+        where T : class
     {
-        var jo = flat.Unflatten();
+        var jo = flat?.Unflatten();
 
-        var joStr = jo.ToString();
+        var joStr = jo?.ToString();
 
-        return joStr.FromJSON<T>();
+        return joStr?.FromJSON<T>();
     }
 
 }
